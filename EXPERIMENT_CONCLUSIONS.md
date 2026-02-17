@@ -163,6 +163,21 @@ The **high-precision patterns** (`sentiment de`, `sentimentul de`, `cuprins de`)
 
 ## Cross-Strategy Comparison
 
+### New Affective States Discovered
+
+| Strategy | Starting Seed | New Words Found | Confirmed ASI | Examples |
+|----------|--------------|-----------------|---------------|---------|
+| Pattern Matching | 85 (6 emotions) | 0 | — | *(baseline, no discovery)* |
+| Bootstrapping | 24 (6 emotions) | 4 | 4 (100%) | mâhnit, afectată, nervos, transpirat |
+| LLM Filtering | — | — | — | *In progress* |
+| Embedding Similarity | N/A | ~1,257 novel expressions | ~330 (26%) with known emotion words | copleșită, rușine, capabilă, non-standard phrasings |
+| Distributional Mining | 18 (6 emotions) | 235 candidate words | 15 (6.4%) | siguranță, iubire, vină, nostalgie, afecțiune, neliniste |
+
+**Notes:**
+- **Bootstrapping** discovers new **adjective** forms (words usable with "sunt X", "mă simt X"). All 4 are genuine, but the small corpus limits yield. MASIVE found 1,600 from 6 seeds on English Reddit.
+- **Embedding similarity** doesn't expand the seed list — it finds novel **expressions** that use emotion words outside the curated 511. The 1,257 novel candidates include non-standard spellings, words not in any seed, and colloquial phrasings.
+- **Distributional mining** discovers new **noun** forms (words usable with "am X", "mi-e X", "sentiment de X"). High raw count (235) but low precision — most discoveries are non-emotional nouns captured by the noisy `plin de` pattern. The 15 confirmed words come from high-precision patterns (`sentiment de`, `cuprins de`).
+
 ### Yield vs. Precision Tradeoff
 
 ```
