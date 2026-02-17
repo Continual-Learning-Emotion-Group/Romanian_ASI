@@ -8,6 +8,7 @@ Datasets:
 - RED v1: Tweets with single-label emotions
 - RED v2: Tweets with multi-label emotions
 - RoSent: Sentiment analysis (reviews)
+- RedditRoAP: Reddit authorship profiling (Romanian Reddit posts)
 
 Output: merged_corpus.jsonl with unified schema
 """
@@ -211,6 +212,56 @@ def process_rosent(base_path: Path) -> Generator[Dict[str, Any], None, None]:
                 }
 
 
+def process_reddit_roap(base_path: Path) -> Generator[Dict[str, Any], None, None]:
+    """
+    Process RedditRoAP dataset (Romanian Reddit authorship profiling).
+
+    Source: https://huggingface.co/datasets/roship-profiling/reddit_authorship_profiling_romanian
+    Paper: https://arxiv.org/abs/2410.09907
+
+    Fields: TEXT, SUBDIALECT, STATUS, LABELS, PERSONAL INCLINATION
+    26,517 Romanian Reddit posts with author demographic annotations.
+    """
+    source = "reddit_roap"
+
+    file_path = base_path / "RedditRoAP" / "train.parquet"
+    if not file_path.exists():
+        print(f"Warning: {file_path} not found")
+        return
+
+    try:
+        import pandas as pd
+    except ImportError:
+        print("Warning: pandas not available, skipping RedditRoAP")
+        return
+
+    df = pd.read_parquet(file_path)
+
+    for idx, row in df.iterrows():
+        text = str(row.get("TEXT", "")).strip()
+        if not text:
+            continue
+
+        # Collect non-null labels
+        labels = {}
+        if pd.notna(row.get("SUBDIALECT")):
+            labels["subdialect"] = row["SUBDIALECT"]
+        if pd.notna(row.get("STATUS")):
+            labels["status"] = row["STATUS"]
+        if pd.notna(row.get("LABELS")):
+            labels["topic_labels"] = row["LABELS"]
+        if pd.notna(row.get("PERSONAL INCLINATION")):
+            labels["personal_inclination"] = row["PERSONAL INCLINATION"]
+
+        yield {
+            "id": generate_id(source, str(idx)),
+            "text": text,
+            "source": source,
+            "split": "train",
+            "original_labels": labels,
+        }
+
+
 def merge_all_datasets(base_path: Path, output_path: Path) -> Dict[str, int]:
     """
     Merge all datasets into a single JSONL file.
@@ -233,6 +284,7 @@ def merge_all_datasets(base_path: Path, output_path: Path) -> Dict[str, int]:
         ("red_v1", process_red_v1),
         ("red_v2", process_red_v2),
         ("rosent", process_rosent),
+        ("reddit_roap", process_reddit_roap),
     ]
 
     output_path.parent.mkdir(parents=True, exist_ok=True)

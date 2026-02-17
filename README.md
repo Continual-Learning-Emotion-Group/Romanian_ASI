@@ -1,6 +1,6 @@
 # Romanian ASI Benchmark - Project Status
 
-**Last Updated:** 2026-02-05
+**Last Updated:** 2026-02-17
 
 ## Overview
 
@@ -14,24 +14,27 @@ The Romanian ASI (Affective State Identification) Benchmark extracts natural "I 
 
 | Source | Records Processed | ASI Candidates | Status |
 |--------|-------------------|----------------|--------|
-| Small Datasets (5 sources) | 79,658 | 4,282 | ✅ Complete |
+| Small Datasets (6 sources) | 105,927 | 5,565 | ✅ Complete |
 | FULG (web crawl) | 405,000 | 21,184 | ⏸️ Paused (resumable) |
 | Filmot/YouTube | - | - | ❌ Blocked |
-| **Total** | **484,658** | **25,466** | |
+| **Total** | **510,927** | **26,749** | |
 
 ### 1. Small Datasets (Complete)
 
-**Source:** 5 Romanian NLP datasets merged into `data/merged_corpus.jsonl`
+**Source:** 6 Romanian NLP datasets merged into `data/merged_corpus.jsonl`
 
 | Dataset | Records | ASI Matches | Match Rate |
 |---------|---------|-------------|------------|
-| RoSent | 28,946 | 2,481 | 8.6% |
-| LaRoSeDa | 15,000 | 1,017 | 6.8% |
-| PoPreRo | 28,107 | 467 | 1.7% |
-| RED v2 | 5,449 | 186 | 3.4% |
-| RED v1 | 2,156 | 131 | 6.1% |
+| RoSent | 27,338 | 2,481 | 9.1% |
+| RedditRoAP | 26,269 | 1,788 | 6.8% |
+| LaRoSeDa | 14,982 | 1,017 | 6.8% |
+| PoPreRo | 28,103 | 467 | 1.7% |
+| RED v2 | 5,199 | 186 | 3.6% |
+| RED v1 | 4,036 | 131 | 3.2% |
 
-**Output:** `data/asi_candidates.jsonl` (4,282 samples)
+**Output:** `data/asi_candidates.jsonl` (5,565 samples)
+
+**RedditRoAP** ([paper](https://arxiv.org/abs/2410.09907)): 26,517 Romanian Reddit posts from 100+ subreddits with authorship profiling annotations (subdialect, employment status, topic labels, personal inclination). Loaded from HuggingFace: `roship-profiling/reddit_authorship_profiling_romanian`.
 
 ### 2. FULG Dataset (Paused - Resumable)
 
@@ -65,30 +68,32 @@ Filmot.com (YouTube subtitle search) uses aggressive bot detection that blocks P
 
 ## Extracted Data Analysis
 
-### Emotion Distribution (Combined: 25,466 samples)
+### Emotion Distribution (Combined: 26,749 samples)
 
 | Emotion | Small Datasets | FULG | Total | % |
 |---------|----------------|------|-------|---|
-| Joy | 1,730 | 7,967 | 9,697 | 31% |
-| Trust | 864 | 7,170 | 8,034 | 26% |
-| Sadness | 803 | 4,966 | 5,769 | 19% |
-| Anticipation | 514 | 3,896 | 4,410 | 14% |
-| Fear | 295 | 2,957 | 3,252 | 11% |
-| Surprise | 601 | 1,285 | 1,886 | 6% |
-| Anger | 214 | 1,201 | 1,415 | 5% |
-| Disgust | 38 | 293 | 331 | 1% |
+| Joy | 2,050 | 7,967 | 10,017 | 31% |
+| Anticipation | 1,282 | 3,896 | 5,178 | 16% |
+| Trust | 1,261 | 7,170 | 8,431 | 26% |
+| Sadness | 1,025 | 4,966 | 5,991 | 19% |
+| Surprise | 697 | 1,285 | 1,982 | 6% |
+| Fear | 529 | 2,957 | 3,486 | 11% |
+| Anger | 289 | 1,201 | 1,490 | 5% |
+| Disgust | 57 | 293 | 350 | 1% |
 
 ### Pattern Usage
 
 | Pattern | Count | % | Example |
 |---------|-------|---|---------|
-| sunt_adj_present | 13,352 | 54% | "sunt fericit" |
-| mie_short | 2,692 | 11% | "mi-e frică" |
-| am_noun_present | 1,517 | 6% | "am teamă" |
-| am_fost_adj_perfect | 2,254 | 9% | "am fost surprins" |
-| ma_simt_present | 1,197 | 5% | "mă simt bine" |
-| eram_adj_imperfect | 1,156 | 5% | "eram trist" |
-| Other patterns | ~2,500 | 10% | Various |
+| sunt_adj_present | 3,837 | 63% | "sunt fericit" |
+| am_fost_adj_perfect | 1,022 | 17% | "am fost surprins" |
+| eram_adj_imperfect | 337 | 6% | "eram trist" |
+| mie_short | 250 | 4% | "mi-e frică" |
+| am_noun_present | 219 | 4% | "am teamă" |
+| ma_simt_present | 203 | 3% | "mă simt bine" |
+| Other patterns | 202 | 3% | Various |
+
+*Note: Pattern counts above are for small datasets only. FULG has similar distribution.*
 
 **Note:** Primary "mă simt" patterns are ~9% of matches. The "sunt" (I am) pattern dominates, which is typical for written Romanian.
 
@@ -131,39 +136,51 @@ Filmot.com (YouTube subtitle search) uses aggressive bot detection that blocks P
 
 ```
 Romanian_ASI/
-├── CLAUDE.md                 # Development guide for Claude Code
-├── ROMANIAN_ASI_PLAN.md      # Original research plan
-├── PROJECT_STATUS.md         # This file
+├── README.md                    # This file (project status & documentation)
+├── CLAUDE.md                    # Development guide for Claude Code
+├── requirements.txt             # Python dependencies
 │
 ├── data/
-│   ├── merged_corpus.jsonl           # 79K records from 5 datasets
-│   ├── asi_candidates.jsonl          # 4,282 samples (small datasets)
+│   ├── merged_corpus.jsonl              # 106K records from 6 datasets
+│   ├── asi_candidates.jsonl             # 4,282 samples (small datasets)
 │   ├── asi_candidates.stats.json
-│   ├── fulg_asi_candidates.jsonl     # 21,184 samples (FULG)
+│   ├── fulg_asi_candidates.jsonl        # 21,184 samples (FULG)
+│   ├── fulg_asi_candidates.stats.json
 │   ├── fulg_extraction_checkpoint.json  # Resume point
-│   ├── fulg_extraction_analysis.json # Detailed statistics
-│   └── emotion_seed.json             # 511 curated affective words
+│   ├── fulg_extraction_analysis.json    # Detailed statistics
+│   ├── emotion_seed.json               # 511 curated affective words
+│   └── roemolex/                        # RoEmoLex V3 CSV files
 │
 ├── scripts/
-│   ├── ro_asi/                       # Core extraction pipeline
-│   │   ├── pattern_matcher.py        # 18 Romanian "I feel" patterns
+│   ├── explore_fulg_dataset.py          # FULG dataset exploration utility
+│   │
+│   ├── ro_asi/                          # Core extraction pipeline
+│   │   ├── pattern_matcher.py           # 18 Romanian "I feel" patterns
 │   │   ├── curated_affective_states.py  # 511 emotion words
-│   │   ├── extract_candidates.py     # Small dataset extraction
-│   │   ├── merge_datasets.py         # Dataset merger
-│   │   └── load_roemolex.py          # RoEmoLex lexicon loader
+│   │   ├── extract_candidates.py        # Small dataset extraction
+│   │   ├── merge_datasets.py            # Dataset merger
+│   │   ├── emotion_seed.py              # Emotion seed generation
+│   │   └── load_roemolex.py             # RoEmoLex lexicon loader
 │   │
-│   ├── fulg/                         # FULG streaming extraction
-│   │   └── extract_candidates.py     # HuggingFace streaming + context extraction
+│   ├── fulg/                            # FULG streaming extraction
+│   │   └── extract_candidates.py        # HuggingFace streaming + context extraction
 │   │
-│   └── filmot/                       # YouTube extraction (blocked)
-│       ├── searcher.py               # Playwright-based search
-│       ├── transcript_fetcher.py     # youtube-transcript-api wrapper
-│       └── extract_candidates.py     # 3-phase pipeline
+│   └── filmot/                          # YouTube extraction (blocked)
+│       ├── config.py                    # Extraction configuration
+│       ├── searcher.py                  # Playwright-based search
+│       ├── transcript_fetcher.py        # youtube-transcript-api wrapper
+│       └── extract_candidates.py        # 3-phase pipeline
 │
-└── small_datasets/                   # Source datasets
+├── references/                          # Research papers
+│   ├── MASIVE_paper.pdf
+│   ├── fulg_paper.pdf
+│   └── roemolex_paper.pdf
+│
+└── small_datasets/                      # Source datasets
     ├── LaRoSeDa/
     ├── PoPreRo/
     ├── RED/
+    ├── RedditRoAP/
     └── RoSent/
 ```
 
@@ -239,8 +256,8 @@ python -m scripts.ro_asi.pattern_matcher
 
 | File | Size | Description |
 |------|------|-------------|
-| `merged_corpus.jsonl` | 32 MB | 79,658 source records |
-| `asi_candidates.jsonl` | 4 MB | 4,282 small dataset samples |
+| `merged_corpus.jsonl` | 49 MB | 105,927 source records (6 datasets) |
+| `asi_candidates.jsonl` | 7 MB | 5,565 small dataset samples |
 | `fulg_asi_candidates.jsonl` | 37 MB | 21,184 FULG samples |
 | `emotion_seed.json` | 40 KB | 511 curated emotion words |
 | `fulg_extraction_analysis.json` | 12 KB | Detailed FULG statistics |

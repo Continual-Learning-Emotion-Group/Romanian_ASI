@@ -78,7 +78,7 @@ python -m scripts.filmot.extract_candidates --max-samples 100 --max-videos 50
 
 ### Pipeline Flow
 ```
-5 Source Datasets → merge_datasets.py → merged_corpus.jsonl (79K records)
+6 Source Datasets → merge_datasets.py → merged_corpus.jsonl (106K records)
                                               ↓
 curated_affective_states.py → emotion_seed.json
                                               ↓
@@ -95,12 +95,12 @@ Filmot/YouTube → filmot search → transcript download → filmot_asi_candidat
 
 ### Core Modules (`scripts/ro_asi/`) - Small Datasets
 
-These modules handle the 5 smaller source datasets (79K records total):
+These modules handle the 6 smaller source datasets (106K records total):
 
 - **curated_affective_states.py**: Manually curated list of 511 Romanian affective state words (348 adjectives, 150 nouns, 15 adverbs) with emotion mappings
 - **pattern_matcher.py**: Regex-based pattern matching with 18 Romanian "I feel" patterns, handles diacritics normalization (ă→a, ș→s, ț→t)
 - **extract_candidates.py**: Main extraction pipeline, outputs JSONL with matched sentences and emotion categories
-- **merge_datasets.py**: Unifies LaRoSeDa, PoPreRo, RED v1/v2, RoSent into common schema
+- **merge_datasets.py**: Unifies LaRoSeDa, PoPreRo, RED v1/v2, RoSent, RedditRoAP into common schema
 - **load_roemolex.py**: Parses RoEmoLex V3 CSV files (optional, falls back to curated list)
 
 ### FULG Extraction (`scripts/fulg/`)
