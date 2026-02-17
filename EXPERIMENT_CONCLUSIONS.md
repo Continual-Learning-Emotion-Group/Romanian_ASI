@@ -12,11 +12,11 @@
 |---|----------|-----------|--------------|-------------|-----------|--------|
 | 1 | Pattern Matching (baseline) | 234 | 219 | — | 85 (6 emotions) | Complete |
 | 2 | MASIVE Bootstrapping | 428 | 391 | +4 new words | 28 (24 Ekman + 4 discovered) | Complete |
-| 3 | LLM Filtering | — | — | — | — | **In Progress** |
+| 3 | LLM Filtering | 1,687 kept / 2,255 input | ~1,687 | Validates others' output | 511 (full seed) | Complete |
 | 4 | Embedding Similarity | 1,664 | ~1,664 | 1,257 novel | N/A (uses anchors) | Complete |
 | 5 | Distributional Mining | 538 | ~500 | 392 from new words | 251 (18 + 233 discovered) | Complete |
 
-**Combined unique candidates (strategies 1, 2, 4, 5): ~2,800+**
+**Combined unique candidates (all 5 strategies): ~2,800+ extraction, 1,687 LLM-validated**
 
 ---
 
@@ -74,18 +74,68 @@ Bootstrapping works in principle — the 4 discovered words are genuinely valid 
 ## Strategy 3: LLM-Assisted Filtering
 
 **Branch:** `strategy/llm-filtering`
-**Status:** **In Progress**
+**Output:** `data/llm_filtered_candidates.jsonl` (1,687 validated candidates)
+**Model:** Qwen/Qwen2.5-7B-Instruct via Modal (A10G GPU, vLLM)
 
-### Planned approach
-Take candidates that already match "I feel" patterns and use an LLM to:
-- Validate whether each is a genuine affective state expression
-- Filter false positives (e.g., "sunt sigur" used epistemically vs affectively)
-- Optionally classify emotion category
+### What it does
+Takes the 2,255 pattern-matched candidates from RedditRoAP and PoPreRo (from the full 511-word seed extraction) and asks an LLM to judge each one: "Does this sentence express a genuine affective state, or is the word used in a non-affective sense?" Uses a Romanian prompt with the matched sentence, surrounding context, seed word, and pattern type.
 
-### Expected contribution
-Higher **precision** rather than higher recall. Should help clean the output of all other strategies, particularly the noisier ones (distributional mining, embedding similarity).
+### Key results
+- **2,255 candidates processed**, 1,687 kept (74.8%), 568 filtered (25.2%)
+- **Zero errors** — all candidates successfully parsed
+- **Processing time:** 519s (~8.5 min), 4.3 candidates/sec
+- **Confidence:** kept mean 0.847, filtered mean 0.807
 
-*Results will be added when complete.*
+### Precision by pattern type
+
+| Pattern | Total | Kept | Keep Rate | Notes |
+|---------|-------|------|-----------|-------|
+| `mă simt` (present) | 111 | 110 | **99.1%** | Near-perfect — "I feel X" is unambiguous |
+| `m-am simțit` (perfect) | 11 | 11 | **100%** | |
+| `mi-e` (dative short) | 127 | 127 | **100%** | "mi-e frică" always affective |
+| `îmi este` (dative formal) | 49 | 49 | **100%** | |
+| `eram` (imperfect) | 205 | 172 | 83.9% | |
+| `am fost` (perfect) | 113 | 94 | 83.2% | |
+| **`sunt` (present)** | **1,429** | **979** | **68.5%** | Noisiest — "I am" ambiguity |
+| `am [noun]` | 156 | 97 | 62.2% | "am voie" (permission) noise |
+
+**Primary patterns** (`mă simt`, `m-am simțit`, etc.) are 99-100% precise. **Secondary patterns** (`sunt`, `am`) carry most of the noise.
+
+### Precision by emotion category
+
+| Emotion | Total | Kept | Keep Rate |
+|---------|-------|------|-----------|
+| Fear | 292 | 289 | **99.0%** |
+| Surprise | 118 | 116 | **98.3%** |
+| Sadness | 284 | 267 | 94.0% |
+| Anger | 93 | 86 | 92.5% |
+| Anticipation | 967 | 759 | 78.5% |
+| Disgust | 27 | 21 | 77.8% |
+| Joy | 410 | 282 | 68.8% |
+| **Trust** | **501** | **203** | **40.5%** |
+
+### Top false positives identified
+
+| Seed Word | Times Filtered | Why |
+|-----------|---------------|-----|
+| sigur/sigură | 208 | Epistemic "I'm sure that..." — certainty, not emotion |
+| curios/curioasă | 183 | Intellectual curiosity, not affective state |
+| bine | 57 | Social "I'm fine" — formulaic, not genuine emotion |
+| voie | 31 | "am voie" = "I'm allowed" — permission, not feeling |
+| chef | 21 | "am chef de" = "I feel like" — desire, not emotion |
+| acceptat | 12 | "am fost acceptat" = "I was accepted" — event, not state |
+
+### Results by source
+
+| Source | Total | Kept | Keep Rate |
+|--------|-------|------|-----------|
+| RedditRoAP | 1,788 | 1,358 | 76.0% |
+| PoPreRo | 467 | 329 | 70.4% |
+
+### Takeaway
+LLM filtering is the **precision strategy** — it doesn't find new candidates but cleans existing ones. The 25.2% filter rate confirms that regex alone has significant noise, especially from `sunt [adj]` and `am [noun]` patterns. The most important insight: **"trust" is not a reliable emotion category** in this pipeline because "sunt sigur" (I'm sure) is almost always epistemic, not affective. Fear, surprise, and sadness are the most reliable categories.
+
+This strategy is designed to be a **second pass** on output from all other strategies.
 
 ---
 
@@ -169,7 +219,7 @@ The **high-precision patterns** (`sentiment de`, `sentimentul de`, `cuprins de`)
 |----------|--------------|-----------------|---------------|---------|
 | Pattern Matching | 85 (6 emotions) | 0 | — | *(baseline, no discovery)* |
 | Bootstrapping | 24 (6 emotions) | 4 | 4 (100%) | mâhnit, afectată, nervos, transpirat |
-| LLM Filtering | — | — | — | *In progress* |
+| LLM Filtering | 511 (full seed) | 0 (validates, doesn't discover) | Removed 568 false positives (25.2%) | sigur, curios, bine, voie — epistemic/non-affective |
 | Embedding Similarity | N/A | ~1,257 novel expressions | ~330 (26%) with known emotion words | copleșită, rușine, capabilă, non-standard phrasings |
 | Distributional Mining | 18 (6 emotions) | 235 candidate words | 15 (6.4%) | siguranță, iubire, vină, nostalgie, afecțiune, neliniste |
 
@@ -187,8 +237,8 @@ The **high-precision patterns** (`sentiment de`, `sentimentul de`, `cuprins de`)
          Baseline (234)  |  Bootstrapping (428)
          ████████████    |  ████████████████
                          |
-                         |         LLM Filtering (TBD)
-                         |         ██████████████████
+                         |  LLM Filtering (1,687)
+                         |  ██████████████████████
                          |
     Distributional (538) |  Embedding (1,664)
     █████████████████    |  ██████████████████████████
@@ -201,7 +251,7 @@ The **high-precision patterns** (`sentiment de`, `sentimentul de`, `cuprins de`)
 |----------|-------------------|--------|----------|
 | Pattern Matching | ~95% | Low | Clean, high-confidence samples |
 | Bootstrapping | ~85-90% | Low-Medium | Discovering new seed words |
-| LLM Filtering | ~95%+ (expected) | Medium | Cleaning other strategies' output |
+| LLM Filtering | 74.8% kept (removes 25.2% noise) | Medium | Cleaning other strategies' output |
 | Embedding Similarity | ~50-70% | High | Finding non-standard expressions |
 | Distributional Mining | ~30-50% (mixed) | Medium | Discovering emotion vocabulary |
 
@@ -209,8 +259,9 @@ The **high-precision patterns** (`sentiment de`, `sentimentul de`, `cuprins de`)
 
 1. **Pattern Matching:** The clean floor — everything it finds is almost certainly an ASI expression
 2. **Bootstrapping:** Discovers new adjective-form ASI words through natural co-occurrence (mâhnit, nervos)
-3. **Embedding Similarity:** Catches colloquial, metaphorical, and non-standard ASI expressions that no regex could match
-4. **Distributional Mining:** Discovers new emotion **nouns** through labeling patterns (sentiment de X, stare de X)
+3. **LLM Filtering:** Identifies which seed words are unreliable ("sigur", "curios", "bine" in non-affective senses) and which patterns are trustworthy (primary > secondary)
+4. **Embedding Similarity:** Catches colloquial, metaphorical, and non-standard ASI expressions that no regex could match
+5. **Distributional Mining:** Discovers new emotion **nouns** through labeling patterns (sentiment de X, stare de X)
 
 ### Overlap Analysis
 
@@ -236,21 +287,28 @@ Across all strategies, `mi-e frică` (I'm afraid) is disproportionately common. 
 Patterns like "un sentiment de X" and "cuprins de X" almost always yield genuine emotion words, but they appear very rarely in informal text. They're better suited for large-scale corpus mining.
 
 ### 5. The "sunt" pattern is a double-edged sword
-`sunt [adj]` is the most productive pattern (captures "sunt fericit", "sunt trist", etc.) but also the noisiest ("sunt student", "sunt persoane"). Every strategy has to deal with this ambiguity.
+`sunt [adj]` is the most productive pattern (captures "sunt fericit", "sunt trist", etc.) but also the noisiest ("sunt student", "sunt persoane"). Every strategy has to deal with this ambiguity. LLM filtering confirms: `sunt` has only 68.5% precision vs 99-100% for `mă simt` patterns.
+
+### 6. "Trust" is an unreliable emotion category
+LLM filtering revealed that 59.5% of "trust"-labeled candidates are false positives, almost entirely driven by "sunt sigur/sigură" (I'm sure) being used epistemically rather than affectively. Similarly, "curios" (curiosity) is frequently intellectual rather than emotional. These words should either be removed from the seed list or always run through LLM validation.
+
+### 7. LLM filtering provides actionable seed list curation
+Beyond validating individual candidates, LLM filtering identifies **which seed words are problematic**: sigur (208 filtered), curios (183), bine (57), voie (31), chef (21). This is directly actionable — removing or flagging these 5 words would eliminate most false positives upstream.
 
 ---
 
 ## Recommendations
 
 ### Immediate next steps
-1. **Complete LLM filtering** (Strategy 3) to validate candidates from all other strategies
-2. **Run bootstrapping on FULG** — the 150B token corpus should yield hundreds of new emotion words instead of 4
-3. **Run distributional mining on FULG** with only high-precision patterns (`sentiment de`, `cuprins de`)
+1. **Curate seed list using LLM findings** — remove or flag sigur, curios, voie, chef; keep bine with context-dependent validation
+2. **Run LLM filtering on embedding + distributional candidates** — these have higher noise and would benefit most
+3. **Run bootstrapping on FULG** — the 150B token corpus should yield hundreds of new emotion words instead of 4
+4. **Run distributional mining on FULG** with only high-precision patterns (`sentiment de`, `cuprins de`)
 
 ### For the final benchmark
-4. **Combine all strategies** into a union set with per-strategy confidence scores
-5. **Human annotation** on a sample of ~500 candidates across strategies to get real precision numbers
-6. **Use LLM filtering as a second pass** on the combined set to produce a clean final dataset
+5. **Combine all strategies** into a union set with per-strategy confidence scores
+6. **Human annotation** on a sample of ~500 candidates across strategies to get real precision numbers
+7. **Use LLM filtering as a second pass** on the combined set to produce a clean final dataset
 
 ### Estimated final yield (projection)
 | Source | Conservative | Optimistic |
@@ -267,6 +325,6 @@ Patterns like "un sentiment de X" and "cuprins de X" almost always yield genuine
 |----------|----------------|----------------|
 | Pattern Matching | `data/reddit_baseline_candidates.jsonl` | `experiments/baseline_pattern_matching/README.md` |
 | Bootstrapping | `data/bootstrapped_asi_candidates.jsonl` | `experiments/bootstrapping/RESULTS.md`, `data/bootstrap_provenance.json` |
-| LLM Filtering | *In progress* | *In progress* |
+| LLM Filtering | `data/llm_filtered_candidates.jsonl` | `experiments/llm_filtering/RESULTS.md`, `data/llm_filter_stats.json` |
 | Embedding Similarity | `data/embedding_asi_candidates.jsonl` | `experiments/embedding_similarity/ANALYSIS.md` |
 | Distributional Mining | `data/distributional_asi_candidates.jsonl` | `scripts/distributional_mining/RESULTS.md`, `data/distributional_stats.json` |
