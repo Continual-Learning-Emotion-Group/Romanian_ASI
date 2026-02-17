@@ -1,6 +1,6 @@
 # ASI Extraction Strategies
 
-This document describes 5 parallel extraction strategies being developed on separate branches. Each strategy targets Romanian Reddit data (RedditRoAP: 26,269 posts) and can also be applied to the full merged corpus (105,927 records) and FULG (150B tokens).
+This document describes 5 parallel extraction strategies being developed on separate branches. Each strategy targets Romanian Reddit data (RedditRoAP + PoPreRo) and can also be applied to the full merged corpus (105,927 records) and FULG (150B tokens), but this will be done later.
 
 All strategies output to a common schema (see below) so results can be compared and combined.
 
