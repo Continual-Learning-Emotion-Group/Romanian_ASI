@@ -242,6 +242,34 @@ Trust+joy dominate due to "bine" (264 of 487 candidates). The pilot sample skews
 - Dominated by Casa Iubirii (450/487) — the first 500 candidates are sorted by input order, which clusters by API query result
 - Full run will cover 3,053 videos across 602 channels (much more diverse)
 
+### Affective State Vocabulary Coverage
+
+The filmot pipeline discovers **248 unique affective states** out of the 511-word curated seed (**48.5% coverage**). The LLM-validated pilot (487 candidates) covers 55 unique AS.
+
+| Frequency Tier | Words | Description |
+|----------------|-------|-------------|
+| 50+ occurrences | 22 | Well-attested core vocabulary |
+| 10–49 occurrences | 41 | Solid evidence |
+| 2–9 occurrences | 111 | Present but sparse |
+| 1 occurrence (hapax) | 74 | May not survive LLM validation |
+
+**Top 10 affective states** (all 7,622 candidates):
+
+| Seed Word | Count | Translation |
+|-----------|-------|-------------|
+| bine | 3,281 | good/well |
+| prost | 591 | bad/stupid |
+| frică | 341 | fear |
+| dor | 340 | longing |
+| rău | 278 | bad |
+| confortabil | 148 | comfortable |
+| vinovată | 141 | guilty (f.) |
+| vinovat | 134 | guilty (m.) |
+| singur | 99 | alone (m.) |
+| în siguranță | 97 | safe |
+
+The remaining ~263 seed words (51.5%) were not found — these are rarer emotional vocabulary unlikely to appear in spoken YouTube Romanian, which tends toward a smaller, more colloquial register. "bine" alone accounts for 43% of all candidates, reflecting how dominant "mă simt bine" is in everyday speech.
+
 ### Projected Full Run
 
 Based on the 97.4% acceptance rate:

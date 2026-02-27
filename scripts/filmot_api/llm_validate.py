@@ -63,7 +63,7 @@ app = modal.App("ro-asi-filmot-llm-validate")
     gpu="A10G",
     timeout=60 * 30,
     volumes={"/root/.cache/huggingface": hf_cache_vol},
-    scaledown_window=300,
+    scaledown_window=60,
 )
 class LLMFilter:
     @modal.enter()
