@@ -68,6 +68,47 @@ python -m scripts.filmot.extract_candidates --phase extract      # Only extract 
 # Quick test run
 python -m scripts.filmot.extract_candidates --max-samples 100 --max-videos 50
 
+# Filmot API Extraction (replaces blocked Playwright pipeline)
+# Install dependencies first:
+pip install python-dotenv filmot
+
+# Phase 1: Collect raw subtitle hits from Filmot API (via RapidAPI)
+python -m scripts.filmot_api.collect
+
+# Resume from checkpoint after interruption
+python -m scripts.filmot_api.collect --resume
+
+# Limit pages per query (for testing)
+python -m scripts.filmot_api.collect --max-pages-per-query 2
+
+# Primary queries only (skip no-diacritic variants)
+python -m scripts.filmot_api.collect --no-secondary
+
+# Phase 2: Filter raw hits into ASI candidates (local, no API calls)
+python -m scripts.filmot_api.filter_candidates
+
+# Show more sample candidates
+python -m scripts.filmot_api.filter_candidates --sample 20
+
+# Phase 3: LLM validation of filmot API candidates (Modal + vLLM)
+modal run scripts/filmot_api/llm_validate.py
+
+# Quick test (500 candidates)
+modal run scripts/filmot_api/llm_validate.py --max-candidates 500
+
+# Resume from checkpoint after interruption
+modal run scripts/filmot_api/llm_validate.py --resume
+
+# Custom batch size
+modal run scripts/filmot_api/llm_validate.py --batch-size 100
+
+# Extraction Strategy Experiments (on RedditRoAP + PoPreRo)
+python -m experiments.baseline_pattern_matching.extract_baseline
+python -m experiments.bootstrapping.bootstrap_candidates
+python -m experiments.embedding_similarity.embedding_candidates
+python -m experiments.llm_filtering.filter_candidates
+python -m scripts.distributional_mining.run
+
 # NOTE: Filmot search is currently blocked by Cloudflare. Alternatives:
 # - Manually search filmot.com, save video IDs to data/filmot_video_ids.jsonl
 # - Then run: python -m scripts.filmot.extract_candidates --phase transcripts
@@ -91,6 +132,9 @@ FULG Dataset (150B tokens) → streaming extraction → fulg_asi_candidates.json
 
 Filmot/YouTube → filmot search → transcript download → filmot_asi_candidates.jsonl
      (uses same pattern_matcher.py and emotion_seed.json)
+
+Filmot API → paginated subtitle search → raw hits JSONL → pattern filter → filmot_api_candidates.jsonl
+     (replaces blocked Playwright pipeline, uses filmot Python package via RapidAPI)
 ```
 
 ### Core Modules (`scripts/ro_asi/`) - Small Datasets
@@ -160,6 +204,20 @@ The pattern matching and transcript fetching components are tested and working -
 
 Output: `data/filmot_asi_candidates.jsonl` (same schema as `asi_candidates.jsonl` with YouTube-specific fields: `video_id`, `video_title`, `channel`, `views`, `duration_seconds`, `upload_date`)
 
+### Filmot API Extraction (`scripts/filmot_api/`) - ACTIVE
+
+Replacement for the blocked Playwright pipeline, using the `filmot` Python package (v0.0.4) via RapidAPI:
+
+- **config.py**: API key setup (loads `.env`), trigger queries (broad verb phrases without emotion words), `FilmotAPIConfig` dataclass
+- **collect.py**: Phase 1 — paginated `getsearchsubtitles` API calls, 50 results/page, checkpoint/resume per (query, page), dedup by video_id + hit_start
+- **filter_candidates.py**: Phase 2 — local PatternMatcher filtering, zero API calls, dedup by matched text MD5
+
+Two-phase pipeline (vs old 3-phase): API returns subtitle context directly (`ctx_before` + `token` + `ctx_after`), so transcript downloads are unnecessary.
+
+Output files:
+- `data/filmot_api_raw_hits.jsonl` — all API hits (Phase 1)
+- `data/filmot_api_candidates.jsonl` — pattern-matched ASI candidates (Phase 2)
+
 ### Pattern Types
 
 Two pattern categories differentiate adjective vs noun usage:
@@ -187,6 +245,23 @@ This prevents false positives like "sunt elev" (I am a student) being matched as
 - The "sunt" pattern is ambiguous (1st person "I am" vs 3rd person plural "they are") - some noise is acceptable
 - RoEmoLex contains many non-affective words (professions, objects) - use curated list instead for precision
 
+### Experiments (`experiments/`)
+
+5 extraction strategies evaluated on RedditRoAP + PoPreRo (54,623 texts):
+
+- **baseline_pattern_matching/**: 6 Ekman emotions only → 234 candidates (floor comparison)
+- **bootstrapping/**: MASIVE-style `"sunt X și Y"` seed expansion → 428 candidates (+4 new words)
+- **llm_filtering/**: Qwen2.5-7B-Instruct validates candidates → 1,687 kept / 2,255 input (74.8%)
+- **embedding_similarity/**: `intfloat/multilingual-e5-base` semantic search → 1,664 candidates (1,257 novel)
+- **distributional_mining/** (in `scripts/`): Pattern-based word discovery → 538 candidates, 235 new words
+
+GPU experiments use Modal (A10G/T4). See `EXPERIMENT_CONCLUSIONS.md` for full analysis.
+
+### Distributional Mining (`scripts/distributional_mining/`)
+
+- **run.py**: Discovers emotion words via explicit labeling patterns (`un sentiment de X`, `plin de X`, etc.)
+- Output: `data/distributional_asi_candidates.jsonl`, `data/distributional_expanded_seed.json`
+
 ## References
 
-See `ROMANIAN_ASI_PLAN.md` for detailed methodology, and `/references/` for MASIVE, RoEmoLex, and FULG papers.
+See `EXPERIMENT_CONCLUSIONS.md` for strategy comparison, `BOOTSTRAPPING_ANALYSIS.md` for methodology details, and `/references/` for MASIVE, RoEmoLex, and FULG papers.

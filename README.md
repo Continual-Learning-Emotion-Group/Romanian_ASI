@@ -1,6 +1,6 @@
 # Romanian ASI Benchmark - Project Status
 
-**Last Updated:** 2026-02-17
+**Last Updated:** 2026-02-27
 
 ## Overview
 
@@ -132,28 +132,73 @@ Filmot.com (YouTube subtitle search) uses aggressive bot detection that blocks P
 
 ---
 
+## Extraction Strategy Experiments
+
+Five parallel strategies were evaluated on RedditRoAP + PoPreRo (54,623 texts) to improve extraction beyond basic pattern matching. See `EXPERIMENT_CONCLUSIONS.md` for full analysis.
+
+| # | Strategy | Candidates | Novel Finds | Status |
+|---|----------|-----------|-------------|--------|
+| 1 | Pattern Matching (baseline) | 234 | — | ✅ Complete |
+| 2 | MASIVE Bootstrapping | 428 | +4 new words | ✅ Complete |
+| 3 | LLM Filtering (Qwen2.5-7B) | 1,687 validated / 2,255 input | Validates others | ✅ Complete |
+| 4 | Embedding Similarity | 1,664 | 1,257 novel | ✅ Complete |
+| 5 | Distributional Mining | 538 | 392 from new words | ✅ Complete |
+
+**Combined: ~2,800 unique candidates, 1,687 LLM-validated**
+
+### Key Findings from Experiments
+
+1. **Corpus size is the bottleneck** — bootstrapping saturated at round 3 on 54K texts (MASIVE found 1,600 words from 6 seeds on massive English Reddit)
+2. **Embeddings give the best ROI** — 5-7x more candidates than regex alone, capturing paraphrases the regex misses
+3. **Fear is overrepresented** in Romanian informal text — `mi-e frică` is extremely common
+4. **"Trust" is unreliable** — 59.5% false positive rate (words like `sigur` = "sure" used non-emotionally)
+5. **LLM filtering provides actionable seed curation** — top false positives: sigur (208x), curios (183x), bine (57x)
+6. **`sunt` pattern is double-edged** — productive (63% of matches) but noisy (68.5% precision vs `mă simt` at 99.1%)
+
+### Experiment Data Files
+
+| File | Size | Description |
+|------|------|-------------|
+| `reddit_baseline_candidates.jsonl` | 543 KB | 234 baseline candidates (6 Ekman emotions) |
+| `bootstrapped_asi_candidates.jsonl` | 850 KB | 428 bootstrapping candidates |
+| `llm_filtered_candidates.jsonl` | 3.0 MB | 1,687 LLM-validated candidates |
+| `llm_filter_results.jsonl` | 4.0 MB | All 2,255 with LLM judgments |
+| `embedding_asi_candidates.jsonl` | 3.8 MB | 1,664 embedding-based candidates |
+| `distributional_asi_candidates.jsonl` | 1.1 MB | 538 distributional mining candidates |
+| `distributional_expanded_seed.json` | 14 KB | 251 discovered emotion words |
+
+---
+
 ## Project Structure
 
 ```
 Romanian_ASI/
-├── README.md                    # This file (project status & documentation)
-├── CLAUDE.md                    # Development guide for Claude Code
-├── requirements.txt             # Python dependencies
+├── README.md                            # This file
+├── CLAUDE.md                            # Development guide for Claude Code
+├── EXPERIMENT_CONCLUSIONS.md            # Strategy comparison & findings
+├── EXTRACTION_STRATEGIES.md             # Strategy overview
+├── BOOTSTRAPPING_ANALYSIS.md            # Bootstrapping methodology
+├── requirements.txt
 │
 ├── data/
 │   ├── merged_corpus.jsonl              # 106K records from 6 datasets
-│   ├── asi_candidates.jsonl             # 4,282 samples (small datasets)
-│   ├── asi_candidates.stats.json
+│   ├── asi_candidates.jsonl             # 5,565 samples (small datasets)
 │   ├── fulg_asi_candidates.jsonl        # 21,184 samples (FULG)
-│   ├── fulg_asi_candidates.stats.json
+│   ├── emotion_seed.json               # 511 curated affective words
 │   ├── fulg_extraction_checkpoint.json  # Resume point
 │   ├── fulg_extraction_analysis.json    # Detailed statistics
-│   ├── emotion_seed.json               # 511 curated affective words
-│   └── roemolex/                        # RoEmoLex V3 CSV files
+│   │
+│   │   # Experiment outputs
+│   ├── reddit_baseline_candidates.jsonl       # Baseline (234)
+│   ├── bootstrapped_asi_candidates.jsonl      # Bootstrapping (428)
+│   ├── llm_filtered_candidates.jsonl          # LLM-validated (1,687)
+│   ├── llm_filter_results.jsonl               # All LLM judgments (2,255)
+│   ├── embedding_asi_candidates.jsonl         # Embedding similarity (1,664)
+│   ├── distributional_asi_candidates.jsonl    # Distributional mining (538)
+│   ├── distributional_expanded_seed.json      # 251 discovered words
+│   └── roemolex/                              # RoEmoLex V3 CSV files
 │
 ├── scripts/
-│   ├── explore_fulg_dataset.py          # FULG dataset exploration utility
-│   │
 │   ├── ro_asi/                          # Core extraction pipeline
 │   │   ├── pattern_matcher.py           # 18 Romanian "I feel" patterns
 │   │   ├── curated_affective_states.py  # 511 emotion words
@@ -163,13 +208,37 @@ Romanian_ASI/
 │   │   └── load_roemolex.py             # RoEmoLex lexicon loader
 │   │
 │   ├── fulg/                            # FULG streaming extraction
-│   │   └── extract_candidates.py        # HuggingFace streaming + context extraction
+│   │   └── extract_candidates.py
 │   │
-│   └── filmot/                          # YouTube extraction (blocked)
-│       ├── config.py                    # Extraction configuration
-│       ├── searcher.py                  # Playwright-based search
-│       ├── transcript_fetcher.py        # youtube-transcript-api wrapper
-│       └── extract_candidates.py        # 3-phase pipeline
+│   ├── filmot/                          # YouTube extraction (blocked)
+│   │   ├── config.py
+│   │   ├── searcher.py
+│   │   ├── transcript_fetcher.py
+│   │   └── extract_candidates.py
+│   │
+│   ├── distributional_mining/           # Pattern-based word discovery
+│   │   └── run.py
+│   │
+│   ├── explore_fulg_dataset.py
+│   ├── sample_popplero.py
+│   └── sample_reddit_roap.py
+│
+├── experiments/                         # Extraction strategy experiments
+│   ├── baseline_pattern_matching/
+│   │   ├── README.md
+│   │   └── extract_baseline.py
+│   ├── bootstrapping/
+│   │   ├── RESULTS.md
+│   │   └── bootstrap_candidates.py
+│   ├── embedding_similarity/
+│   │   ├── ANALYSIS.md
+│   │   ├── embedding_candidates.py
+│   │   └── modal_embeddings.py          # Modal GPU wrapper
+│   └── llm_filtering/
+│       ├── RESULTS.md
+│       ├── config.py
+│       ├── filter_candidates.py
+│       └── modal_filter.py              # Modal GPU wrapper
 │
 ├── references/                          # Research papers
 │   ├── MASIVE_paper.pdf
@@ -193,12 +262,12 @@ Romanian_ASI/
 18 Romanian patterns organized into two categories:
 
 **Primary (adjectives with "mă simt"):**
-- `mă simt [adj]` - present
+- `mă simt [adj]` - present (99.1% precision)
 - `m-am simțit [adj]` - perfect
 - `mă simțeam [adj]` - imperfect
 
 **Secondary (nouns with "am", "mi-e"):**
-- `sunt [adj]` - present (most common)
+- `sunt [adj]` - present (most common, 68.5% precision)
 - `mi-e [noun]` - dative short form
 - `am [noun]` - have + emotion noun
 - `îmi este [noun]` - dative formal
@@ -238,17 +307,26 @@ python -m scripts.fulg.extract_candidates --max-samples 50000
 
 # Test pattern matcher
 python -m scripts.ro_asi.pattern_matcher
+
+# Run experiments (on RedditRoAP + PoPreRo)
+python -m experiments.baseline_pattern_matching.extract_baseline
+python -m experiments.bootstrapping.bootstrap_candidates
+python -m experiments.embedding_similarity.embedding_candidates
+python -m experiments.llm_filtering.filter_candidates
+python -m scripts.distributional_mining.run
 ```
 
 ---
 
 ## Next Steps
 
-1. **Resume FULG extraction** to reach 50K samples target
-2. **Explore YouTube alternatives** (yt-dlp channel crawling, manual filmot export)
-3. **Quality review** of extracted samples
-4. **Annotation** for benchmark validation
-5. **Train/test split** for final benchmark
+1. **Curate seed list** using LLM filtering findings (remove problematic words like sigur, curios)
+2. **Resume FULG extraction** to reach 50K+ samples target
+3. **Run bootstrapping + distributional mining on FULG** (larger corpus should yield more discoveries)
+4. **Run LLM filtering as second pass** on all strategies' output
+5. **Human annotation** on ~500 samples for real precision numbers
+6. **Combine all strategies** into final benchmark with confidence scores
+7. **Train/test split** for final benchmark release
 
 ---
 
@@ -261,3 +339,6 @@ python -m scripts.ro_asi.pattern_matcher
 | `fulg_asi_candidates.jsonl` | 37 MB | 21,184 FULG samples |
 | `emotion_seed.json` | 40 KB | 511 curated emotion words |
 | `fulg_extraction_analysis.json` | 12 KB | Detailed FULG statistics |
+| `llm_filtered_candidates.jsonl` | 3 MB | 1,687 LLM-validated candidates |
+| `embedding_asi_candidates.jsonl` | 4 MB | 1,664 embedding-based candidates |
+| `distributional_expanded_seed.json` | 14 KB | 251 discovered emotion words |
