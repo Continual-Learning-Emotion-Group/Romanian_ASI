@@ -346,7 +346,7 @@ def save_seed(output_path=None):
     from pathlib import Path
 
     if output_path is None:
-        output_path = Path(__file__).parent / "emotion_seed.json"
+        output_path = Path(__file__).parent / "seed_bridge_only.json"
 
     seed = build_seed()
 

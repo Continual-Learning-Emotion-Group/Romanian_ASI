@@ -8,7 +8,7 @@ RoEmoLex has ~9K Romanian words linked to WordNet 3.0 synset IDs.
 This script bridges them using UPC/TALP offset mapping files (WN 1.6 → 3.0).
 
 Usage:
-    python -m pipeline.test_wn_affect_bridge
+    python -m pipeline.seed.test_wn_affect_bridge
 """
 
 import csv
@@ -17,11 +17,11 @@ import xml.etree.ElementTree as ET
 from collections import Counter
 from pathlib import Path
 
-PIPELINE_DIR = Path(__file__).parent
-PROJECT_ROOT = PIPELINE_DIR.parent
+SEED_DIR = Path(__file__).parent
+PROJECT_ROOT = SEED_DIR.parent.parent
 ROEMOLEX_DIR = PROJECT_ROOT / "data" / "roemolex"
-WN_AFFECT_XML = PIPELINE_DIR / "wn-affect-1.1" / "a-synsets.xml"
-WN_MAPPING_DIR = PIPELINE_DIR / "wn-mappings"
+WN_AFFECT_XML = SEED_DIR / "wn-affect-1.1" / "a-synsets.xml"
+WN_MAPPING_DIR = SEED_DIR / "wn-mappings"
 
 
 def load_wn16_to_30_mapping():
@@ -234,7 +234,7 @@ def main():
         "all_matched_words": sorted(unique_words),
     }
 
-    out_path = PIPELINE_DIR / "wn_affect_bridge_results.json"
+    out_path = SEED_DIR / "wn_affect_bridge_results.json"
     with open(out_path, 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
     print(f"\nResults saved to {out_path}")
