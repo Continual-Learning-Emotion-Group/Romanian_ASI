@@ -1,0 +1,87 @@
+{
+  "initial_seed_size": 375,
+  "rounds": [
+    {
+      "round": 1,
+      "seed_size_before": 375,
+      "seed_size_after": 381,
+      "conjunction_matches": 367,
+      "unique_candidates": 165,
+      "accepted": 6,
+      "new_words_added": 6,
+      "rejected_reasons": {
+        "stopword": 30,
+        "too_short": 29,
+        "gender_mismatch": 24,
+        "low_co_occurrence": 53,
+        "already_in_seed": 23
+      },
+      "accepted_words": [
+        {
+          "word": "aproape",
+          "emotions": [
+            "anger"
+          ],
+          "confidence": 0.88
+        },
+        {
+          "word": "deoarece",
+          "emotions": [
+            "sadness"
+          ],
+          "confidence": 0.7
+        },
+        {
+          "word": "deși",
+          "emotions": [
+            "cheerlessness",
+            "joy"
+          ],
+          "confidence": 0.58
+        },
+        {
+          "word": "sper",
+          "emotions": [
+            "contentment",
+            "disgust"
+          ],
+          "confidence": 0.48
+        },
+        {
+          "word": "asteptam",
+          "emotions": [
+            "distress",
+            "happiness"
+          ],
+          "confidence": 0.48
+        },
+        {
+          "word": "iar",
+          "emotions": [
+            "sadness"
+          ],
+          "confidence": 0.48
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "seed_size_before": 381,
+      "seed_size_after": 381,
+      "conjunction_matches": 371,
+      "unique_candidates": 167,
+      "accepted": 0,
+      "new_words_added": 0,
+      "rejected_reasons": {
+        "stopword": 30,
+        "too_short": 29,
+        "gender_mismatch": 25,
+        "low_co_occurrence": 54,
+        "already_in_seed": 29
+      },
+      "accepted_words": []
+    }
+  ],
+  "final_seed_size": 381,
+  "new_words_count": 6
+}

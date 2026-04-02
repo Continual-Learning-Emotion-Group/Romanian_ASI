@@ -2,18 +2,21 @@
 """
 Stream raw records from the FULG dataset (150B tokens, 289GB).
 
-No filtering — just streams N records from HuggingFace and saves them as JSONL.
-This is the raw collection step; filtering happens in a later pipeline stage.
+Saves JSONL records from HuggingFace streaming. Optionally filters by trigger
+words (verb stems from the pattern matcher) to keep only records likely to
+contain "I feel" patterns.
 
 Usage:
     python -m pipeline.collect.stream_fulg
     python -m pipeline.collect.stream_fulg --max-records 100000
+    python -m pipeline.collect.stream_fulg --no-trigger-filter
     python -m pipeline.collect.stream_fulg --min-language-score 0.8
 """
 
 import argparse
 import json
 from pathlib import Path
+from typing import Optional, Set
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 
@@ -25,6 +28,7 @@ def stream_fulg(
     max_records: int = 50_000,
     min_language_score: float = 0.0,
     min_text_length: int = 0,
+    trigger_words: Optional[Set[str]] = None,
     verbose: bool = True,
 ):
     """
@@ -35,11 +39,15 @@ def stream_fulg(
         max_records: Stop after this many saved records.
         min_language_score: Only keep records above this Romanian confidence.
         min_text_length: Only keep records with text longer than this.
+        trigger_words: If given, only keep records containing at least one
+                       of these words/phrases (case-insensitive).
         verbose: Print progress.
     """
     from datasets import load_dataset
 
     print(f"Streaming from {DATASET_ID}...")
+    if trigger_words:
+        print(f"  Trigger filter: {len(trigger_words)} words/phrases")
     ds = load_dataset(DATASET_ID, split="train", streaming=True)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -58,6 +66,13 @@ def stream_fulg(
             if min_text_length > 0 and len(text) < min_text_length:
                 skipped += 1
                 continue
+
+            # Trigger word filter
+            if trigger_words:
+                text_lower = text.lower()
+                if not any(tw in text_lower for tw in trigger_words):
+                    skipped += 1
+                    continue
 
             row = {
                 "id": f"fulg_{record.get('digest', '')[:12]}",
@@ -78,14 +93,14 @@ def stream_fulg(
             if saved >= max_records:
                 break
 
-    print(f"\nDone: {saved:,} records saved, {skipped:,} skipped")
+    print(f"\nDone: {saved:,} records saved, {skipped:,} skipped (scanned {i + 1:,})")
     print(f"Output: {output_path}")
     return saved
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Stream raw FULG records (no filtering)"
+        description="Stream FULG records with optional trigger word filter"
     )
     parser.add_argument(
         "--max-records", type=int, default=50_000,
@@ -100,6 +115,10 @@ def main():
         help="Minimum text length in chars, 0 = no filter (default: 0)",
     )
     parser.add_argument(
+        "--no-trigger-filter", action="store_true",
+        help="Disable trigger word filter (saves all records)",
+    )
+    parser.add_argument(
         "--output", type=Path, default=None,
         help="Output JSONL path",
     )
@@ -111,11 +130,18 @@ def main():
 
     output = args.output or DATA_DIR / "fulg_raw.jsonl"
 
+    # Load trigger words from pattern matcher (unless disabled)
+    trigger_words = None
+    if not args.no_trigger_filter:
+        from pipeline.utils.pattern_matcher import get_trigger_words
+        trigger_words = get_trigger_words()
+
     stream_fulg(
         output_path=output,
         max_records=args.max_records,
         min_language_score=args.min_language_score,
         min_text_length=args.min_text_length,
+        trigger_words=trigger_words,
         verbose=not args.quiet,
     )
 

@@ -6,25 +6,33 @@ Unified pipeline for constructing the Romanian ASI benchmark.
 pipeline/
 ├── README.md
 ├── data/                              # Pipeline outputs
-│   └── merged_corpus.jsonl            # Unified corpus (106K records)
+│   ├── merged_corpus.jsonl            # Unified corpus (106K records)
+│   └── enriched_seed.json             # Enriched seed (after seed enrichment)
+├── utils/                             # Shared utilities
+│   ├── text_utils.py                  # Diacritics normalization, sentence splitting
+│   ├── inflect.py                     # Lemma → inflected forms (MULTEXT-East)
+│   ├── pattern_matcher.py             # 23 "I feel" patterns, PatternMatcher
+│   ├── corpus_reader.py               # Unified JSONL reader
+│   └── stoplists.py                   # Minimal stoplist, gender inference
 ├── seed/                              # Seed construction
 │   ├── bridge.py                      # Bridge-only seed (229 words)
 │   ├── merged.py                      # Bridge + old seed merged (375 words)
+│   ├── enriched.py                    # Loader for enriched seed
 │   ├── test_wn_affect_bridge.py       # Bridge script (RoEmoLex × WN-Affect)
 │   ├── wn_affect_bridge_results.json  # Raw bridge output (398 words)
 │   ├── wn-affect-1.1/                 # WordNet-Affect data
 │   ├── wn-mappings/                   # WN 1.6→3.0 offset mappings
 │   └── multext-east/                  # Romanian morphological lexicon
-└── collect/                           # Data collection
-    ├── merge_small.py                 # Merge 6 small datasets
-    ├── stream_fulg.py                 # Stream from FULG (150B tokens)
-    ├── stream_filmot.py               # Stream from Filmot API (YouTube subtitles)
-    └── small_datasets/                # Raw source data
-        ├── LaRoSeDa/                  # Product reviews (sentiment)
-        ├── PoPreRo/                   # News popularity prediction
-        ├── RED/                       # Emotion tweets (v1 + v2)
-        ├── RoSent/                    # Sentiment analysis
-        └── RedditRoAP/               # Romanian Reddit posts
+├── collect/                           # Data collection
+│   ├── merge_small.py                 # Merge 6 small datasets
+│   ├── stream_fulg.py                 # Stream from FULG (trigger-filtered)
+│   ├── stream_filmot.py               # Stream from Filmot API
+│   └── small_datasets/                # Raw source data
+└── seed_enrichment/                   # Seed enrichment
+    ├── run.py                         # CLI: runs both methods, merges
+    ├── bootstrapping.py               # MASIVE-style "I feel X and Y"
+    ├── distributional.py              # "un sentiment de X" discovery
+    └── merge_results.py               # Combine outputs → enriched seed
 ```
 
 ## Seed Construction (`seed/`)
@@ -128,13 +136,13 @@ Raw datasets live in `collect/small_datasets/` (not checked into git).
 
 ### FULG (`collect/stream_fulg.py`)
 
-Streams raw records from the FULG dataset (150B tokens, 289GB Romanian web text)
-via HuggingFace Datasets in streaming mode. No filtering — saves raw text with
-metadata for downstream processing.
+Streams records from the FULG dataset (150B tokens, 289GB Romanian web text)
+via HuggingFace Datasets in streaming mode. By default, filters by trigger words
+from the pattern matcher to keep only records likely to contain "I feel" patterns.
 
 Run with `python -m pipeline.collect.stream_fulg --max-records 50000`.
 
-Optional pre-filters: `--min-language-score 0.8`, `--min-text-length 100`.
+Options: `--min-language-score 0.8`, `--min-text-length 100`, `--no-trigger-filter`.
 
 ### Filmot API (`collect/stream_filmot.py`)
 
@@ -145,6 +153,57 @@ saves raw subtitle context for downstream filtering.
 Requires: `pip install filmot python-dotenv` and `RAPIDAPI_KEY` in `.env`.
 
 Run with `python -m pipeline.collect.stream_filmot --max-hits 50000`.
+
+## Shared Utilities (`utils/`)
+
+### Pattern Matcher (`utils/pattern_matcher.py`)
+
+23 Romanian "I feel" regex patterns (18 original + 5 new colloquial/conditional/
+subjunctive forms). Auto-expands lemma seeds to all gender/number/diacritics
+forms via MULTEXT-East.
+
+New patterns added: `o să mă simt` (colloquial future), `o să fiu` (colloquial
+future of "to be"), `m-aș simți` (conditional), `să mă simt` (subjunctive),
+`mă fac` (reflexive "I become").
+
+Also exports `get_trigger_words()` and `get_filmot_queries()` as single source
+of truth for FULG/Filmot collection scripts.
+
+### Inflection (`utils/inflect.py`)
+
+Expands lemmas to all inflected forms using MULTEXT-East (428K entries).
+E.g., `fericit` → `{fericit, fericită, fericite, fericiți, fericita, ...}`.
+
+### Corpus Reader (`utils/corpus_reader.py`)
+
+Unified JSONL reader: `iter_corpus(data_dir)` yields `(id, text, source)` from
+all `*.jsonl` files in `pipeline/data/`. Handles different text field names
+(`text`, `full_context`). Optional trigger word pre-filter.
+
+## Seed Enrichment (`seed_enrichment/`)
+
+Discovers new seed words from text data. Reads from all JSONL files in
+`pipeline/data/` (merged small datasets + optional FULG/Filmot dumps).
+
+Run with `python -m pipeline.seed_enrichment.run`.
+
+### Method 1: Bootstrapping (`bootstrapping.py`)
+
+MASIVE-style conjunction mining: finds "I feel X and Y" patterns where X is a
+known seed word and Y is a candidate. Iterative (4 rounds by default). Starts
+from the 375-word merged seed. Validates candidates by co-occurrence threshold,
+gender agreement, and stopword filtering.
+
+### Method 2: Distributional Mining (`distributional.py`)
+
+Discovers emotion words via explicit labeling patterns (no seed needed):
+"un sentiment de X", "o stare de X", "plin de X", "cuprins de X", etc.
+Primarily finds nouns.
+
+### Output
+
+Both methods' results are merged and deduplicated into `data/enriched_seed.json`,
+loadable via `pipeline.seed.enriched.build_enriched_seed()`.
 
 ## External Data (`seed/`)
 
@@ -175,8 +234,7 @@ forms to lemmas with morphosyntactic descriptors.
 
 File: `wfl-ro.txt` (tab-separated: form, lemma, MSD tag)
 
-Used for: resolving inflected forms to lemmas, comparing seed lists at the
-lemma level, and (future) auto-expanding lemma seeds to all gender/number
+Used by `utils/inflect.py` to expand lemma seeds to all gender/number/diacritics
 forms for the pattern matcher.
 
 Source: https://www.clarin.si/repository/xmlui/handle/11356/1041
