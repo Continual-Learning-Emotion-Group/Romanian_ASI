@@ -111,20 +111,30 @@ def build_wn30_affect_set(affect_16_synsets, wn_mapping):
     return affect_30, unmapped
 
 
+VALID_POS = {'Adjective', 'Noun', 'Adverb'}
+
+
 def load_roemolex():
-    """Load RoEmoLex V3 entries with ENG30 synset IDs."""
+    """Load RoEmoLex V3 entries with ENG30 synset IDs, excluding verbs and expressions."""
     entries = []
+    skipped = 0
     for fname in sorted(ROEMOLEX_DIR.glob("*.csv")):
         with open(fname, encoding='utf-8') as f:
             reader = csv.DictReader(f, delimiter=';')
             for row in reader:
                 sid = row.get('wn_synset_id', '').strip()
-                if sid.startswith('ENG30-'):
-                    entries.append({
-                        'word': row['word'].strip(),
-                        'synset_id': sid,
-                        'pos': row.get('part_of_speech', '').strip(),
-                    })
+                pos = row.get('part_of_speech', '').strip()
+                if not sid.startswith('ENG30-'):
+                    continue
+                if pos not in VALID_POS:
+                    skipped += 1
+                    continue
+                entries.append({
+                    'word': row['word'].strip(),
+                    'synset_id': sid,
+                    'pos': pos,
+                })
+    print(f"  Skipped {skipped} entries (verbs, expressions, etc.)")
     return entries
 
 
@@ -198,15 +208,15 @@ def main():
     for w, c in noun_hits:
         print(f"  {w} -> {c}")
 
-    # Verb matches
-    verb_hits = sorted(set((h['word'], h['affect_categ']) for h in hits if h['pos'] == 'Verb'))
-    print(f"\nVerb matches ({len(verb_hits)}, first 40):")
-    for w, c in verb_hits[:40]:
+    # Adverb matches
+    adv_hits = sorted(set((h['word'], h['affect_categ']) for h in hits if h['pos'] == 'Adverb'))
+    print(f"\nAdverb matches ({len(adv_hits)}):")
+    for w, c in adv_hits:
         print(f"  {w} -> {c}")
 
     # Save results
     results = {
-        "method": "UPC/TALP WN 1.6 → 3.0 offset mapping",
+        "method": "UPC/TALP WN 1.6 → 3.0 offset mapping (verbs excluded)",
         "summary": {
             "wn_affect_16_synsets": len(all_affect_16),
             "wn_30_mapped_synsets": len(affect_30),
@@ -220,7 +230,7 @@ def main():
         "by_pos": dict(pos_hits.most_common()),
         "adjectives": [{"word": w, "affect_categ": c} for w, c in adj_hits],
         "nouns": [{"word": w, "affect_categ": c} for w, c in noun_hits],
-        "verbs": [{"word": w, "affect_categ": c} for w, c in verb_hits],
+        "adverbs": [{"word": w, "affect_categ": c} for w, c in adv_hits],
         "all_matched_words": sorted(unique_words),
     }
 
