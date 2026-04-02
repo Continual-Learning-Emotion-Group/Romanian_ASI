@@ -17,6 +17,8 @@ pipeline/
 │   └── multext-east/                  # Romanian morphological lexicon
 └── collect/                           # Data collection
     ├── merge_small.py                 # Merge 6 small datasets
+    ├── stream_fulg.py                 # Stream from FULG (150B tokens)
+    ├── stream_filmot.py               # Stream from Filmot API (YouTube subtitles)
     └── small_datasets/                # Raw source data
         ├── LaRoSeDa/                  # Product reviews (sentiment)
         ├── PoPreRo/                   # News popularity prediction
@@ -123,6 +125,26 @@ Output schema:
 ```
 
 Raw datasets live in `collect/small_datasets/` (not checked into git).
+
+### FULG (`collect/stream_fulg.py`)
+
+Streams raw records from the FULG dataset (150B tokens, 289GB Romanian web text)
+via HuggingFace Datasets in streaming mode. No filtering — saves raw text with
+metadata for downstream processing.
+
+Run with `python -m pipeline.collect.stream_fulg --max-records 50000`.
+
+Optional pre-filters: `--min-language-score 0.8`, `--min-text-length 100`.
+
+### Filmot API (`collect/stream_filmot.py`)
+
+Streams raw subtitle hits from the Filmot API (RapidAPI) by searching for
+Romanian "I feel" trigger phrases in YouTube subtitles. No pattern matching —
+saves raw subtitle context for downstream filtering.
+
+Requires: `pip install filmot python-dotenv` and `RAPIDAPI_KEY` in `.env`.
+
+Run with `python -m pipeline.collect.stream_filmot --max-hits 50000`.
 
 ## External Data (`seed/`)
 
