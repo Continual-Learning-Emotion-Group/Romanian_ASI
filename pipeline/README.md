@@ -5,14 +5,24 @@ Unified pipeline for constructing the Romanian ASI benchmark.
 ```
 pipeline/
 ├── README.md
-└── seed/                              # Seed construction
-    ├── bridge.py                      # Bridge-only seed (229 words)
-    ├── merged.py                      # Bridge + old seed merged (375 words)
-    ├── test_wn_affect_bridge.py       # Bridge script (RoEmoLex × WN-Affect)
-    ├── wn_affect_bridge_results.json  # Raw bridge output (398 words)
-    ├── wn-affect-1.1/                 # WordNet-Affect data
-    ├── wn-mappings/                   # WN 1.6→3.0 offset mappings
-    └── multext-east/                  # Romanian morphological lexicon
+├── data/                              # Pipeline outputs
+│   └── merged_corpus.jsonl            # Unified corpus (106K records)
+├── seed/                              # Seed construction
+│   ├── bridge.py                      # Bridge-only seed (229 words)
+│   ├── merged.py                      # Bridge + old seed merged (375 words)
+│   ├── test_wn_affect_bridge.py       # Bridge script (RoEmoLex × WN-Affect)
+│   ├── wn_affect_bridge_results.json  # Raw bridge output (398 words)
+│   ├── wn-affect-1.1/                 # WordNet-Affect data
+│   ├── wn-mappings/                   # WN 1.6→3.0 offset mappings
+│   └── multext-east/                  # Romanian morphological lexicon
+└── collect/                           # Data collection
+    ├── merge_small.py                 # Merge 6 small datasets
+    └── small_datasets/                # Raw source data
+        ├── LaRoSeDa/                  # Product reviews (sentiment)
+        ├── PoPreRo/                   # News popularity prediction
+        ├── RED/                       # Emotion tweets (v1 + v2)
+        ├── RoSent/                    # Sentiment analysis
+        └── RedditRoAP/               # Romanian Reddit posts
 ```
 
 ## Seed Construction (`seed/`)
@@ -88,6 +98,31 @@ Every word in both seeds was checked against:
    - Yes: emotions, moods, bodily-felt states, psychological states
    - No: epistemic states, personality traits, external qualities,
      causative/stimulus adjectives, social roles, events/situations
+
+## Data Collection (`collect/`)
+
+### Small Datasets (`collect/merge_small.py`)
+
+Merges 6 Romanian NLP datasets into `data/merged_corpus.jsonl` (106K records)
+with a unified schema. Deduplicates by MD5 text hash.
+
+| Dataset | Records | Type |
+|---------|---------|------|
+| LaRoSeDa | 14,982 | Product reviews (sentiment) |
+| PoPreRo | 28,103 | News articles (popularity) |
+| RED v1 | 4,036 | Tweets, single-label emotion (5 classes) |
+| RED v2 | 5,199 | Tweets, multi-label emotion (7 classes) |
+| RoSent | 27,338 | Reviews (sentiment, binary) |
+| RedditRoAP | 26,269 | Reddit posts (authorship profiling) |
+
+Run with `python -m pipeline.collect.merge_small`.
+
+Output schema:
+```json
+{"id": "source_123", "text": "...", "source": "laroseda", "split": "train", "original_labels": {...}}
+```
+
+Raw datasets live in `collect/small_datasets/` (not checked into git).
 
 ## External Data (`seed/`)
 
