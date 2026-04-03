@@ -172,8 +172,129 @@ def infer_emotions(candidate: CandidateEvidence, threshold: float = 0.3) -> List
 
 
 # ---------------------------------------------------------------------------
-# Main bootstrapping loop
+# Single-pass scanning (works for both loaded texts and streams)
 # ---------------------------------------------------------------------------
+
+def _scan_texts(
+    text_iterator,
+    conj_patterns: List[re.Pattern],
+    norm_seed_lookup: Dict[str, Dict[str, Any]],
+) -> Tuple[Dict[str, CandidateEvidence], int]:
+    """
+    Scan texts for conjunction matches. Works with any iterator of (orig, normalized)
+    text pairs or (record_id, text, source) tuples.
+
+    Returns (candidates_dict, match_count).
+    """
+    candidates: Dict[str, CandidateEvidence] = {}
+    match_count = 0
+
+    for item in text_iterator:
+        # Accept both (orig, norm) pairs and (id, text, source) tuples
+        if len(item) == 2:
+            orig_text, norm_text = item
+        else:
+            _, orig_text, _ = item
+            norm_text = normalize_text(orig_text)
+
+        for pat in conj_patterns:
+            for m in pat.finditer(norm_text):
+                groups = m.groups()
+                if len(groups) < 2:
+                    continue
+                x_word = groups[-2].lower()
+                y_word_norm = groups[-1].lower()
+
+                x_info = norm_seed_lookup.get(x_word)
+                if not x_info:
+                    continue
+
+                match_count += 1
+
+                # Recover original Y form
+                y_orig = y_word_norm
+                for w in re.findall(r"\b\w+\b", orig_text, re.UNICODE):
+                    if normalize_text(w) == y_word_norm:
+                        y_orig = w
+                        break
+
+                sentence = extract_sentence(orig_text, m.start(), m.end())
+                verb_form = m.group(0)[:30]
+
+                if y_word_norm not in candidates:
+                    candidates[y_word_norm] = CandidateEvidence(
+                        word=y_orig, normalized=y_word_norm,
+                    )
+                candidates[y_word_norm].add_evidence(
+                    x_seed=x_word,
+                    x_emotions=x_info["emotions"],
+                    x_gender=x_info["gender"],
+                    verb_form=verb_form,
+                    sentence=sentence,
+                )
+
+    return candidates, match_count
+
+
+def _validate_and_accept(
+    candidates: Dict[str, CandidateEvidence],
+    current_seed_normalized: Set[str],
+    co_occurrence_threshold: int,
+    verbose: bool,
+) -> Tuple[List[Dict], Counter]:
+    """Validate candidates and return accepted list + rejection stats."""
+    accepted = []
+    rejected_reasons = Counter()
+
+    for y_norm, evidence in candidates.items():
+        valid, reason = validate_candidate(
+            evidence, current_seed_normalized, co_occurrence_threshold,
+        )
+        if valid:
+            confidence = compute_confidence(evidence)
+            emotions = infer_emotions(evidence)
+            y_gender = infer_gender(evidence.word) or "m"
+            accepted.append({
+                "word": evidence.word,
+                "normalized": y_norm,
+                "emotions": emotions,
+                "gender": y_gender,
+                "confidence": round(confidence, 3),
+                "co_occurring_seeds": sorted(evidence.co_occurring_seeds),
+                "pattern_types": sorted(evidence.pattern_types),
+                "source_count": evidence.source_count,
+                "sample_sentences": evidence.source_sentences[:3],
+            })
+        else:
+            rejected_reasons[reason] += 1
+
+    if verbose:
+        print(f"  Accepted: {len(accepted)}")
+        print(f"  Rejected: {dict(rejected_reasons)}")
+        if accepted:
+            top = sorted(accepted, key=lambda x: -x["confidence"])[:10]
+            print(f"  Top new words: {[a['word'] for a in top]}")
+
+    return accepted, rejected_reasons
+
+
+# ---------------------------------------------------------------------------
+# Main entry points
+# ---------------------------------------------------------------------------
+
+def _build_seed_lookup(
+    seed: Dict[str, Dict[str, Any]],
+) -> Dict[str, Dict[str, Any]]:
+    """Build normalized seed lookup from seed dict."""
+    lookup = {}
+    for word, info in seed.items():
+        lookup[normalize_text(word)] = {
+            "word": word,
+            "emotions": info.get("emotions", []),
+            "gender": info.get("gender", infer_gender(word) or "m"),
+        }
+    return lookup
+
 
 def run_bootstrapping(
     data_dir: Path,
@@ -184,12 +305,11 @@ def run_bootstrapping(
     verbose: bool = True,
 ) -> Dict[str, Any]:
     """
-    Run MASIVE-style bootstrapping.
+    Run multi-round bootstrapping on JSONL files (loaded into memory).
 
     Args:
         data_dir: Directory with JSONL corpus files.
-        seed: Starting seed — dict mapping word → {"emotions": [...], "gender": "m"/"f"}.
-              Typically built from pipeline.seed.merged.
+        seed: Starting seed — word → {"emotions": [...], "gender": "m"/"f"}.
         rounds: Number of bootstrapping rounds.
         co_occurrence_threshold: Min distinct X seeds for Y to be accepted.
         sources: Which JSONL files to use (None = all).
@@ -199,16 +319,14 @@ def run_bootstrapping(
         {"new_words": {word: info}, "provenance": {...}, "expanded_seed": {...}}
     """
     current_seed: Dict[str, Dict[str, Any]] = dict(seed)
-    provenance = {
-        "initial_seed_size": len(current_seed),
-        "rounds": [],
-    }
+    provenance = {"initial_seed_size": len(current_seed), "rounds": []}
+    original_seed_normalized = {normalize_text(w) for w in seed}
 
     if verbose:
         print(f"\nBootstrapping: starting with {len(current_seed)} seed words")
         print(f"  Rounds: {rounds}, Co-occurrence threshold: {co_occurrence_threshold}")
 
-    # Load all texts once
+    # Load all texts once for multi-round scanning
     print("\nLoading corpus...")
     texts = []
     for record_id, text, source in iter_corpus(data_dir, sources=sources):
@@ -217,10 +335,7 @@ def run_bootstrapping(
     if verbose:
         print(f"  Loaded {len(texts):,} texts")
 
-    # Pre-normalize for faster scanning
     normalized_texts = [(t, normalize_text(t)) for t in texts]
-
-    original_seed_normalized = {normalize_text(w) for w in seed}
 
     for round_num in range(1, rounds + 1):
         if verbose:
@@ -228,100 +343,22 @@ def run_bootstrapping(
             print(f"Round {round_num} (seed size: {len(current_seed)})")
             print(f"{'=' * 60}")
 
-        # Build conjunction patterns with current seed
-        seed_words = list(current_seed.keys())
-        conj_patterns = build_conjunction_patterns(seed_words)
-
-        # Normalized seed lookup
-        norm_seed_lookup: Dict[str, Dict[str, Any]] = {}
-        for word, info in current_seed.items():
-            norm_seed_lookup[normalize_text(word)] = {
-                "word": word,
-                "emotions": info.get("emotions", []),
-                "gender": info.get("gender", infer_gender(word) or "m"),
-            }
-
+        conj_patterns = build_conjunction_patterns(list(current_seed.keys()))
+        norm_seed_lookup = _build_seed_lookup(current_seed)
         current_seed_normalized = set(norm_seed_lookup.keys())
 
-        # Scan texts
-        candidates: Dict[str, CandidateEvidence] = {}
-        match_count = 0
-
-        for orig_text, norm_text in normalized_texts:
-            for pat in conj_patterns:
-                for m in pat.finditer(norm_text):
-                    groups = m.groups()
-                    if len(groups) < 2:
-                        continue
-                    x_word = groups[-2].lower()
-                    y_word_norm = groups[-1].lower()
-
-                    x_info = norm_seed_lookup.get(x_word)
-                    if not x_info:
-                        continue
-
-                    match_count += 1
-
-                    # Recover original Y form
-                    y_orig = y_word_norm
-                    for w in re.findall(r"\b\w+\b", orig_text, re.UNICODE):
-                        if normalize_text(w) == y_word_norm:
-                            y_orig = w
-                            break
-
-                    sentence = extract_sentence(orig_text, m.start(), m.end())
-                    verb_form = m.group(0)[:30]
-
-                    if y_word_norm not in candidates:
-                        candidates[y_word_norm] = CandidateEvidence(
-                            word=y_orig, normalized=y_word_norm,
-                        )
-                    candidates[y_word_norm].add_evidence(
-                        x_seed=x_word,
-                        x_emotions=x_info["emotions"],
-                        x_gender=x_info["gender"],
-                        verb_form=verb_form,
-                        sentence=sentence,
-                    )
+        candidates, match_count = _scan_texts(
+            normalized_texts, conj_patterns, norm_seed_lookup,
+        )
 
         if verbose:
             print(f"  Conjunction matches: {match_count}")
             print(f"  Unique Y candidates: {len(candidates)}")
 
-        # Validate
-        accepted = []
-        rejected_reasons = Counter()
+        accepted, rejected_reasons = _validate_and_accept(
+            candidates, current_seed_normalized, co_occurrence_threshold, verbose,
+        )
 
-        for y_norm, evidence in candidates.items():
-            valid, reason = validate_candidate(
-                evidence, current_seed_normalized, co_occurrence_threshold,
-            )
-            if valid:
-                confidence = compute_confidence(evidence)
-                emotions = infer_emotions(evidence)
-                y_gender = infer_gender(evidence.word) or "m"
-                accepted.append({
-                    "word": evidence.word,
-                    "normalized": y_norm,
-                    "emotions": emotions,
-                    "gender": y_gender,
-                    "confidence": round(confidence, 3),
-                    "co_occurring_seeds": sorted(evidence.co_occurring_seeds),
-                    "pattern_types": sorted(evidence.pattern_types),
-                    "source_count": evidence.source_count,
-                    "sample_sentences": evidence.source_sentences[:3],
-                })
-            else:
-                rejected_reasons[reason] += 1
-
-        if verbose:
-            print(f"  Accepted: {len(accepted)}")
-            print(f"  Rejected: {dict(rejected_reasons)}")
-            if accepted:
-                top = sorted(accepted, key=lambda x: -x["confidence"])[:10]
-                print(f"  Top new words: {[a['word'] for a in top]}")
-
-        # Add to seed
         new_words_added = 0
         for a in accepted:
             if a["normalized"] not in current_seed_normalized:
@@ -352,17 +389,76 @@ def run_bootstrapping(
                 print(f"\n  No new words — stopping early at round {round_num}")
             break
 
-    # Separate new words from original seed
-    new_words = {}
-    for word, info in current_seed.items():
-        if normalize_text(word) not in original_seed_normalized:
-            new_words[word] = info
-
+    new_words = {
+        w: info for w, info in current_seed.items()
+        if normalize_text(w) not in original_seed_normalized
+    }
     provenance["final_seed_size"] = len(current_seed)
     provenance["new_words_count"] = len(new_words)
 
-    return {
-        "new_words": new_words,
-        "expanded_seed": current_seed,
-        "provenance": provenance,
+    return {"new_words": new_words, "expanded_seed": current_seed, "provenance": provenance}
+
+
+def run_bootstrapping_streaming(
+    text_iterator,
+    seed: Dict[str, Dict[str, Any]],
+    co_occurrence_threshold: int = 2,
+    verbose: bool = True,
+) -> Dict[str, Any]:
+    """
+    Run single-pass bootstrapping on a streaming text source (e.g., FULG).
+
+    No multi-round — scans the stream once with the full seed.
+
+    Args:
+        text_iterator: Iterator yielding (record_id, text, source) tuples.
+        seed: Starting seed — word → {"emotions": [...], "gender": "m"/"f"}.
+        co_occurrence_threshold: Min distinct X seeds for Y to be accepted.
+        verbose: Print progress.
+
+    Returns:
+        {"new_words": {word: info}, "provenance": {...}}
+    """
+    original_seed_normalized = {normalize_text(w) for w in seed}
+    conj_patterns = build_conjunction_patterns(list(seed.keys()))
+    norm_seed_lookup = _build_seed_lookup(seed)
+
+    if verbose:
+        print(f"\nBootstrapping (streaming): {len(seed)} seed words, single pass")
+
+    candidates, match_count = _scan_texts(
+        text_iterator, conj_patterns, norm_seed_lookup,
+    )
+
+    if verbose:
+        print(f"  Conjunction matches: {match_count}")
+        print(f"  Unique Y candidates: {len(candidates)}")
+
+    accepted, rejected_reasons = _validate_and_accept(
+        candidates, original_seed_normalized, co_occurrence_threshold, verbose,
+    )
+
+    new_words = {}
+    for a in accepted:
+        if a["normalized"] not in original_seed_normalized:
+            new_words[a["word"]] = {
+                "emotions": a["emotions"],
+                "gender": a["gender"],
+            }
+
+    provenance = {
+        "initial_seed_size": len(seed),
+        "mode": "streaming",
+        "conjunction_matches": match_count,
+        "unique_candidates": len(candidates),
+        "accepted": len(accepted),
+        "new_words_count": len(new_words),
+        "rejected_reasons": dict(rejected_reasons),
+        "accepted_words": [
+            {"word": a["word"], "emotions": a["emotions"],
+             "confidence": a["confidence"]}
+            for a in sorted(accepted, key=lambda x: -x["confidence"])
+        ],
     }
+
+    return {"new_words": new_words, "provenance": provenance}

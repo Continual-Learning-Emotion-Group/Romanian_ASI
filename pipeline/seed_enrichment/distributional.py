@@ -2,7 +2,7 @@
 Distributional mining for seed enrichment.
 
 Discovers new emotion words via explicit labeling patterns that don't need a
-seed: "un sentiment de X", "o stare de X", "plin de X", etc.
+seed: "un sentiment de X", "sentimentul de X", "emoție de X", etc.
 
 These patterns primarily discover nouns.
 """
@@ -10,7 +10,7 @@ These patterns primarily discover nouns.
 import re
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from pipeline.utils.text_utils import normalize_text
 from pipeline.utils.stoplists import STOPWORDS
@@ -26,7 +26,6 @@ DISCOVERY_PATTERNS = [
     ("sentimentul_de", r"\bsentimentul\s+de\s+(\w+)"),
     ("emotie_de", r"\bemoti[ae]\s+de\s+(\w+)"),
     ("senzatie_de", r"\bo\s+senzatie\s+de\s+(\w+)"),
-    ("cuprins_de", r"\bcuprins[aă]?\s+de\s+(\w+)"),
     ("coplesit_de", r"\bcoplesit[aă]?\s+de\s+(\w+)"),
 ]
 
@@ -37,46 +36,38 @@ COMPILED_DISCOVERY = [
 
 
 # ---------------------------------------------------------------------------
-# Discovery phase
+# Core scanning (works with any text iterator)
 # ---------------------------------------------------------------------------
 
-def discover_words(
-    data_dir: Path,
-    min_freq: int = 2,
-    sources: Optional[List[str]] = None,
+def _scan_for_discoveries(
+    text_iterator,
     verbose: bool = True,
-) -> Dict[str, Dict[str, Any]]:
+) -> Tuple[Dict, int]:
     """
-    Mine explicit labeling patterns to discover new emotion words.
+    Scan texts for discovery pattern matches.
 
     Args:
-        data_dir: Directory with JSONL corpus files.
-        min_freq: Minimum frequency for a word to be kept.
-        sources: Which JSONL files to use (None = all).
+        text_iterator: Iterator yielding (record_id, text, source) tuples.
         verbose: Print progress.
 
     Returns:
-        Dict of word → {"frequency", "patterns", "examples"}.
+        (word_data dict, total_matches count).
+        word_data values have "frequency", "patterns" (set), "examples" (list).
     """
-    if verbose:
-        print(f"\nDistributional mining: scanning with {len(COMPILED_DISCOVERY)} patterns")
-
     word_data = defaultdict(lambda: {
         "frequency": 0,
         "patterns": set(),
         "examples": [],
     })
-
     total_matches = 0
 
-    for record_id, text, source in iter_corpus(data_dir, sources=sources):
+    for record_id, text, source in text_iterator:
         normalized = normalize_text(text)
 
         for pattern_name, pattern in COMPILED_DISCOVERY:
             for match in pattern.finditer(normalized):
                 word = match.group(1).strip().lower()
 
-                # Basic filters
                 if len(word) < 3 or len(word) > 20:
                     continue
                 if word in STOPWORDS:
@@ -99,7 +90,15 @@ def discover_words(
                     })
                 total_matches += 1
 
-    # Filter by frequency and convert sets to lists
+    return word_data, total_matches
+
+
+def _filter_and_format(
+    word_data: Dict,
+    min_freq: int,
+    verbose: bool,
+) -> Dict[str, Dict[str, Any]]:
+    """Filter by frequency, convert sets to lists, print summary."""
     result = {}
     for word, data in sorted(word_data.items(), key=lambda x: -x[1]["frequency"]):
         if data["frequency"] < min_freq:
@@ -111,7 +110,6 @@ def discover_words(
         }
 
     if verbose:
-        print(f"  Total pattern matches: {total_matches}")
         print(f"  Unique words (freq >= {min_freq}): {len(result)}")
         if result:
             print(f"\n  Top 20 discovered words:")
@@ -120,6 +118,46 @@ def discover_words(
                 print(f"    {i + 1:3d}. {word:<20s}  freq={data['frequency']:3d}  [{pats}]")
 
     return result
+
+
+# ---------------------------------------------------------------------------
+# Discovery entry points
+# ---------------------------------------------------------------------------
+
+def discover_words(
+    data_dir: Path,
+    min_freq: int = 2,
+    sources: Optional[List[str]] = None,
+    verbose: bool = True,
+) -> Dict[str, Dict[str, Any]]:
+    """Discover words from JSONL files in data_dir."""
+    if verbose:
+        print(f"\nDistributional mining: scanning with {len(COMPILED_DISCOVERY)} patterns")
+
+    text_iter = iter_corpus(data_dir, sources=sources)
+    word_data, total_matches = _scan_for_discoveries(text_iter, verbose)
+
+    if verbose:
+        print(f"  Total pattern matches: {total_matches}")
+
+    return _filter_and_format(word_data, min_freq, verbose)
+
+
+def discover_words_streaming(
+    text_iterator,
+    min_freq: int = 2,
+    verbose: bool = True,
+) -> Dict[str, Dict[str, Any]]:
+    """Discover words from a streaming text source (e.g., FULG)."""
+    if verbose:
+        print(f"\nDistributional mining (streaming): {len(COMPILED_DISCOVERY)} patterns")
+
+    word_data, total_matches = _scan_for_discoveries(text_iterator, verbose)
+
+    if verbose:
+        print(f"  Total pattern matches: {total_matches}")
+
+    return _filter_and_format(word_data, min_freq, verbose)
 
 
 # ---------------------------------------------------------------------------
@@ -134,14 +172,7 @@ def expand_seed_with_discoveries(
     """
     Build new-word entries from discovered words.
 
-    Args:
-        discovered: Output of discover_words().
-        existing_seed_normalized: Normalized forms already in the seed.
-        verbose: Print progress.
-
-    Returns:
-        Dict of word → {"emotions", "frequency", "patterns", "examples"}.
-        Only includes words NOT already in the existing seed.
+    Only includes words NOT already in the existing seed.
     """
     new_words = {}
 
@@ -149,7 +180,6 @@ def expand_seed_with_discoveries(
         if word in existing_seed_normalized:
             continue
 
-        # Assign emotion from NOUN_EMOTION_MAP if available
         emotions = NOUN_EMOTION_MAP.get(word, ["discovered"])
 
         new_words[word] = {
@@ -169,7 +199,7 @@ def expand_seed_with_discoveries(
 
 
 # ---------------------------------------------------------------------------
-# Main entry point
+# Main entry points
 # ---------------------------------------------------------------------------
 
 def run_distributional_mining(
@@ -179,31 +209,29 @@ def run_distributional_mining(
     sources: Optional[List[str]] = None,
     verbose: bool = True,
 ) -> Dict[str, Any]:
-    """
-    Run distributional mining pipeline (Phase 1 + Phase 2).
-
-    Args:
-        data_dir: Directory with JSONL corpus files.
-        seed_normalized: Set of normalized words already in seed.
-        min_freq: Minimum frequency threshold.
-        sources: Which JSONL files to use.
-        verbose: Print progress.
-
-    Returns:
-        {"new_words": {word: info}, "discovered": {word: data}, "stats": {...}}
-    """
-    # Phase 1: Discovery
+    """Run distributional mining on JSONL files."""
     discovered = discover_words(data_dir, min_freq=min_freq, sources=sources, verbose=verbose)
-
-    # Phase 2: Expand
     new_words = expand_seed_with_discoveries(discovered, seed_normalized, verbose=verbose)
 
     return {
         "new_words": new_words,
         "discovered": discovered,
-        "stats": {
-            "total_discovered": len(discovered),
-            "new_words": len(new_words),
-            "min_freq": min_freq,
-        },
+        "stats": {"total_discovered": len(discovered), "new_words": len(new_words), "min_freq": min_freq},
+    }
+
+
+def run_distributional_mining_streaming(
+    text_iterator,
+    seed_normalized: Set[str],
+    min_freq: int = 2,
+    verbose: bool = True,
+) -> Dict[str, Any]:
+    """Run distributional mining on a streaming text source (e.g., FULG)."""
+    discovered = discover_words_streaming(text_iterator, min_freq=min_freq, verbose=verbose)
+    new_words = expand_seed_with_discoveries(discovered, seed_normalized, verbose=verbose)
+
+    return {
+        "new_words": new_words,
+        "discovered": discovered,
+        "stats": {"total_discovered": len(discovered), "new_words": len(new_words), "min_freq": min_freq},
     }

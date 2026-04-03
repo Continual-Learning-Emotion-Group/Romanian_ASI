@@ -1,8 +1,8 @@
 """
-Unified JSONL corpus reader for the ASI pipeline.
+Unified corpus reader for the ASI pipeline.
 
-Reads all JSONL files from pipeline/data/ and yields (record_id, text, source)
-tuples. Handles different text field names across data sources.
+Reads JSONL files from pipeline/data/ and/or streams from HuggingFace (FULG).
+Yields (record_id, text, source) tuples.
 """
 
 import json
@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Iterator, List, Optional, Set, Tuple
 
 DATA_DIR = Path(__file__).parent.parent / "data"
+
+FULG_DATASET_ID = "faur-ai/fulg"
 
 # Text field names in order of preference
 TEXT_FIELDS = ["text", "full_context", "raw_content"]
@@ -83,3 +85,78 @@ def iter_corpus(
                 yield (record_id, text, source_name)
 
         print(f"    → {count:,} records")
+
+
+def stream_fulg(
+    max_records: int = 0,
+    min_language_score: float = 0.8,
+    min_text_length: int = 100,
+    trigger_words: Optional[Set[str]] = None,
+    progress: bool = True,
+) -> Iterator[Tuple[str, str, str]]:
+    """
+    Stream FULG records directly from HuggingFace (no intermediate files).
+
+    Args:
+        max_records: Stop after this many yielded records (0 = unlimited).
+        min_language_score: Skip records below this Romanian confidence.
+        min_text_length: Skip records shorter than this.
+        trigger_words: If given, skip records without any trigger word.
+        progress: Show tqdm progress bar.
+
+    Yields:
+        (record_id, text, "fulg") tuples.
+    """
+    from datasets import load_dataset
+
+    print(f"  Streaming FULG from {FULG_DATASET_ID}...")
+    if trigger_words:
+        print(f"    Trigger filter: {len(trigger_words)} words/phrases")
+    ds = load_dataset(FULG_DATASET_ID, split="train", streaming=True)
+
+    yielded = 0
+    skipped = 0
+
+    pbar = None
+    if progress and max_records > 0:
+        try:
+            from tqdm import tqdm
+            pbar = tqdm(total=max_records, desc="FULG", unit="rec")
+        except ImportError:
+            pass
+
+    for i, record in enumerate(ds):
+        text = record.get("raw_content", "")
+        lang_score = record.get("language_score", 0)
+
+        if lang_score < min_language_score:
+            skipped += 1
+            continue
+
+        if len(text) < min_text_length:
+            skipped += 1
+            continue
+
+        if trigger_words:
+            text_lower = text.lower()
+            if not any(tw in text_lower for tw in trigger_words):
+                skipped += 1
+                continue
+
+        digest = record.get("digest", "")
+        record_id = f"fulg_{digest[:12]}" if digest else f"fulg_{i}"
+        yielded += 1
+
+        if pbar:
+            pbar.update(1)
+            pbar.set_postfix(skipped=skipped, scanned=i + 1)
+
+        yield (record_id, text, "fulg")
+
+        if max_records > 0 and yielded >= max_records:
+            break
+
+    if pbar:
+        pbar.close()
+
+    print(f"    FULG done: {yielded:,} yielded, {skipped:,} skipped (scanned {i + 1:,})")
