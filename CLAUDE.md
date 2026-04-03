@@ -142,6 +142,9 @@ python -m pipeline.human_eval.prepare_csv
 
 # Step 4: Compute inter-annotator agreement after annotation
 python -m pipeline.human_eval.agreement pipeline/data/annotator1_results.csv pipeline/data/annotator2_results.csv
+
+# Step 5: Build final benchmark (LLM >= 3, informed by human eval)
+python -m pipeline.human_eval.build_benchmark
 ```
 
 ## Architecture
@@ -318,9 +321,9 @@ Pilot human evaluation to measure LLM validation quality, following MASIVE metho
 | Binary Kappa (0-1 vs 2-3) | 0.564 (moderate) |
 | Binary percent agreement | 78.1% |
 | Spearman's rho (mean human vs LLM) | 0.701 (p<0.0001) |
-| Human validation rate (LLM>=2 confirmed by humans) | 86.8% |
+| Human validation rate (LLM>=2 confirmed by humans) | 71.7% |
 
-The human validation rate (86.8%) is comparable to MASIVE's English result (88%), confirming the LLM validation pipeline is a reliable proxy for human judgment at scale.
+The human validation rate (71.7%) is comparable to MASIVE's Spanish result (72%), confirming the LLM validation pipeline is a reasonable proxy for human judgment at scale. Human positive defined as mean annotator score >= 2.0 (MASIVE binary: 0-1 = not affect, 2-3 = affect).
 
 Output files:
 - `data/human_eval_sample.jsonl` — 200 stratified samples with LLM scores
@@ -329,6 +332,8 @@ Output files:
 - `data/annotator1_results.csv` — MTurk export with annotator 1 responses
 - `data/annotator2_results.csv` — MTurk export with annotator 2 responses
 - `data/human_eval_results.json` — all metrics + per-item scores (both annotators + LLM)
+- `data/benchmark_ro_asi.jsonl` — **final benchmark: 73,427 candidates** (LLM >= 3, 91.3% human-confirmed precision)
+- `data/benchmark_ro_asi.stats.json` — benchmark distribution stats (sources, patterns, seed words)
 
 ## References
 

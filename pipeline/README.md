@@ -12,6 +12,7 @@ Unified pipeline for constructing the Romanian ASI benchmark.
 6. [Embedding Extraction (`extract_embed/`)](#embedding-extraction-extract_embed--experimental) — EXPERIMENTAL
 7. [LLM Validation (`llm_validation/`)](#llm-validation-llm_validation)
 8. [Human Evaluation (`human_eval/`)](#human-evaluation-human_eval)
+   - [Benchmark Construction](#benchmark-construction-build_benchmarkpy)
 9. [External Data (`seed/`)](#external-data-seed)
 
 ```
@@ -36,6 +37,8 @@ pipeline/
 │   ├── human_eval_sample.jsonl        # 200 stratified samples for human eval
 │   ├── human_eval_mturk.csv           # MTurk-ready CSV (HTML-encoded diacritics)
 │   ├── human_eval_results.json        # Agreement metrics + per-item scores
+│   ├── benchmark_ro_asi.jsonl         # Final benchmark (73K, LLM >= 3)
+│   ├── benchmark_ro_asi.stats.json    # Benchmark distribution stats
 │   └── ...                            # Provenance files, checkpoints, stats
 ├── utils/                             # Shared utilities
 │   ├── text_utils.py                  # Diacritics normalization, sentence splitting
@@ -77,7 +80,8 @@ pipeline/
 │   ├── sample.py                      # Stratified sampling (50 per LLM score bin)
 │   ├── prepare_csv.py                 # Convert JSONL → MTurk CSV (HTML-encoded)
 │   ├── mturk_interface.html           # Romanian MTurk annotation interface
-│   └── agreement.py                   # Inter-annotator agreement + LLM correlation
+│   ├── agreement.py                   # Inter-annotator agreement + LLM correlation
+│   └── build_benchmark.py             # Final benchmark construction (LLM >= 3)
 └── seed_enrichment/                   # Seed enrichment
     ├── run.py                         # CLI: runs both methods on any source
     ├── bootstrapping.py               # MASIVE-style "I feel X and Y"
@@ -708,23 +712,53 @@ Handles MTurk's boolean column export format (separate `Answer.affect.is_affect`
 | Binary Kappa (0–1 vs 2–3) | 0.564 | Moderate agreement |
 | Binary percent agreement | 78.1% | |
 | Spearman's ρ (mean human vs LLM) | 0.701 | Strong correlation (p<0.0001) |
-| Human validation rate (LLM≥2) | 86.8% | Comparable to MASIVE English (88%) |
+| Human validation rate (LLM≥2) | 71.7% | Comparable to MASIVE Spanish (72%) |
+
+Human positive defined as mean annotator score ≥ 2.0 (MASIVE binary: 0–1 = not
+affect, 2–3 = affect).
 
 **Human validation rate by LLM score:**
 
-| LLM Score | n | Human confirmed (mean≥1.5) |
+| LLM Score | n | Human confirmed (mean≥2.0) |
 |-----------|---|---------------------------|
-| 0 | 25 | 8.0% |
-| 1 | 27 | 55.6% |
-| 2 | 30 | 80.0% |
-| 3 | 23 | 95.7% |
+| 0 | 25 | 4.0% |
+| 1 | 27 | 29.6% |
+| 2 | 30 | 46.7% |
+| 3 | 23 | 91.3% |
 
 **Threshold analysis for benchmark construction:**
 
 | Threshold | Precision | Recall | F1 | Est. benchmark size (130K) |
 |-----------|-----------|--------|----|---------------------------|
-| LLM ≥ 2 | 86.8% | 73.0% | 79.3% | ~104K |
-| LLM ≥ 3 | 95.7% | 34.9% | 51.2% | ~73K |
+| LLM ≥ 2 | 71.7% | 77.6% | 74.5% | ~104K |
+| LLM ≥ 3 | 91.3% | 42.9% | 58.3% | ~73K |
+
+### Benchmark Construction (`build_benchmark.py`)
+
+Filters `candidates_validated.jsonl` to produce the final benchmark. Based on
+human evaluation results, we use **LLM ≥ 3** as the inclusion threshold:
+- 91.3% precision against human annotations (mean ≥ 2.0)
+- Prioritizes precision over recall — a clean benchmark is more valuable than
+  a large noisy one
+
+```bash
+# Build the benchmark (refuses to overwrite if output exists)
+python -m pipeline.human_eval.build_benchmark
+
+# Custom threshold or paths
+python -m pipeline.human_eval.build_benchmark --threshold 2 --output data/benchmark_lenient.jsonl
+```
+
+**Final benchmark: `data/benchmark_ro_asi.jsonl`** — 73,427 candidates
+
+| Source | Candidates | % |
+|--------|-----------|---|
+| FULG | 57,794 | 78.7% |
+| Filmot | 12,819 | 17.5% |
+| Merged corpus | 2,814 | 3.8% |
+
+- 910 unique seed words matched
+- 87.4% secondary patterns, 12.6% primary patterns
 
 ### Output files
 
@@ -736,6 +770,8 @@ Handles MTurk's boolean column export format (separate `Answer.affect.is_affect`
 | `data/annotator1_results.csv` | MTurk export — annotator 1 responses |
 | `data/annotator2_results.csv` | MTurk export — annotator 2 responses |
 | `data/human_eval_results.json` | All metrics + per-item scores (both annotators + LLM) |
+| `data/benchmark_ro_asi.jsonl` | **Final benchmark** (73,427 candidates, LLM ≥ 3) |
+| `data/benchmark_ro_asi.stats.json` | Benchmark distribution stats |
 
 ## External Data (`seed/`)
 

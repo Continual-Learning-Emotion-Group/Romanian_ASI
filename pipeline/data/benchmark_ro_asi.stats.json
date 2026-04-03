@@ -1,0 +1,43 @@
+{
+  "input_file": "/Users/alexjerpelea/Romanian_ASI/pipeline/data/candidates_validated.jsonl",
+  "output_file": "/Users/alexjerpelea/Romanian_ASI/pipeline/data/benchmark_ro_asi.jsonl",
+  "llm_threshold": 3,
+  "total_input": 129700,
+  "kept": 73427,
+  "skipped": 56273,
+  "score_distribution": {
+    "3": 73427
+  },
+  "source_distribution": {
+    "filmot": 12819,
+    "fulg": 57794,
+    "merged_corpus": 2814
+  },
+  "pattern_distribution": {
+    "primary": 9208,
+    "secondary": 64219
+  },
+  "unique_seed_words": 910,
+  "top_seed_words": {
+    "dor": 6756,
+    "frică": 3863,
+    "fericit": 3104,
+    "fericită": 2600,
+    "bine": 2458,
+    "teamă": 2270,
+    "mândru": 2015,
+    "bucuros": 1500,
+    "multumit": 1467,
+    "mulțumit": 1338,
+    "frica": 1315,
+    "multumita": 1259,
+    "dezamagit": 1206,
+    "teama": 1117,
+    "rușine": 1046,
+    "mulțumită": 843,
+    "vinovat": 799,
+    "încântată": 788,
+    "supărat": 778,
+    "încântat": 758
+  }
+}

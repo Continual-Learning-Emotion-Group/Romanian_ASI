@@ -153,7 +153,7 @@ def compute_agreement(ann1: dict[str, int], ann2: dict[str, int],
         results["spearman_ann2_vs_llm"] = {"rho": round(rho2, 4), "p": round(p2, 6)}
 
         # Confusion matrix (mean human binary vs LLM binary)
-        yh_bin = (y_mean >= 1.5).astype(int)
+        yh_bin = (y_mean >= 2.0).astype(int)
         yl_bin = (yl >= 2).astype(int)
         kappa_hl = cohen_kappa_score(yh_bin, yl_bin)
         print(f"\nBinary agreement (human vs LLM): Kappa={kappa_hl:.3f}")
