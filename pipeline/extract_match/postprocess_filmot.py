@@ -273,11 +273,12 @@ def postprocess(
         print("Loading Stanza Romanian model...")
     nlp = stanza.Pipeline(
         'ro',
-        processors='tokenize,pos,depparse',
+        processors='tokenize,pos,lemma,depparse',
         verbose=False,
     )
 
-    # Process
+    BATCH_SIZE = 64  # candidates per Stanza batch
+
     stats = {
         "total": len(candidates),
         "trimmed": 0,
@@ -295,18 +296,52 @@ def postprocess(
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with open(output_path, "w", encoding="utf-8") as out_f:
-        pbar = tqdm(candidates, desc="Post-processing", unit="rec") if verbose else candidates
-        for cand in pbar:
-            original_text = cand["text"]
-            seed_word = cand["seed_word"]
-            pattern_name = cand["pattern_used"]
+    def _process_batch(batch, nlp):
+        """
+        Process a batch of candidates: split sentences, batch-run Stanza,
+        trim to first person.
 
-            # Split into sentences
-            sentences = split_sentences(original_text)
+        Returns list of processed candidate dicts.
+        """
+        # Phase 1: split all candidates into sentences
+        all_split = []  # (cand_idx, sentences_list)
+        for ci, cand in enumerate(batch):
+            sents = split_sentences(cand["text"])
+            all_split.append(sents)
+
+        # Phase 2: collect all non-trivial sentences into one big batch
+        # Track which candidate and sentence index each belongs to
+        flat_texts = []
+        flat_map = []  # (cand_idx, sent_idx)
+        for ci, sents in enumerate(all_split):
+            for si, sent_text in enumerate(sents):
+                if len(sent_text.split()) >= 2:
+                    flat_texts.append(sent_text)
+                    flat_map.append((ci, si))
+
+        # Phase 3: run Stanza on all sentences at once
+        all_persons = [[None] * len(sents) for sents in all_split]
+
+        if flat_texts:
+            joined = '\n\n'.join(flat_texts)
+            try:
+                doc = nlp(joined)
+                for j, stanza_sent in enumerate(doc.sentences):
+                    if j < len(flat_map):
+                        ci, si = flat_map[j]
+                        all_persons[ci][si] = get_root_person(stanza_sent)
+            except Exception:
+                # Fallback: skip person detection for this batch
+                pass
+
+        # Phase 4: trim each candidate
+        results = []
+        for ci, cand in enumerate(batch):
+            original_text = cand["text"]
+            sentences = all_split[ci]
+            persons = all_persons[ci]
 
             if len(sentences) <= 1:
-                # Nothing to trim
                 processed_text = original_text.strip()
                 if not processed_text.endswith(('.', '?', '!')):
                     processed_text += '.'
@@ -314,47 +349,51 @@ def postprocess(
                 cand["text_original"] = original_text
                 cand["pp_sentences_before"] = 1
                 cand["pp_sentences_after"] = 1
-                stats["unchanged"] += 1
-                total_sents_before += 1
-                total_sents_after += 1
-                total_chars_before += len(original_text)
-                total_chars_after += len(processed_text)
-                out_f.write(json.dumps(cand, ensure_ascii=False) + "\n")
+                results.append((cand, False))
                 continue
 
-            # Detect person for each sentence
-            persons = detect_sentence_persons(sentences, nlp)
-
-            # Find the match sentence
-            anchor = find_match_sentence(sentences, seed_word, pattern_name)
-
-            # Trim to first-person context
+            anchor = find_match_sentence(
+                sentences, cand["seed_word"], cand["pattern_used"]
+            )
             kept = trim_to_first_person(sentences, persons, anchor)
 
-            # Build processed text
             processed_text = '. '.join(s.rstrip('.?!, ') for s in kept)
             if not processed_text.endswith(('.', '?', '!')):
                 processed_text += '.'
 
-            was_trimmed = len(kept) < len(sentences)
-
-            # Store both versions
             cand["text_pp"] = processed_text
             cand["text_original"] = original_text
             cand["pp_sentences_before"] = len(sentences)
             cand["pp_sentences_after"] = len(kept)
+            results.append((cand, len(kept) < len(sentences)))
 
-            if was_trimmed:
-                stats["trimmed"] += 1
-            else:
-                stats["unchanged"] += 1
+        return results
 
-            total_sents_before += len(sentences)
-            total_sents_after += len(kept)
-            total_chars_before += len(original_text)
-            total_chars_after += len(processed_text)
+    with open(output_path, "w", encoding="utf-8") as out_f:
+        pbar = tqdm(total=len(candidates), desc="Post-processing", unit="rec") if verbose else None
 
-            out_f.write(json.dumps(cand, ensure_ascii=False) + "\n")
+        for batch_start in range(0, len(candidates), BATCH_SIZE):
+            batch = candidates[batch_start:batch_start + BATCH_SIZE]
+            results = _process_batch(batch, nlp)
+
+            for cand, was_trimmed in results:
+                if was_trimmed:
+                    stats["trimmed"] += 1
+                else:
+                    stats["unchanged"] += 1
+
+                total_sents_before += cand["pp_sentences_before"]
+                total_sents_after += cand["pp_sentences_after"]
+                total_chars_before += len(cand["text_original"])
+                total_chars_after += len(cand["text_pp"])
+
+                out_f.write(json.dumps(cand, ensure_ascii=False) + "\n")
+
+            if pbar:
+                pbar.update(len(batch))
+
+        if pbar:
+            pbar.close()
 
     # Compute averages
     n = len(candidates)
