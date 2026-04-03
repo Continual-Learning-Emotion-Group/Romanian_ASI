@@ -1,33 +1,50 @@
 {
-  "records_scanned": 398,
-  "total_processed": 295,
-  "filtered_out": 102,
+  "records_scanned": 1582,
+  "total_processed": 1540,
+  "filtered_out": 438,
   "filter_reasons": {
-    "low_language_score": 91,
-    "no_trigger_words": 10,
-    "too_long": 1
+    "low_language_score": 393,
+    "no_trigger_words": 43,
+    "too_long": 2
   },
   "duplicates_skipped": 0,
-  "total_candidates": 20,
-  "unique_seed_words": 15,
+  "total_candidates": 100,
+  "unique_seed_words": 41,
   "by_source_category": {
-    "other": 15,
-    "blog": 5
+    "other": 55,
+    "blog": 38,
+    "wiki": 5,
+    "news": 2
   },
   "by_pattern": {
-    "sunt_adj_present": 11,
-    "ma_simt_present": 2,
-    "mie_short": 6,
-    "am_fost_adj_perfect": 1
+    "sunt_adj_present": 54,
+    "ma_simt_present": 7,
+    "mie_short": 23,
+    "am_fost_adj_perfect": 7,
+    "sa_ma_simt_subjunctive": 1,
+    "mam_simtit_perfect": 3,
+    "am_noun_present": 2,
+    "eram_adj_imperfect": 1,
+    "imi_este_present": 2
   },
   "by_emotion": {
-    "joy": 4,
-    "anticipation": 4,
-    "sadness": 3,
-    "negative-fear": 3,
-    "indignation": 2,
-    "discovered": 3,
-    "gladness": 1
+    "joy": 21,
+    "anticipation": 11,
+    "sadness": 21,
+    "negative-fear": 7,
+    "indignation": 4,
+    "discovered": 8,
+    "gladness": 4,
+    "happiness": 6,
+    "trust": 4,
+    "distress": 1,
+    "positive-hope": 1,
+    "disgust": 3,
+    "shame": 3,
+    "stupefaction": 1,
+    "electricity": 2,
+    "huffiness": 2,
+    "surprise": 1
   },
-  "finished_at": "2026-04-03T01:27:35.332870"
+  "finished_at": "2026-04-03T01:46:54.507830"
 }

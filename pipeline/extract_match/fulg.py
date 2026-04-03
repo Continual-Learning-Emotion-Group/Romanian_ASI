@@ -210,6 +210,7 @@ def extract_fulg(
     if resume and checkpoint_path.exists():
         checkpoint = load_checkpoint(checkpoint_path)
         seen = set(checkpoint["seen_hashes"])
+        seen_domain_sentences = set(checkpoint.get("seen_domain_sentences", []))
         start_offset = checkpoint["records_offset"]
         if verbose:
             print(f"Resuming from record {start_offset:,}, "
@@ -217,6 +218,7 @@ def extract_fulg(
     else:
         checkpoint = load_checkpoint(checkpoint_path)
         seen = set()
+        seen_domain_sentences = set()
         start_offset = 0
 
     # Stats (restore from checkpoint or fresh)
@@ -306,9 +308,24 @@ def extract_fulg(
             url = record.get("url", "")
             source_category = categorize_domain(source_domain, url)
 
+            seen_in_page = set()
             for match in matches:
                 if total_matches >= max_samples:
                     break
+
+                # Skip duplicate matches within same page
+                match_key = (record["id"], match.matched_text)
+                if match_key in seen_in_page:
+                    continue
+                seen_in_page.add(match_key)
+
+                # Skip same matched sentence from same domain (boilerplate dedup)
+                domain_sent_key = hashlib.md5(
+                    f"{source_domain}|{match.matched_text}".encode()
+                ).hexdigest()
+                if domain_sent_key in seen_domain_sentences:
+                    continue
+                seen_domain_sentences.add(domain_sent_key)
 
                 # Extract sentence-level context
                 ctx_before, matched_sent, ctx_after = extract_context_window(
@@ -365,6 +382,7 @@ def extract_fulg(
                     "filter_reasons": dict(filter_reasons),
                     "duplicates_skipped": dupes_skipped,
                     "seen_hashes": list(seen),
+                    "seen_domain_sentences": list(seen_domain_sentences),
                     "by_source_category": dict(by_category),
                     "by_pattern": dict(by_pattern),
                     "by_emotion": dict(by_emotion),
