@@ -239,10 +239,31 @@ def get_trigger_words() -> Set[str]:
 
 
 def get_filmot_queries(include_secondary: bool = True) -> List[str]:
-    """Get Filmot API search queries."""
+    """Get Filmot API search queries (simt-family + dative only, for seed enrichment)."""
     queries = list(FILMOT_QUERIES_PRIMARY)
     if include_secondary:
         queries.extend(FILMOT_QUERIES_SECONDARY)
+    return queries
+
+
+# Full query set for extraction — includes ALL pattern triggers
+FILMOT_QUERIES_EXTRACTION = [
+    # "sunt" / "eram" / "am fost" — ambiguous but filtered by seed downstream
+    '"sunt"',
+    '"eram"',
+    '"am fost"',
+    # "mă fac" / "ma fac"
+    '"mă fac"',
+    '"ma fac"',
+    # "aveam" (noun pattern)
+    '"aveam"',
+]
+
+
+def get_filmot_queries_all(include_secondary: bool = True) -> List[str]:
+    """Get ALL Filmot queries — enrichment set + extraction triggers."""
+    queries = get_filmot_queries(include_secondary=include_secondary)
+    queries.extend(FILMOT_QUERIES_EXTRACTION)
     return queries
 
 # ---------------------------------------------------------------------------
