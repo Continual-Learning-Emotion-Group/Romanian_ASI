@@ -10,7 +10,9 @@ Unified pipeline for constructing the Romanian ASI benchmark.
 4. [Seed Enrichment (`seed_enrichment/`)](#seed-enrichment-seed_enrichment)
 5. [Pattern Extraction (`extract_match/`)](#pattern-extraction-extract_match)
 6. [Embedding Extraction (`extract_embed/`)](#embedding-extraction-extract_embed--experimental) — EXPERIMENTAL
-7. [External Data (`seed/`)](#external-data-seed)
+7. [LLM Validation (`llm_validation/`)](#llm-validation-llm_validation)
+8. [Human Evaluation (`human_eval/`)](#human-evaluation-human_eval)
+9. [External Data (`seed/`)](#external-data-seed)
 
 ```
 pipeline/
@@ -28,6 +30,12 @@ pipeline/
 │   ├── pattern_candidates_filmot_light.jsonl # Post-processed: light (>>, periods, fragments)
 │   ├── embedding_asi_candidates.jsonl # Embedding extraction raw output (all hits >= 0.75)
 │   ├── embedding_asi_candidates_filtered.jsonl # Filtered (bad noun anchors removed)
+│   ├── candidates_unified.jsonl       # All candidates merged (pre-validation)
+│   ├── candidates_validated.jsonl     # LLM-validated candidates (with llm_affect_score 0-3)
+│   ├── candidates_validated_partial.jsonl # First 20K validated chunk
+│   ├── human_eval_sample.jsonl        # 200 stratified samples for human eval
+│   ├── human_eval_mturk.csv           # MTurk-ready CSV (HTML-encoded diacritics)
+│   ├── human_eval_results.json        # Agreement metrics + per-item scores
 │   └── ...                            # Provenance files, checkpoints, stats
 ├── utils/                             # Shared utilities
 │   ├── text_utils.py                  # Diacritics normalization, sentence splitting
@@ -53,12 +61,23 @@ pipeline/
 │   ├── run.py                         # Small datasets → pattern_candidates_small.jsonl
 │   ├── filmot.py                      # Filmot API collect+filter → pattern_candidates_filmot.jsonl
 │   ├── postprocess_filmot.py          # Stanza-based: trim to 1st-person context (_pp.jsonl)
-│   └── postprocess_filmot_light.py    # Light: split >>, add periods, trim fragments (_light.jsonl)
+│   ├── postprocess_filmot_light.py    # Light: split >>, add periods, trim fragments (_light.jsonl)
+│   ├── fulg.py                        # FULG streaming extract → pattern_candidates_fulg.jsonl
+│   └── unify.py                       # Merge all sources → candidates_unified.jsonl
 ├── extract_embed/                     # Embedding similarity ASI extraction
 │   ├── run.py                         # Main pipeline (Modal GPU + E5-base)
 │   ├── modal_embeddings.py            # Modal GPU embedder class
 │   ├── filter_results.py              # Post-processing: remove bad-anchor hits
 │   └── ANALYSIS.md                    # Experiment results & conclusions
+├── llm_validation/                    # LLM-based verification (Qwen 3.5-9B)
+│   ├── config.py                      # Model name, prompt template, scale definitions
+│   ├── parse.py                       # Prompt building + response parsing
+│   └── modal_validate.py              # Modal A100-80GB validation runner
+├── human_eval/                        # Human annotation & agreement analysis
+│   ├── sample.py                      # Stratified sampling (50 per LLM score bin)
+│   ├── prepare_csv.py                 # Convert JSONL → MTurk CSV (HTML-encoded)
+│   ├── mturk_interface.html           # Romanian MTurk annotation interface
+│   └── agreement.py                   # Inter-annotator agreement + LLM correlation
 └── seed_enrichment/                   # Seed enrichment
     ├── run.py                         # CLI: runs both methods on any source
     ├── bootstrapping.py               # MASIVE-style "I feel X and Y"
@@ -417,6 +436,49 @@ python -m pipeline.extract_match.postprocess_filmot_light --max-records 200  # q
 Output: `data/pattern_candidates_filmot_light.jsonl`
 - Each record has `text_light` (post-processed) and `text_original`
 
+### FULG (`extract_match/fulg.py`)
+
+Streams records from the FULG dataset (150B tokens) via HuggingFace Datasets,
+applies PatternMatcher with the enriched seed. Extracts sentence-level context
+(configurable window around the match). Supports parallel shard workers and
+checkpoint/resume.
+
+```bash
+python -m pipeline.extract_match.fulg                                          # default (100K samples)
+python -m pipeline.extract_match.fulg --max-samples 200000 --workers 4         # more, parallel
+python -m pipeline.extract_match.fulg --resume                                 # resume
+python -m pipeline.extract_match.fulg --max-records 10000 --max-samples 100    # quick test
+```
+
+Output: `data/pattern_candidates_fulg.jsonl`
+
+**Results** (2.8M records scanned):
+- 100,000 candidates (3.6% hit rate)
+- Top patterns: `sunt_adj_present` (48,646), `mie_short` (16,071),
+  `am_fost_adj_perfect` (8,779)
+- Top source categories: other (67.7%), blog (19.6%), news (9.3%)
+- FULG-specific fields: `source_domain`, `source_category`, `url`, `title`,
+  `context_before`, `context_after`, `full_text_length`
+
+### Unification (`extract_match/unify.py`)
+
+Merges all extracted candidates into a single dataset with a common schema.
+Uses filmot light post-processing by default. Deduplicates by `matched_sentence`
+hash with priority: small > filmot > fulg.
+
+```bash
+python -m pipeline.extract_match.unify                          # default (all 3 sources, filmot light)
+python -m pipeline.extract_match.unify --filmot-variant pp      # use Stanza post-processed filmot
+python -m pipeline.extract_match.unify --no-fulg                # exclude FULG
+python -m pipeline.extract_match.unify --max-per-source 10000   # cap per source
+```
+
+Output: `data/candidates_unified.jsonl`
+
+**Results**:
+- 134,657 input → 129,700 output (4,957 cross-source duplicates removed)
+- By source: small 4,905 / filmot 28,314 / FULG 96,481
+
 ### Output schema
 
 All extractors share a common base schema:
@@ -510,6 +572,170 @@ One row per post, all qualifying sentences grouped in `hits`:
 Removes hits where a noun-only pattern (e.g., `imi_este`, `am_noun`) was paired
 with a noun not in the curated `EMOTION_NOUNS_ONLY` set. Also supports
 `--min-confidence` for threshold filtering without re-running the GPU pipeline.
+
+## LLM Validation (`llm_validation/`)
+
+Verifies whether each ASI candidate is a genuine affective state using
+Qwen/Qwen3.5-9B on Modal (A100-80GB, vLLM). MASIVE-style verification prompt
+in Romanian with 7 in-context examples.
+
+### Scoring Scale (0–3)
+
+| Score | Label | Description |
+|-------|-------|-------------|
+| 0 | Nu este o stare afectivă | Term doesn't refer to emotion/feeling/internal state |
+| 1 | Improbabil o stare afectivă | Term likely refers to something else |
+| 2 | Probabil o stare afectivă | Term likely refers to emotion/feeling/internal state |
+| 3 | Categoric o stare afectivă | Term is definitely an emotion/feeling/internal state |
+
+### Pipeline
+
+1. Loads candidates from `candidates_unified.jsonl`
+2. Truncates context to ~5000 chars centered on the matched sentence
+3. Inserts `<span>seed_word</span>` markers
+4. Formats with Qwen chat template (system + user message with 7 examples)
+5. Runs vLLM inference (temperature=0, max_tokens=8)
+6. Parses response to extract 0–3 digit
+7. Writes results with `llm_affect_score` to `candidates_validated.jsonl`
+
+Supports checkpoint/resume (20K chunks committed to Modal volume), `--shuffle`
+for randomized source mixing. Processing runs entirely on the GPU container
+(data uploaded via Modal volume) to eliminate network round-trips.
+
+```bash
+# Run on Modal
+modal run pipeline/llm_validation/modal_validate.py
+
+# Quick test (shuffled for source diversity)
+modal run pipeline/llm_validation/modal_validate.py --max-candidates 200 --shuffle
+
+# Resume from checkpoint
+modal run pipeline/llm_validation/modal_validate.py --resume --shuffle
+```
+
+### Results (129,700 candidates)
+
+| Score | Count | % | Description |
+|-------|-------|---|-------------|
+| 3 | 73,427 | 56.6% | Clearly affective |
+| 2 | 30,373 | 23.4% | Likely affective |
+| 1 | 16,348 | 12.6% | Unlikely affective |
+| 0 | 9,552 | 7.4% | Not affective |
+
+Parse failures: 0
+
+**By source (score ≥ 2 acceptance rate):**
+
+| Source | Total | Score ≥ 2 | Rate |
+|--------|-------|-----------|------|
+| FULG | 96,481 | 75,952 | 78.7% |
+| Filmot | 28,314 | 24,148 | 85.3% |
+| Small datasets | 4,905 | 3,700 | 75.4% |
+
+**By pattern (notable):**
+- `ma_simt_present`: 91% score ≥ 2 (high precision pattern)
+- `sunt_adj_present`: 77.5% score ≥ 2 (noisiest, as expected)
+- `am_noun_present`: 34.7% score ≥ 2 (most false positives)
+- `mie_short`: 91.0% score ≥ 2
+
+### Key files
+
+| File | Purpose |
+|------|---------|
+| `config.py` | Model name, prompt template, scale definitions, context window params |
+| `parse.py` | `build_prompt()` — context truncation + span insertion; `parse_response()` — digit extraction |
+| `modal_validate.py` | Modal runner: A100-80GB, vLLM, 92% GPU memory utilization, 4h timeout |
+
+## Human Evaluation (`human_eval/`)
+
+Pilot human evaluation measuring LLM validation quality, following the MASIVE
+paper methodology. 2 Romanian native-speaker annotators, hosted on MTurk
+Developer Sandbox (free).
+
+### Pipeline
+
+```bash
+# Step 1: Stratified sample 200 candidates (50 per LLM score bin)
+python -m pipeline.human_eval.sample
+
+# Step 2: Convert to MTurk CSV (HTML-encodes diacritics for MTurk compatibility)
+python -m pipeline.human_eval.prepare_csv
+
+# Step 3: Upload to MTurk Developer Sandbox
+# - Create project with human_eval/mturk_interface.html as the HIT template
+# - Upload data/human_eval_mturk.csv as the batch CSV
+# - Set "Number of assignments per HIT" = number of annotators
+
+# Step 4: After annotation, download results CSVs and compute agreement
+python -m pipeline.human_eval.agreement data/annotator1_results.csv data/annotator2_results.csv
+```
+
+### MTurk Interface (`mturk_interface.html`)
+
+Romanian adaptation of the MASIVE paper's MTurk annotation interface:
+- Single question: 4-point affective state Likert scale (0–3), matching the
+  LLM validation scale exactly
+- Toggle between short context (matched sentence) and full context (surrounding
+  text + title)
+- 7 worked examples adapted from the LLM prompt (încredere=0, fericit=3, dor=3,
+  sigur=0, confuz=2, tulburată=3, încredere=1)
+- TimeMe.js time tracking
+- All instructions, labels, and definitions in Romanian
+
+### CSV Format (`prepare_csv.py`)
+
+MTurk rejects raw UTF-8 Romanian diacritics in CSV uploads. `prepare_csv.py`
+HTML-encodes all non-ASCII characters (e.g., `ă` → `&#259;`) while preserving
+HTML tags for the green highlight spans.
+
+Columns: `id`, `short_context`, `full_context`, `emo_term`, `show_inst`
+
+### Agreement Analysis (`agreement.py`)
+
+Computes inter-annotator and LLM–human agreement metrics. Saves all results
+(metrics + per-item scores) to `data/human_eval_results.json`.
+
+Handles MTurk's boolean column export format (separate `Answer.affect.is_affect`,
+`Answer.affect.like_affect`, etc. columns).
+
+### Results (n=105)
+
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| Cohen's Kappa (quadratic weighted) | 0.649 | Substantial agreement |
+| Cohen's Kappa (unweighted) | 0.295 | Fair (expected — 4-point ordinal scale) |
+| Percent agreement (exact) | 47.6% | |
+| Binary Kappa (0–1 vs 2–3) | 0.564 | Moderate agreement |
+| Binary percent agreement | 78.1% | |
+| Spearman's ρ (mean human vs LLM) | 0.701 | Strong correlation (p<0.0001) |
+| Human validation rate (LLM≥2) | 86.8% | Comparable to MASIVE English (88%) |
+
+**Human validation rate by LLM score:**
+
+| LLM Score | n | Human confirmed (mean≥1.5) |
+|-----------|---|---------------------------|
+| 0 | 25 | 8.0% |
+| 1 | 27 | 55.6% |
+| 2 | 30 | 80.0% |
+| 3 | 23 | 95.7% |
+
+**Threshold analysis for benchmark construction:**
+
+| Threshold | Precision | Recall | F1 | Est. benchmark size (130K) |
+|-----------|-----------|--------|----|---------------------------|
+| LLM ≥ 2 | 86.8% | 73.0% | 79.3% | ~104K |
+| LLM ≥ 3 | 95.7% | 34.9% | 51.2% | ~73K |
+
+### Output files
+
+| File | Description |
+|------|-------------|
+| `data/human_eval_sample.jsonl` | 200 stratified samples with LLM scores |
+| `data/human_eval_mturk.csv` | MTurk-ready CSV (all 200) |
+| `data/human_eval_mturk_annotator2.csv` | Filtered to 105 IDs completed by annotator 1 |
+| `data/annotator1_results.csv` | MTurk export — annotator 1 responses |
+| `data/annotator2_results.csv` | MTurk export — annotator 2 responses |
+| `data/human_eval_results.json` | All metrics + per-item scores (both annotators + LLM) |
 
 ## External Data (`seed/`)
 
