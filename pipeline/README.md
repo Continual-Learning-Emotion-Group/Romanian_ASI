@@ -2,6 +2,16 @@
 
 Unified pipeline for constructing the Romanian ASI benchmark.
 
+## Table of Contents
+
+1. [Seed Construction (`seed/`)](#seed-construction-seed)
+2. [Data Collection (`collect/`)](#data-collection-collect)
+3. [Shared Utilities (`utils/`)](#shared-utilities-utils)
+4. [Seed Enrichment (`seed_enrichment/`)](#seed-enrichment-seed_enrichment)
+5. [Pattern Extraction (`extract_match/`)](#pattern-extraction-extract_match)
+6. [Embedding Extraction (`extract_embed/`)](#embedding-extraction-extract_embed--experimental) — EXPERIMENTAL
+7. [External Data (`seed/`)](#external-data-seed)
+
 ```
 pipeline/
 ├── README.md
