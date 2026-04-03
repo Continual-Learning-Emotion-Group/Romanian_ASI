@@ -1,6 +1,9 @@
-# Pipeline
+# Romanian ASI Benchmark
 
-Unified pipeline for constructing the Romanian ASI benchmark.
+Unified pipeline for constructing the Romanian ASI (Affective State Identification) benchmark.
+
+All pipeline code lives in `pipeline/`. Paths in this document are relative to the repo root.
+Old experiments and scripts are archived in `deprecated/`.
 
 ## Table of Contents
 
@@ -17,7 +20,6 @@ Unified pipeline for constructing the Romanian ASI benchmark.
 
 ```
 pipeline/
-├── README.md
 ├── data/                              # Pipeline outputs
 │   ├── merged_corpus.jsonl            # Unified corpus (106K records)
 │   ├── enriched_seed.json             # Small-dataset enriched seed (377 words)
