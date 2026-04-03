@@ -1,7 +1,7 @@
 """
 Romanian "I Feel" pattern matcher for the ASI pipeline.
 
-23 patterns covering present, imperfect, perfect, future, conditional,
+20 patterns covering present, imperfect, perfect, future, conditional,
 subjunctive, and colloquial forms. Supports lemma-based seeds with
 automatic inflection expansion via MULTEXT-East.
 """
@@ -105,7 +105,7 @@ NOUN_EMOTION_MAP = {
 }
 
 # ---------------------------------------------------------------------------
-# Pattern definitions (23 patterns)
+# Pattern definitions (20 patterns, first person singular only)
 # ---------------------------------------------------------------------------
 
 _MOD = MODIFIER_PATTERN
