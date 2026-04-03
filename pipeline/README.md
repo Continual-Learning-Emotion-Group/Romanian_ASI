@@ -147,12 +147,21 @@ Options: `--min-language-score 0.8`, `--min-text-length 100`, `--no-trigger-filt
 ### Filmot API (`collect/stream_filmot.py`)
 
 Streams raw subtitle hits from the Filmot API (RapidAPI) by searching for
-Romanian "I feel" trigger phrases in YouTube subtitles. No pattern matching —
-saves raw subtitle context for downstream filtering.
+Romanian "I feel" trigger phrases in YouTube subtitles. Queries are sourced
+from `utils/pattern_matcher.get_filmot_queries()` (single source of truth).
+No pattern matching — saves raw subtitle context for downstream filtering.
+
+Supports checkpoint/resume for long collection runs.
 
 Requires: `pip install filmot python-dotenv` and `RAPIDAPI_KEY` in `.env`.
 
-Run with `python -m pipeline.collect.stream_filmot --max-hits 50000`.
+```bash
+# Collect filmot data (run before enrichment)
+python -m pipeline.collect.stream_filmot --max-hits 100000
+python -m pipeline.collect.stream_filmot --max-hits 100000 --resume        # resume interrupted run
+python -m pipeline.collect.stream_filmot --max-pages-per-query 200         # deeper pagination
+python -m pipeline.collect.stream_filmot --no-secondary                    # skip no-diacritic variants
+```
 
 ## Shared Utilities (`utils/`)
 
@@ -185,7 +194,14 @@ all `*.jsonl` files in `pipeline/data/`. Handles different text field names
 Discovers new seed words from text data. Reads from all JSONL files in
 `pipeline/data/` (merged small datasets + optional FULG/Filmot dumps).
 
-Run with `python -m pipeline.seed_enrichment.run`.
+```bash
+python -m pipeline.seed_enrichment.run                          # small datasets only
+python -m pipeline.seed_enrichment.run --source filmot          # filmot JSONL only
+python -m pipeline.seed_enrichment.run --source fulg            # FULG streaming only
+python -m pipeline.seed_enrichment.run --source all             # small + FULG + filmot
+python -m pipeline.seed_enrichment.run --source fulg --fulg-max-records 500000
+python -m pipeline.seed_enrichment.run --source filmot --filmot-path /path/to/file.jsonl
+```
 
 ### Method 1: Bootstrapping (`bootstrapping.py`)
 
