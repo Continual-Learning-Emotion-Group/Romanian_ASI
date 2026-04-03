@@ -127,6 +127,21 @@ python -m scripts.distributional_mining.run
 # - Manually search filmot.com, save video IDs to data/filmot_video_ids.jsonl
 # - Then run: python -m scripts.filmot.extract_candidates --phase transcripts
 # - Then run: python -m scripts.filmot.extract_candidates --phase extract
+
+# Human Evaluation (pipeline/human_eval/)
+# Step 1: Stratified sampling from validated candidates (50 per LLM score bin)
+python -m pipeline.human_eval.sample
+
+# Step 2: Convert samples to MTurk-compatible CSV (HTML-encodes diacritics)
+python -m pipeline.human_eval.prepare_csv
+
+# Step 3: Upload to MTurk Developer Sandbox
+# - Create project with pipeline/human_eval/mturk_interface.html as template
+# - Upload pipeline/data/human_eval_mturk.csv as batch CSV
+# - Set assignments per HIT = number of annotators
+
+# Step 4: Compute inter-annotator agreement after annotation
+python -m pipeline.human_eval.agreement pipeline/data/annotator1_results.csv pipeline/data/annotator2_results.csv
 ```
 
 ## Architecture
@@ -149,6 +164,12 @@ Filmot/YouTube → filmot search → transcript download → filmot_asi_candidat
 
 Filmot API → paginated subtitle search → raw hits JSONL → pattern filter → filmot_api_candidates.jsonl
      (replaces blocked Playwright pipeline, uses filmot Python package via RapidAPI)
+
+All sources → candidates_unified.jsonl → LLM validation (Qwen 3.5-9B) → candidates_validated.jsonl
+                                                                              ↓
+                                          Human Evaluation (MTurk Sandbox, 2 annotators, 0-3 scale)
+                                                                              ↓
+                                                            agreement.py → IAA metrics + LLM correlation
 ```
 
 ### Core Modules (`scripts/ro_asi/`) - Small Datasets
@@ -275,6 +296,39 @@ GPU experiments use Modal (A10G/T4). See `EXPERIMENT_CONCLUSIONS.md` for full an
 
 - **run.py**: Discovers emotion words via explicit labeling patterns (`un sentiment de X`, `plin de X`, etc.)
 - Output: `data/distributional_asi_candidates.jsonl`, `data/distributional_expanded_seed.json`
+
+### Human Evaluation (`pipeline/human_eval/`)
+
+Pilot human evaluation to measure LLM validation quality, following MASIVE methodology:
+
+- **sample.py**: Stratified sampling from `candidates_validated_partial.jsonl` (20K candidates). Samples 50 per LLM score bin (0/1/2/3) = 200 total, with secondary stratification by source (FULG/filmot/merged_corpus).
+- **prepare_csv.py**: Converts sampled JSONL to MTurk CSV format. HTML-encodes Romanian diacritics (MTurk rejects raw UTF-8). Highlights seed word in green, provides short (matched sentence) and full (surrounding text + title) context.
+- **mturk_interface.html**: Romanian adaptation of MASIVE's MTurk annotation interface. Single question: 4-point affective state Likert scale (0-3), matching the LLM validation scale. Includes 7 worked examples from `config.py`. Hosted on MTurk Developer Sandbox (free).
+- **agreement.py**: Computes Cohen's Kappa (unweighted + quadratic weighted), percent agreement, binary agreement (0-1 vs 2-3), Spearman correlation between human and LLM scores, and confusion matrices.
+
+**Annotation setup**: 2 annotators (Romanian native speakers), 105 overlapping samples, MTurk Developer Sandbox.
+
+**Results** (n=105):
+
+| Metric | Value |
+|--------|-------|
+| Cohen's Kappa (quadratic weighted) | 0.649 (substantial) |
+| Cohen's Kappa (unweighted) | 0.295 |
+| Percent agreement (exact) | 47.6% |
+| Binary Kappa (0-1 vs 2-3) | 0.564 (moderate) |
+| Binary percent agreement | 78.1% |
+| Spearman's rho (mean human vs LLM) | 0.701 (p<0.0001) |
+| Human validation rate (LLM>=2 confirmed by humans) | 86.8% |
+
+The human validation rate (86.8%) is comparable to MASIVE's English result (88%), confirming the LLM validation pipeline is a reliable proxy for human judgment at scale.
+
+Output files:
+- `data/human_eval_sample.jsonl` — 200 stratified samples with LLM scores
+- `data/human_eval_mturk.csv` — MTurk-ready CSV (all 200 samples)
+- `data/human_eval_mturk_annotator2.csv` — filtered to 105 IDs completed by annotator 1
+- `data/annotator1_results.csv` — MTurk export with annotator 1 responses
+- `data/annotator2_results.csv` — MTurk export with annotator 2 responses
+- `data/human_eval_results.json` — all metrics + per-item scores (both annotators + LLM)
 
 ## References
 
