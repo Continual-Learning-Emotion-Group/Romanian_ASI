@@ -1,15 +1,15 @@
 {
   "mode": "filmot_jsonl",
-  "conjunction_matches": 633,
-  "unique_new_candidates": 168,
-  "accepted": 7,
-  "new_words_count": 7,
+  "conjunction_matches": 2531,
+  "unique_new_candidates": 318,
+  "accepted": 28,
+  "new_words_count": 28,
   "rejected_reasons": {
-    "too_short": 32,
-    "stopword": 38,
-    "low_co_occurrence": 55,
-    "gender_mismatch": 36,
-    "already_in_seed": 10
+    "too_short": 42,
+    "stopword": 55,
+    "gender_mismatch": 76,
+    "low_co_occurrence": 117,
+    "already_in_seed": 21
   },
   "accepted_words": [
     {
@@ -18,15 +18,60 @@
         "joy",
         "sadness"
       ],
+      "confidence": 1.0
+    },
+    {
+      "word": "știi",
+      "emotions": [
+        "joy"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "word": "mulțumesc",
+      "emotions": [
+        "joy",
+        "trust"
+      ],
       "confidence": 0.94
     },
     {
       "word": "sincer",
       "emotions": [
+        "joy"
+      ],
+      "confidence": 0.94
+    },
+    {
+      "word": "sper",
+      "emotions": [
+        "fear",
+        "joy"
+      ],
+      "confidence": 0.94
+    },
+    {
+      "word": "astăzi",
+      "emotions": [
+        "happiness",
+        "sadness"
+      ],
+      "confidence": 0.94
+    },
+    {
+      "word": "zic",
+      "emotions": [
+        "sadness"
+      ],
+      "confidence": 0.94
+    },
+    {
+      "word": "deși",
+      "emotions": [
         "joy",
         "sadness"
       ],
-      "confidence": 0.88
+      "confidence": 0.94
     },
     {
       "word": "atât",
@@ -40,27 +85,141 @@
       "emotions": [
         "joy"
       ],
-      "confidence": 0.8
+      "confidence": 0.86
     },
     {
-      "word": "mulțumesc",
-      "emotions": [
-        "joy"
-      ],
-      "confidence": 0.58
-    },
-    {
-      "word": "voiam",
+      "word": "oricum",
       "emotions": [
         "joy",
         "sadness"
       ],
-      "confidence": 0.58
+      "confidence": 0.86
+    },
+    {
+      "word": "voiam",
+      "emotions": [
+        "joy"
+      ],
+      "confidence": 0.86
     },
     {
       "word": "ales",
       "emotions": [
         "joy"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "word": "înțelegi",
+      "emotions": [
+        "joy"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "word": "fix",
+      "emotions": [
+        "joy",
+        "sadness"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "word": "încerc",
+      "emotions": [
+        "joy",
+        "trust"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "word": "coaie",
+      "emotions": [
+        "joy",
+        "sadness"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "word": "aveam",
+      "emotions": [
+        "joy",
+        "sadness"
+      ],
+      "confidence": 0.82
+    },
+    {
+      "word": "dintr",
+      "emotions": [
+        "joy",
+        "sadness"
+      ],
+      "confidence": 0.8
+    },
+    {
+      "word": "oamenii",
+      "emotions": [
+        "joy"
+      ],
+      "confidence": 0.8
+    },
+    {
+      "word": "omul",
+      "emotions": [
+        "joy"
+      ],
+      "confidence": 0.8
+    },
+    {
+      "word": "credeam",
+      "emotions": [
+        "sadness"
+      ],
+      "confidence": 0.8
+    },
+    {
+      "word": "plăcut",
+      "emotions": [
+        "joy",
+        "trust"
+      ],
+      "confidence": 0.74
+    },
+    {
+      "word": "oarecum",
+      "emotions": [
+        "sadness",
+        "trust"
+      ],
+      "confidence": 0.74
+    },
+    {
+      "word": "lucrurile",
+      "emotions": [
+        "sadness"
+      ],
+      "confidence": 0.74
+    },
+    {
+      "word": "simțeam",
+      "emotions": [
+        "anxiousness",
+        "sadness"
+      ],
+      "confidence": 0.64
+    },
+    {
+      "word": "zici",
+      "emotions": [
+        "anger",
+        "joy"
+      ],
+      "confidence": 0.58
+    },
+    {
+      "word": "încercam",
+      "emotions": [
+        "sadness"
       ],
       "confidence": 0.58
     }

@@ -1,14 +1,91 @@
 {
   "mode": "streaming_fulg",
-  "conjunction_matches": 6,
-  "unique_candidates": 6,
-  "accepted": 0,
-  "new_words_count": 0,
+  "conjunction_matches": 671,
+  "unique_new_candidates": 168,
+  "accepted": 10,
+  "new_words_count": 10,
   "rejected_reasons": {
-    "too_short": 3,
-    "gender_mismatch": 1,
-    "stopword": 1,
-    "low_co_occurrence": 1
+    "too_short": 26,
+    "gender_mismatch": 30,
+    "stopword": 30,
+    "low_co_occurrence": 72,
+    "already_in_seed": 25
   },
-  "accepted_words": []
+  "accepted_words": [
+    {
+      "word": "încerc",
+      "emotions": [
+        "joy"
+      ],
+      "confidence": 0.94
+    },
+    {
+      "word": "iar",
+      "emotions": [
+        "joy"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "word": "fizic",
+      "emotions": [
+        "joy"
+      ],
+      "confidence": 0.8
+    },
+    {
+      "word": "Aveam",
+      "emotions": [
+        "joy"
+      ],
+      "confidence": 0.8
+    },
+    {
+      "word": "încât",
+      "emotions": [
+        "sadness"
+      ],
+      "confidence": 0.76
+    },
+    {
+      "word": "deşi",
+      "emotions": [
+        "joy",
+        "trust"
+      ],
+      "confidence": 0.64
+    },
+    {
+      "word": "căci",
+      "emotions": [
+        "joy",
+        "shame"
+      ],
+      "confidence": 0.64
+    },
+    {
+      "word": "simțeam",
+      "emotions": [
+        "fear",
+        "happiness"
+      ],
+      "confidence": 0.58
+    },
+    {
+      "word": "numai",
+      "emotions": [
+        "joy",
+        "sadness"
+      ],
+      "confidence": 0.58
+    },
+    {
+      "word": "oricum",
+      "emotions": [
+        "joy",
+        "sadness"
+      ],
+      "confidence": 0.58
+    }
+  ]
 }

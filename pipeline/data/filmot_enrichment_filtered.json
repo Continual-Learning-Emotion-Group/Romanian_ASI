@@ -1,0 +1,32 @@
+{
+  "_metadata": {
+    "description": "New words discovered by Filmot seed enrichment (88,581 subtitle records), manually filtered.",
+    "source": "pipeline.seed_enrichment.run --source filmot",
+    "data": "pipeline/data/filmot_raw.jsonl (88,581 records from Filmot API, 21 queries)",
+    "methods": {
+      "bootstrapping": "2531 conjunction matches, 28 accepted — ALL garbage (verbs, conjunctions, adverbs, slang: simt, știi, mulțumesc, sincer, sper, coaie, etc.). Zero usable words.",
+      "distributional": "68 pattern matches, 13 words with freq>=2. Most already in seed (vinovăție, bucurie, frică, fericire) or not affective (situație, situații, energie)."
+    },
+    "filtering": {
+      "bootstrapping_removed": "All 28 words — none are affective states",
+      "distributional_removed": [
+        "Already in seed: vinovatie, bucurie, frica, fericire",
+        "Not affective: situatie, situatii, energia, bine",
+        "Meta: emotii (the word 'emotions' itself)"
+      ],
+      "kept": "mila (pity/compassion), implinire (fulfillment), siguranta (safety/security), regret"
+    },
+    "note": "Low yield because filmot records are short subtitle snippets (~50 words each), so distributional patterns ('un sentiment de X') rarely fire. Bootstrapping finds many conjunction matches but the Y words are almost never affective states — YouTube speech is full of filler words after 'mă simt X și Y'."
+  },
+  "new_nouns": {
+    "mila": "discovered",
+    "implinire": "discovered",
+    "siguranta": "discovered",
+    "regret": "discovered"
+  },
+  "new_nouns_count": 4,
+  "new_adjectives": {},
+  "new_adjectives_count": 0,
+  "new_adverbs": {},
+  "new_adverbs_count": 0
+}
