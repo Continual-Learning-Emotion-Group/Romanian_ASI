@@ -23,28 +23,16 @@ from pipeline.utils.corpus_reader import iter_corpus
 # Conjunction pattern building
 # ---------------------------------------------------------------------------
 
-# Verb forms for conjunction patterns (normalized, no diacritics)
+# Verb forms for conjunction patterns (normalized, no diacritics).
+# Only unambiguous "simt" family — no "sunt/eram/am fost" (too ambiguous),
+# no plural, no "mă fac" or "o să fiu".
 VERB_FORMS = [
-    # Primary: "mă simt" family
     r"ma\s+simt",
     r"m-?am\s+simtit",
     r"ma\s+simteam",
-    # Colloquial future + conditional + subjunctive
     r"o\s+sa\s+ma\s+simt",
     r"m-?as\s+simti",
     r"sa\s+ma\s+simt",
-    # Secondary: "sunt" family
-    r"sunt",
-    r"eram",
-    r"am\s+fost",
-    # Colloquial future of "to be"
-    r"o\s+sa\s+fiu",
-    # Reflexive
-    r"ma\s+fac",
-    # Plural (kept for conjunction mining — captures more evidence)
-    r"ne\s+simtim",
-    r"ne-?am\s+simtit",
-    r"suntem",
 ]
 
 # Conjunctions — longer alternatives first to avoid partial matches

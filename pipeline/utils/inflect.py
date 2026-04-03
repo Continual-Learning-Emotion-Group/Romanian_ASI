@@ -60,23 +60,54 @@ def get_multext_east(path: Path = None) -> Dict[str, List[Tuple[str, str]]]:
     return _multext_cache
 
 
+def _is_valid_adjective_form(msd: str) -> bool:
+    """
+    Check if an adjective MSD tag represents a form usable in "I feel" patterns.
+
+    We only need singular, no clitic (no definite article), not oblique case.
+    MSD format: Afp{gender}{number}{case}{clitic}
+    - Position 4: gender (m/f)
+    - Position 5: number (s/p)
+    - Position 6: case (r=nominative, o=oblique, -=unspecified, v=vocative)
+    - Position 7 (last): clitic (n=no, y=yes)
+    """
+    if len(msd) < 6:
+        return False
+    number = msd[5] if len(msd) > 5 else '-'
+    case = msd[6] if len(msd) > 6 else '-'
+    clitic = msd[-1]
+    return number == 's' and clitic == 'n' and case not in ('o', 'v')
+
+
+def _is_valid_noun_form(msd: str) -> bool:
+    """
+    Check if a noun MSD tag represents a base form (singular, no article).
+
+    MSD format: Nc{gender}{number}{case}{clitic}
+    """
+    if len(msd) < 5:
+        return False
+    number = msd[4] if len(msd) > 4 else '-'
+    clitic = msd[-1]
+    return number == 's' and clitic == 'n'
+
+
 def expand_lemma(
     lemma: str,
     pos: str,
     multext: Dict[str, List[Tuple[str, str]]] = None,
 ) -> Set[str]:
     """
-    Expand a lemma to all inflected forms + diacritic-stripped variants.
+    Expand a lemma to forms usable in first-person singular "I feel" patterns.
 
-    Args:
-        lemma: Base form (e.g., "fericit", "tristețe", "bine")
-        pos: Part of speech ("adjective", "noun", "adverb")
-        multext: MULTEXT-East lookup table (loaded if None)
+    For adjectives: masculine + feminine singular (no articles, no plural,
+    no oblique/vocative). E.g., fericit → {fericit, fericită}.
 
-    Returns:
-        Set of all forms including diacritic variants.
-        E.g., {"fericit", "fericită", "fericite", "fericiți",
-               "fericita", "fericite", "fericiti"}
+    For nouns: singular base form only.
+
+    For adverbs: just the lemma (adverbs don't inflect).
+
+    All forms also get diacritic-stripped variants added.
     """
     if multext is None:
         multext = get_multext_east()
@@ -88,6 +119,11 @@ def expand_lemma(
     entries = multext.get(lemma, [])
     for form, msd in entries:
         if tag_prefix and not msd.startswith(tag_prefix):
+            continue
+        # Filter to forms that make sense in "I feel [X]" patterns
+        if pos == "adjective" and not _is_valid_adjective_form(msd):
+            continue
+        if pos == "noun" and not _is_valid_noun_form(msd):
             continue
         forms.add(form)
 
@@ -112,38 +148,26 @@ def expand_lemma(
 
 def _fallback_adjective_forms(lemma: str) -> Set[str]:
     """
-    Simple suffix rules for Romanian adjective inflection.
+    Simple suffix rules for Romanian adjective feminine singular.
 
     Used when a lemma is not found in MULTEXT-East.
-    Covers the most common patterns (not exhaustive).
+    Only generates masculine + feminine singular (for "I feel" patterns).
     """
     forms = {lemma}
 
-    # Common masculine → feminine patterns
+    # Common masculine → feminine singular patterns
     if lemma.endswith("it"):
-        # fericit → fericită, fericiți, fericite
-        stem = lemma[:-2]
-        forms.update([stem + "ită", stem + "iți", stem + "ite"])
+        forms.add(lemma[:-2] + "ită")
     elif lemma.endswith("at"):
-        # stresat → stresată, stresați, stresate
-        stem = lemma[:-2]
-        forms.update([stem + "ată", stem + "ați", stem + "ate"])
+        forms.add(lemma[:-2] + "ată")
     elif lemma.endswith("ut"):
-        # abătut → abătută, abătuți, abătute
-        stem = lemma[:-2]
-        forms.update([stem + "ută", stem + "uți", stem + "ute"])
+        forms.add(lemma[:-2] + "ută")
     elif lemma.endswith("os"):
-        # nervos → nervoasă, nervoși, nervoase
-        stem = lemma[:-2]
-        forms.update([stem + "oasă", stem + "oși", stem + "oase"])
+        forms.add(lemma[:-2] + "oasă")
     elif lemma.endswith("nic"):
-        # panic → panică (but this is noun-like)
-        stem = lemma[:-2]
-        forms.update([stem + "ică", stem + "ici", stem + "ice"])
+        forms.add(lemma[:-2] + "ică")
     elif lemma.endswith("t"):
-        # trist → tristă, triști, triste
-        stem = lemma[:-1]
-        forms.update([stem + "tă", stem + "ști", stem + "te"])
+        forms.add(lemma[:-1] + "tă")
 
     return forms
 

@@ -24,11 +24,8 @@ from pipeline.utils.pattern_matcher import NOUN_EMOTION_MAP
 DISCOVERY_PATTERNS = [
     ("sentiment_de", r"\bun\s+sentiment\s+de\s+(\w+)"),
     ("sentimentul_de", r"\bsentimentul\s+de\s+(\w+)"),
-    ("stare_de", r"\bo\s+stare\s+de\s+(\w+)"),
-    ("starea_de", r"\bstarea\s+de\s+(\w+)"),
     ("emotie_de", r"\bemoti[ae]\s+de\s+(\w+)"),
     ("senzatie_de", r"\bo\s+senzatie\s+de\s+(\w+)"),
-    ("plin_de", r"\bplin[aă]?\s+de\s+(\w+)"),
     ("cuprins_de", r"\bcuprins[aă]?\s+de\s+(\w+)"),
     ("coplesit_de", r"\bcoplesit[aă]?\s+de\s+(\w+)"),
 ]

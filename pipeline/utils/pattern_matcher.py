@@ -148,13 +148,6 @@ PATTERNS = [
     ("simteam_noun", "primary",
      r'\b(sim[tț]eam)\s+' + _MOD + r'({SEED})\b', True),
 
-    # First person plural
-    ("ne_simtim_present", "primary",
-     r'\b(ne\s+sim[tț]im)\s+' + _MOD + r'({SEED})\b', False),
-
-    ("neam_simtit_perfect", "primary",
-     r'\b(ne-?am\s+sim[tț]it)\s+' + _MOD + r'({SEED})\b', False),
-
     # === Secondary: "sunt" (I am), dative, possessive ===
 
     ("sunt_adj_present", "secondary",
@@ -165,9 +158,6 @@ PATTERNS = [
 
     ("am_fost_adj_perfect", "secondary",
      r'\b(am\s+fost)\s+' + _MOD + r'({SEED})\b', False),
-
-    ("suntem_adj_present", "secondary",
-     r'\b(suntem)\s+' + _MOD + r'({SEED})\b', False),
 
     # Colloquial future of "to be"
     ("o_sa_fiu_future", "secondary",
@@ -205,7 +195,6 @@ PATTERNS = [
 TRIGGER_WORDS = {
     "simt", "sunt", "eram", "fost", "mi-e", "mie",
     "imi", "îmi", "simteam", "simțeam", "simtit", "simțit",
-    "suntem", "simtim", "simțim",
 }
 
 # Multi-word triggers for the new patterns (too vague as single words)
@@ -221,8 +210,6 @@ FILMOT_QUERIES_PRIMARY = [
     '"m-am simțit"',
     '"îmi este"',
     '"mă simțeam"',
-    '"ne simțim"',
-    '"ne-am simțit"',
     '"simt că"',
     '"îmi era"',
     '"mă voi simți"',
@@ -238,8 +225,6 @@ FILMOT_QUERIES_SECONDARY = [
     '"imi este"',
     '"imi era"',
     '"ma simteam"',
-    '"ne simtim"',
-    '"ne-am simtit"',
     '"o sa ma simt"',
     '"m-as simti"',
     '"sa ma simt"',

@@ -158,9 +158,8 @@ Run with `python -m pipeline.collect.stream_filmot --max-hits 50000`.
 
 ### Pattern Matcher (`utils/pattern_matcher.py`)
 
-23 Romanian "I feel" regex patterns (18 original + 5 new colloquial/conditional/
-subjunctive forms). Auto-expands lemma seeds to all gender/number/diacritics
-forms via MULTEXT-East.
+20 Romanian "I feel" regex patterns (first person singular only). Auto-expands
+lemma seeds to masc/fem singular + diacritic variants via MULTEXT-East.
 
 New patterns added: `o să mă simt` (colloquial future), `o să fiu` (colloquial
 future of "to be"), `m-aș simți` (conditional), `să mă simt` (subjunctive),
@@ -171,8 +170,9 @@ of truth for FULG/Filmot collection scripts.
 
 ### Inflection (`utils/inflect.py`)
 
-Expands lemmas to all inflected forms using MULTEXT-East (428K entries).
-E.g., `fericit` → `{fericit, fericită, fericite, fericiți, fericita, ...}`.
+Expands lemmas to masculine + feminine singular forms for "I feel" patterns
+using MULTEXT-East (428K entries). E.g., `fericit` → `{fericit, fericită, fericita}`.
+No plurals, articles, oblique/vocative — only forms that appear after "mă simt".
 
 ### Corpus Reader (`utils/corpus_reader.py`)
 
@@ -189,21 +189,31 @@ Run with `python -m pipeline.seed_enrichment.run`.
 
 ### Method 1: Bootstrapping (`bootstrapping.py`)
 
-MASIVE-style conjunction mining: finds "I feel X and Y" patterns where X is a
-known seed word and Y is a candidate. Iterative (4 rounds by default). Starts
-from the 375-word merged seed. Validates candidates by co-occurrence threshold,
+MASIVE-style conjunction mining: finds "mă simt X and Y" patterns where X is a
+known seed word and Y is a candidate. Uses only unambiguous "simt" verb forms
+(no "sunt"/"eram" — too ambiguous with 3rd person). Iterative (4 rounds).
+Starts from the 375-word merged seed. Validates by co-occurrence threshold,
 gender agreement, and stopword filtering.
 
 ### Method 2: Distributional Mining (`distributional.py`)
 
 Discovers emotion words via explicit labeling patterns (no seed needed):
-"un sentiment de X", "o stare de X", "plin de X", "cuprins de X", etc.
-Primarily finds nouns.
+"un sentiment de X", "sentimentul de X", "emoție de X", "o senzație de X",
+"cuprins de X", "copleșit de X". Primarily finds nouns. Excluded patterns
+that produced too much noise: "stare de" (matches "starea de urgență"),
+"plin de" (matches "plin de gauri").
 
 ### Output
 
-Both methods' results are merged and deduplicated into `data/enriched_seed.json`,
+Both methods' results are merged, then **manually reviewed** to discard
+non-affective words. The enriched seed is saved to `data/enriched_seed.json`,
 loadable via `pipeline.seed.enriched.build_enriched_seed()`.
+
+**Current results** (on small datasets only, 106K records): 375 → 377 words.
+Bootstrapping found very few conjunction patterns in reviews/news data.
+Distributional mining found 20 candidates, of which 7 were genuine affective
+states but 5 were already in the seed. Net new: `neputință` (helplessness),
+`tensiune` (tension). With FULG/Filmot data the yield should be much higher.
 
 ## External Data (`seed/`)
 
