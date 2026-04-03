@@ -4,15 +4,17 @@ FULG extraction: stream the FULG dataset (150B tokens) from HuggingFace,
 filter by PatternMatcher + enriched seed, save candidates with sentence-level
 context and domain categorization.
 
+Supports parallel workers (--workers N) to stream different shards
+concurrently, overcoming the single-stream network bottleneck.
+
 Requires:
     pip install datasets tqdm
 
 Usage:
     python -m pipeline.extract_match.fulg                          # default (50K samples)
     python -m pipeline.extract_match.fulg --max-samples 100000     # more
-    python -m pipeline.extract_match.fulg --max-records 5000000    # limit scanned
+    python -m pipeline.extract_match.fulg --workers 4              # parallel shards
     python -m pipeline.extract_match.fulg --resume                 # resume from checkpoint
-    python -m pipeline.extract_match.fulg --context-sentences 3    # wider context
     python -m pipeline.extract_match.fulg --max-records 10000 --max-samples 100  # quick test
 """
 
@@ -21,10 +23,12 @@ import hashlib
 import json
 import re
 import signal
+import threading
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Generator, Set
+from queue import Queue, Empty
+from typing import Any, Dict, List, Optional, Set
 
 from tqdm import tqdm
 
@@ -37,6 +41,9 @@ DEFAULT_OUTPUT = DATA_DIR / "pattern_candidates_fulg.jsonl"
 ENRICHED_SEED_PATH = DATA_DIR / "enriched_seed_merged.json"
 
 FULG_DATASET_ID = "faur-ai/fulg"
+
+# Sentinel value to signal worker completion
+_WORKER_DONE = None
 
 # ---------------------------------------------------------------------------
 # Domain categorization (soft tagging for analysis, NOT filtering)
@@ -110,6 +117,7 @@ def load_checkpoint(checkpoint_path: Path) -> Dict[str, Any]:
             "filter_reasons": {},
             "duplicates_skipped": 0,
             "seen_hashes": [],
+            "seen_domain_sentences": [],
             "by_source_category": {},
             "by_pattern": {},
             "by_emotion": {},
@@ -129,54 +137,145 @@ def save_checkpoint(checkpoint_path: Path, checkpoint: Dict[str, Any]):
 
 
 # ---------------------------------------------------------------------------
-# FULG streaming
+# Worker: streams one shard, filters, puts candidates on queue
 # ---------------------------------------------------------------------------
 
-def stream_fulg_raw(
-    min_language_score: float = 0.8,
-    min_text_length: int = 100,
-    max_text_length: int = 100_000,
-    trigger_words: Set[str] = None,
-) -> Generator[Dict[str, Any], None, None]:
+def _shard_worker(
+    shard_index: int,
+    num_shards: int,
+    matcher: PatternMatcher,
+    trigger_words: Set[str],
+    context_sentences: int,
+    max_context_length: int,
+    queue: Queue,
+    stop_event: threading.Event,
+):
     """
-    Stream FULG records from HuggingFace with pre-filters.
+    Stream one shard of FULG, run pattern matching, put candidates on queue.
 
-    Yields full records (dict) with all metadata intact.
+    Each item on the queue is either:
+    - A dict with candidate info + "_worker_stats" key for filtered/scanned counts
+    - _WORKER_DONE sentinel when this worker finishes
     """
     from datasets import load_dataset
 
     ds = load_dataset(FULG_DATASET_ID, split="train", streaming=True)
+    shard = ds.shard(num_shards=num_shards, index=shard_index)
 
-    for record in ds:
+    local_filtered = 0
+    local_filter_reasons = defaultdict(int)
+    local_scanned = 0
+
+    for record in shard:
+        if stop_event.is_set():
+            break
+
+        local_scanned += 1
+
         text = record.get("raw_content", "")
         lang_score = record.get("language_score", 0)
 
-        if lang_score < min_language_score:
-            yield {"_skip": "low_language_score"}
+        if lang_score < 0.8:
+            local_filtered += 1
+            local_filter_reasons["low_language_score"] += 1
             continue
-        if len(text) < min_text_length:
-            yield {"_skip": "too_short"}
+        if len(text) < 100:
+            local_filtered += 1
+            local_filter_reasons["too_short"] += 1
             continue
-        if len(text) > max_text_length:
-            yield {"_skip": "too_long"}
+        if len(text) > 100_000:
+            local_filtered += 1
+            local_filter_reasons["too_long"] += 1
             continue
 
-        if trigger_words:
-            text_lower = text.lower()
-            if not any(tw in text_lower for tw in trigger_words):
-                yield {"_skip": "no_trigger_words"}
-                continue
+        text_lower = text.lower()
+        if not any(tw in text_lower for tw in trigger_words):
+            local_filtered += 1
+            local_filter_reasons["no_trigger_words"] += 1
+            continue
+
+        # Pattern matching
+        matches = matcher.find_matches(text, extract_sentences=True)
+        if not matches:
+            continue
 
         digest = record.get("digest", "")
-        yield {
-            "id": f"fulg_{digest[:12]}" if digest else f"fulg_{hash(text) & 0xFFFFFFFF:08x}",
-            "text": text,
-            "url": record.get("url", ""),
-            "title": record.get("title", ""),
-            "source_domain": record.get("source_domain", ""),
-            "language_score": lang_score,
-            "length": record.get("length", len(text)),
-        }
+        record_id = f"fulg_{digest[:12]}" if digest else f"fulg_{hash(text) & 0xFFFFFFFF:08x}"
+        source_domain = record.get("source_domain", "")
+        url = record.get("url", "")
+        source_category = categorize_domain(source_domain, url)
+
+        seen_in_page = set()
+        for match in matches:
+            if stop_event.is_set():
+                break
+
+            # In-page dedup
+            match_key = (record_id, match.matched_text)
+            if match_key in seen_in_page:
+                continue
+            seen_in_page.add(match_key)
+
+            ctx_before, matched_sent, ctx_after = extract_context_window(
+                text, match.start_pos, match.end_pos,
+                num_sentences=context_sentences,
+                max_length=max_context_length,
+            )
+
+            context = ""
+            if ctx_before:
+                context += ctx_before + " "
+            context += matched_sent
+            if ctx_after:
+                context += " " + ctx_after
+
+            candidate = {
+                "id": record_id,
+                "text": context.strip(),
+                "context_before": ctx_before,
+                "context_after": ctx_after,
+                "matched_sentence": match.matched_text,
+                "pattern_used": match.pattern_name,
+                "pattern_category": match.pattern_category,
+                "seed_word": match.seed_word,
+                "seed_word_normalized": match.seed_word_normalized,
+                "emotion_category": match.emotions,
+                "source": "fulg",
+                "source_domain": source_domain,
+                "source_category": source_category,
+                "url": url,
+                "title": record.get("title", ""),
+                "full_text_length": len(text),
+                # For dedup in main thread
+                "_text_hash": hashlib.md5(text.encode("utf-8")).hexdigest(),
+                "_domain_sent_hash": hashlib.md5(
+                    f"{source_domain}|{match.matched_text}".encode()
+                ).hexdigest(),
+            }
+            queue.put(candidate)
+
+        # Periodically report filter stats (as deltas)
+        if local_scanned % 5000 == 0:
+            queue.put({
+                "_stats": True,
+                "filtered": local_filtered,
+                "filter_reasons": dict(local_filter_reasons),
+                "scanned": local_scanned,
+                "shard": shard_index,
+            })
+            local_filtered = 0
+            local_filter_reasons = defaultdict(int)
+            local_scanned = 0
+
+    # Final stats flush (remaining delta)
+    queue.put({
+        "_stats": True,
+        "filtered": local_filtered,
+        "filter_reasons": dict(local_filter_reasons),
+        "scanned": local_scanned,
+        "shard": shard_index,
+    })
+    queue.put(_WORKER_DONE)
 
 
 # ---------------------------------------------------------------------------
@@ -188,6 +287,7 @@ def extract_fulg(
     seed_path: Path = None,
     max_samples: int = 50_000,
     max_records: int = 0,
+    workers: int = 1,
     context_sentences: int = 2,
     max_context_length: int = 1000,
     checkpoint_every: int = 10_000,
@@ -196,6 +296,8 @@ def extract_fulg(
 ) -> dict:
     """
     Stream FULG, filter by PatternMatcher, save candidates with context.
+
+    With workers > 1, streams multiple shards in parallel for higher throughput.
     """
     if output_path is None:
         output_path = DEFAULT_OUTPUT
@@ -211,15 +313,19 @@ def extract_fulg(
         checkpoint = load_checkpoint(checkpoint_path)
         seen = set(checkpoint["seen_hashes"])
         seen_domain_sentences = set(checkpoint.get("seen_domain_sentences", []))
-        start_offset = checkpoint["records_offset"]
         if verbose:
-            print(f"Resuming from record {start_offset:,}, "
-                  f"{checkpoint['total_matches']:,} candidates so far")
+            print(f"Resuming: {checkpoint['total_matches']:,} candidates so far")
     else:
-        checkpoint = load_checkpoint(checkpoint_path)
+        # Fresh run — start with empty state
+        checkpoint = {
+            "total_processed": 0, "total_matches": 0,
+            "filtered_out": 0, "filter_reasons": {},
+            "duplicates_skipped": 0,
+            "by_source_category": {}, "by_pattern": {}, "by_emotion": {},
+            "started_at": datetime.now().isoformat(),
+        }
         seen = set()
         seen_domain_sentences = set()
-        start_offset = 0
 
     # Stats (restore from checkpoint or fresh)
     total_processed = checkpoint["total_processed"]
@@ -231,15 +337,18 @@ def extract_fulg(
     by_pattern = defaultdict(int, checkpoint.get("by_pattern", {}))
     by_emotion = defaultdict(int, checkpoint.get("by_emotion", {}))
     unique_seed_words = set()
+    records_scanned = 0
 
-    # Graceful Ctrl+C
+    # Stop event for graceful shutdown
+    stop_event = threading.Event()
     interrupted = False
 
     def _sigint_handler(sig, frame):
         nonlocal interrupted
         interrupted = True
+        stop_event.set()
         if verbose:
-            print("\nInterrupted — saving checkpoint...")
+            print("\nInterrupted — stopping workers and saving checkpoint...")
 
     prev_handler = signal.signal(signal.SIGINT, _sigint_handler)
 
@@ -248,6 +357,7 @@ def extract_fulg(
 
     if verbose:
         print(f"Streaming FULG from {FULG_DATASET_ID}...")
+        print(f"  Workers: {workers} (shards: {workers})")
         print(f"  Trigger filter: {len(trigger_words)} words/phrases")
         print(f"  Max samples: {max_samples:,}"
               + (f", max records: {max_records:,}" if max_records else ""))
@@ -259,123 +369,88 @@ def extract_fulg(
     if pbar and total_matches > 0:
         pbar.update(total_matches)
 
-    records_seen = 0
+    # Launch workers
+    queue: Queue = Queue(maxsize=workers * 200)
+    threads: List[threading.Thread] = []
+    for i in range(workers):
+        t = threading.Thread(
+            target=_shard_worker,
+            args=(
+                i, workers, matcher, trigger_words,
+                context_sentences, max_context_length,
+                queue, stop_event,
+            ),
+            daemon=True,
+        )
+        t.start()
+        threads.append(t)
+
+    workers_done = 0
+    candidates_since_checkpoint = 0
 
     with open(output_path, write_mode, encoding="utf-8") as f:
-        for record in stream_fulg_raw(
-            trigger_words=trigger_words,
-        ):
-            if interrupted:
-                break
-
-            # Skip records until we reach the resume offset
-            if records_seen < start_offset:
-                records_seen += 1
-                continue
-            records_seen += 1
-
-            # Handle filtered records
-            skip_reason = record.get("_skip")
-            if skip_reason:
-                filtered_out += 1
-                filter_reasons[skip_reason] += 1
+        while workers_done < workers:
+            try:
+                item = queue.get(timeout=1.0)
+            except Empty:
                 continue
 
-            # Max records limit
-            if max_records > 0 and total_processed >= max_records:
-                break
-
-            # Max samples limit
-            if total_matches >= max_samples:
-                break
-
-            text = record["text"]
-
-            # Dedup by text hash
-            text_hash = hashlib.md5(text.encode("utf-8")).hexdigest()
-            if text_hash in seen:
-                dupes_skipped += 1
-                continue
-            seen.add(text_hash)
-            total_processed += 1
-
-            # Pattern matching
-            matches = matcher.find_matches(text, extract_sentences=True)
-            if not matches:
+            # Worker finished
+            if item is _WORKER_DONE:
+                workers_done += 1
                 continue
 
-            source_domain = record.get("source_domain", "")
-            url = record.get("url", "")
-            source_category = categorize_domain(source_domain, url)
+            # Stats update from worker
+            if item.get("_stats"):
+                filtered_out += item["filtered"]
+                for reason, cnt in item["filter_reasons"].items():
+                    filter_reasons[reason] += cnt
+                records_scanned += item["scanned"]
+                continue
 
-            seen_in_page = set()
-            for match in matches:
-                if total_matches >= max_samples:
-                    break
+            # Candidate — apply cross-worker dedup
+            text_hash = item.pop("_text_hash")
+            domain_sent_hash = item.pop("_domain_sent_hash")
 
-                # Skip duplicate matches within same page
-                match_key = (record["id"], match.matched_text)
-                if match_key in seen_in_page:
-                    continue
-                seen_in_page.add(match_key)
+            # Boilerplate dedup: same sentence from same domain → skip
+            if domain_sent_hash in seen_domain_sentences:
+                continue
+            seen_domain_sentences.add(domain_sent_hash)
 
-                # Skip same matched sentence from same domain (boilerplate dedup)
-                domain_sent_key = hashlib.md5(
-                    f"{source_domain}|{match.matched_text}".encode()
-                ).hexdigest()
-                if domain_sent_key in seen_domain_sentences:
-                    continue
-                seen_domain_sentences.add(domain_sent_key)
+            # Track processed pages (for stats; a page may yield multiple candidates)
+            if text_hash not in seen:
+                seen.add(text_hash)
+                total_processed += 1
 
-                # Extract sentence-level context
-                ctx_before, matched_sent, ctx_after = extract_context_window(
-                    text,
-                    match.start_pos,
-                    match.end_pos,
-                    num_sentences=context_sentences,
-                    max_length=max_context_length,
+            f.write(json.dumps(item, ensure_ascii=False) + "\n")
+            total_matches += 1
+            candidates_since_checkpoint += 1
+
+            by_category[item["source_category"]] += 1
+            by_pattern[item["pattern_used"]] += 1
+            for e in item["emotion_category"]:
+                by_emotion[e] += 1
+            unique_seed_words.add(item["seed_word_normalized"])
+
+            if pbar:
+                pbar.n = total_matches
+                pbar.set_postfix(
+                    processed=f"{total_processed:,}",
+                    scanned=f"{records_scanned:,}",
                 )
+                pbar.refresh()
 
-                # Build context string
-                context = ""
-                if ctx_before:
-                    context += ctx_before + " "
-                context += matched_sent
-                if ctx_after:
-                    context += " " + ctx_after
-
-                candidate = {
-                    "id": record["id"],
-                    "text": context.strip(),
-                    "context_before": ctx_before,
-                    "context_after": ctx_after,
-                    "matched_sentence": match.matched_text,
-                    "pattern_used": match.pattern_name,
-                    "pattern_category": match.pattern_category,
-                    "seed_word": match.seed_word,
-                    "seed_word_normalized": match.seed_word_normalized,
-                    "emotion_category": match.emotions,
-                    "source": "fulg",
-                    "source_domain": source_domain,
-                    "source_category": source_category,
-                    "url": url,
-                    "title": record.get("title", ""),
-                    "full_text_length": len(text),
-                }
-
-                f.write(json.dumps(candidate, ensure_ascii=False) + "\n")
-                total_matches += 1
-
-                by_category[source_category] += 1
-                by_pattern[match.pattern_name] += 1
-                for e in match.emotions:
-                    by_emotion[e] += 1
-                unique_seed_words.add(match.seed_word_normalized)
+            # Max limits
+            if total_matches >= max_samples:
+                stop_event.set()
+                break
+            if max_records > 0 and total_processed >= max_records:
+                stop_event.set()
+                break
 
             # Checkpoint
-            if total_processed % checkpoint_every == 0:
+            if candidates_since_checkpoint >= checkpoint_every:
                 checkpoint.update({
-                    "records_offset": records_seen,
                     "total_processed": total_processed,
                     "total_matches": total_matches,
                     "filtered_out": filtered_out,
@@ -388,30 +463,41 @@ def extract_fulg(
                     "by_emotion": dict(by_emotion),
                 })
                 save_checkpoint(checkpoint_path, checkpoint)
-
-            if pbar:
-                pbar.n = total_matches
-                pbar.set_postfix(
-                    processed=f"{total_processed:,}",
-                    scanned=f"{records_seen:,}",
-                )
-                pbar.refresh()
+                candidates_since_checkpoint = 0
 
     if pbar:
         pbar.close()
 
-    # Restore original signal handler
+    # Signal workers to stop and drain queue so they can exit
+    # (workers may be blocked on queue.put() if queue is full)
+    stop_event.set()
+    while any(t.is_alive() for t in threads):
+        try:
+            item = queue.get(timeout=0.5)
+            # Still collect stats from draining
+            if item is _WORKER_DONE:
+                continue
+            if isinstance(item, dict) and item.get("_stats"):
+                filtered_out += item["filtered"]
+                for reason, cnt in item["filter_reasons"].items():
+                    filter_reasons[reason] += cnt
+                records_scanned += item["scanned"]
+        except Empty:
+            continue
+    for t in threads:
+        t.join(timeout=2.0)
+
     signal.signal(signal.SIGINT, prev_handler)
 
     # Final checkpoint
     checkpoint.update({
-        "records_offset": records_seen,
         "total_processed": total_processed,
         "total_matches": total_matches,
         "filtered_out": filtered_out,
         "filter_reasons": dict(filter_reasons),
         "duplicates_skipped": dupes_skipped,
         "seen_hashes": list(seen),
+        "seen_domain_sentences": list(seen_domain_sentences),
         "by_source_category": dict(by_category),
         "by_pattern": dict(by_pattern),
         "by_emotion": dict(by_emotion),
@@ -423,7 +509,7 @@ def extract_fulg(
         print(f"\n{'='*60}")
         print(f"FULG extraction {'interrupted' if interrupted else 'complete'}")
         print(f"{'='*60}")
-        print(f"Records scanned: {records_seen:,}")
+        print(f"Records scanned: {records_scanned:,}")
         print(f"Records processed (after filter): {total_processed:,}")
         print(f"Filtered out: {filtered_out:,}")
         if filter_reasons:
@@ -451,7 +537,7 @@ def extract_fulg(
 
     # Save stats
     stats = {
-        "records_scanned": records_seen,
+        "records_scanned": records_scanned,
         "total_processed": total_processed,
         "filtered_out": filtered_out,
         "filter_reasons": dict(filter_reasons),
@@ -483,6 +569,10 @@ def main():
         help="Max source records to process after filtering (0 = unlimited)",
     )
     parser.add_argument(
+        "--workers", type=int, default=1,
+        help="Number of parallel shard workers (default: 1)",
+    )
+    parser.add_argument(
         "--context-sentences", type=int, default=2,
         help="Sentences of context before/after match (default: 2)",
     )
@@ -492,7 +582,7 @@ def main():
     )
     parser.add_argument(
         "--checkpoint-every", type=int, default=10_000,
-        help="Save checkpoint every N processed records (default: 10000)",
+        help="Save checkpoint every N candidates (default: 10000)",
     )
     parser.add_argument(
         "--resume", action="store_true",
@@ -517,6 +607,7 @@ def main():
         seed_path=args.seed,
         max_samples=args.max_samples,
         max_records=args.max_records,
+        workers=args.workers,
         context_sentences=args.context_sentences,
         max_context_length=args.max_context_length,
         checkpoint_every=args.checkpoint_every,
