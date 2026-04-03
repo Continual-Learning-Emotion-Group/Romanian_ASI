@@ -15,6 +15,8 @@ pipeline/
 │   ├── pattern_candidates_small.jsonl # Extraction from small datasets (~150K candidates)
 │   ├── pattern_candidates_filmot.jsonl # Extraction from Filmot API (~800K candidates)
 │   ├── pattern_candidates_fulg.jsonl  # Extraction from FULG (100K candidates)
+│   ├── embedding_asi_candidates.jsonl # Embedding extraction raw output (all hits >= 0.75)
+│   ├── embedding_asi_candidates_filtered.jsonl # Filtered (bad noun anchors removed)
 │   └── ...                            # Provenance files, checkpoints, stats
 ├── utils/                             # Shared utilities
 │   ├── text_utils.py                  # Diacritics normalization, sentence splitting
@@ -40,6 +42,11 @@ pipeline/
 │   ├── run.py                         # Small datasets → pattern_candidates_small.jsonl
 │   ├── filmot.py                      # Filmot API → pattern_candidates_filmot.jsonl
 │   └── fulg.py                        # FULG streaming → pattern_candidates_fulg.jsonl
+├── extract_embed/                     # Embedding similarity ASI extraction
+│   ├── run.py                         # Main pipeline (Modal GPU + E5-base)
+│   ├── modal_embeddings.py            # Modal GPU embedder class
+│   ├── filter_results.py              # Post-processing: remove bad-anchor hits
+│   └── ANALYSIS.md                    # Experiment results & conclusions
 └── seed_enrichment/                   # Seed enrichment
     ├── run.py                         # CLI: runs both methods on any source
     ├── bootstrapping.py               # MASIVE-style "I feel X and Y"
@@ -387,6 +394,79 @@ FULG adds: `context_before`, `context_after`, `source_domain`, `source_category`
 `url`, `title`, `full_text_length`.
 
 Filmot adds: `video_id`, `video_title`, `channel_name`, `youtube_url`, `view_count`.
+
+## Embedding Extraction (`extract_embed/`) — EXPERIMENTAL
+
+Attempted to find ASI expressions via semantic similarity to synthetic anchor
+sentences (all combinations of 20 "I feel" verb templates × 524 seed words).
+Used `intfloat/multilingual-e5-base` (278M params, 768-dim) on Modal T4.
+
+```bash
+python -m pipeline.extract_embed.run --dry-run                    # test without GPU
+python -m pipeline.extract_embed.run --threshold 0.75 --sample 10 # full run
+python -m pipeline.extract_embed.filter_results                   # remove bad noun anchors
+python -m pipeline.extract_embed.filter_results --min-confidence 0.90  # + threshold filter
+```
+
+### Pipeline
+
+1. Load all 106K posts from `merged_corpus.jsonl`
+2. Split into sentences (409K total) — no pre-filter, embed everything
+3. Generate 3,912 synthetic anchors ("mă simt fericit", "sunt trist", etc.)
+4. Embed anchors (`query:` prefix) + all sentences (`passage:` prefix) on Modal GPU
+5. Cosine similarity: each sentence vs all anchors, keep max
+6. Group hits by post, output one row per post with `hits` list
+
+### Results & Conclusions
+
+**The synthetic anchor approach did not work well.** Short anchors produce a very
+narrow similarity band (median ~0.836) — 99.9% of sentences pass the 0.75
+threshold. Only above 0.90 (342 hits) is there meaningful signal, and those
+are mostly near-exact matches to what regex already catches.
+
+See `extract_embed/ANALYSIS.md` for full analysis. Key findings:
+
+**New patterns discovered** (to consider adding to `pattern_matcher.py`):
+- `am rămas [adj]` / `rămân [adj]` — "Am rămas perplex"
+- `aș fi [adj]` — "Aș fi foarte recunoscător" (conditional of "a fi")
+- `să fiu [adj]` — "Să fiu mulțumită" (subjunctive of "a fi")
+- `îmi pare rău` — common regret/sympathy expression
+- `mă ia cu [noun]` — "Mă ia cu rău" (felt-state idiom)
+
+**New seed words discovered**: `special`, `rupt` (colloquial "shattered")
+
+**Recommendation**: For regex-matched corpora, pattern matching with the enriched
+seed is sufficient. If embeddings are revisited, corpus-mined anchors (real
+matched sentences) provide much better discrimination than synthetic ones.
+
+### Output schema
+
+One row per post, all qualifying sentences grouped in `hits`:
+
+```json
+{
+  "id": "reddit_roap_12345",
+  "text": "full post text",
+  "source": "merged_corpus",
+  "extraction_method": "embedding_similarity",
+  "hits": [
+    {
+      "sentence": "Mă simt foarte trist.",
+      "confidence": 0.8723,
+      "emotion_category": ["sadness"],
+      "nearest_anchor": "mă simt trist",
+      "nearest_anchor_pattern": "ma_simt_present",
+      "is_novel": true
+    }
+  ]
+}
+```
+
+### Post-processing filter (`filter_results.py`)
+
+Removes hits where a noun-only pattern (e.g., `imi_este`, `am_noun`) was paired
+with a noun not in the curated `EMOTION_NOUNS_ONLY` set. Also supports
+`--min-confidence` for threshold filtering without re-running the GPU pipeline.
 
 ## External Data (`seed/`)
 
