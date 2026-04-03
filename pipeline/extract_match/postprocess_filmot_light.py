@@ -101,9 +101,11 @@ def process_one(text: str, seed_word: str) -> str:
 
     # 4. Remove leading fragment if first word is not capitalized
     #    (incomplete sentence carried over from filmot context window)
+    #    BUT keep it if it contains the seed word (the match)
     sentences = [s.strip() for s in re.split(r'(?<=\.)\s+', text) if s.strip()]
     if sentences and sentences[0] and not sentences[0][0].isupper():
-        sentences = sentences[1:]
+        if seed_word.lower() not in sentences[0].lower():
+            sentences = sentences[1:]
 
     if not sentences:
         # Fallback: return the text with periods added
