@@ -12,9 +12,10 @@ pipeline/
 │   ├── fulg_enrichment_filtered.json  # FULG enrichment: 135 new nouns (manually filtered)
 │   ├── filmot_enrichment_filtered.json # Filmot enrichment: 4 new nouns (manually filtered)
 │   ├── filmot_raw.jsonl               # Raw filmot subtitle hits (88K records)
-│   ├── pattern_candidates_small.jsonl # Extraction from small datasets (~150K candidates)
-│   ├── pattern_candidates_filmot.jsonl # Extraction from Filmot API (~800K candidates)
-│   ├── pattern_candidates_fulg.jsonl  # Extraction from FULG (100K candidates)
+│   ├── pattern_candidates_small.jsonl  # Extraction from small datasets (5.2K candidates)
+│   ├── pattern_candidates_filmot.jsonl # Extraction from Filmot API (29K candidates)
+│   ├── pattern_candidates_filmot_pp.jsonl    # Post-processed: Stanza 1st-person trimming
+│   ├── pattern_candidates_filmot_light.jsonl # Post-processed: light (>>, periods, fragments)
 │   ├── embedding_asi_candidates.jsonl # Embedding extraction raw output (all hits >= 0.75)
 │   ├── embedding_asi_candidates_filtered.jsonl # Filtered (bad noun anchors removed)
 │   └── ...                            # Provenance files, checkpoints, stats
@@ -40,8 +41,9 @@ pipeline/
 │   └── small_datasets/                # Raw source data
 ├── extract_match/                     # Pattern-based ASI candidate extraction
 │   ├── run.py                         # Small datasets → pattern_candidates_small.jsonl
-│   ├── filmot.py                      # Filmot API → pattern_candidates_filmot.jsonl
-│   └── fulg.py                        # FULG streaming → pattern_candidates_fulg.jsonl
+│   ├── filmot.py                      # Filmot API collect+filter → pattern_candidates_filmot.jsonl
+│   ├── postprocess_filmot.py          # Stanza-based: trim to 1st-person context (_pp.jsonl)
+│   └── postprocess_filmot_light.py    # Light: split >>, add periods, trim fragments (_light.jsonl)
 ├── extract_embed/                     # Embedding similarity ASI extraction
 │   ├── run.py                         # Main pipeline (Modal GPU + E5-base)
 │   ├── modal_embeddings.py            # Modal GPU embedder class
@@ -195,8 +197,9 @@ New patterns added: `o să mă simt` (colloquial future), `o să fiu` (colloquia
 future of "to be"), `m-aș simți` (conditional), `să mă simt` (subjunctive),
 `mă fac` (reflexive "I become").
 
-Also exports `get_trigger_words()` and `get_filmot_queries()` as single source
-of truth for FULG/Filmot collection scripts.
+Also exports `get_trigger_words()` and `get_filmot_queries()` for seed
+enrichment collection, and `get_filmot_queries_all()` for extraction (adds
+"sunt", "eram", "am fost", "mă fac", "aveam" triggers).
 
 ### Inflection (`utils/inflect.py`)
 
@@ -307,12 +310,14 @@ avoids errors from incorrect diacritic restoration.
 ## Pattern Extraction (`extract_match/`)
 
 Extracts ASI candidates from text corpora using the enriched seed (524 words)
-and 20 "I feel" regex patterns. Three data sources supported:
+and 20 "I feel" regex patterns. Each hit = one pattern match (trigger + seed
+word) in one text. Texts can produce multiple candidates if different patterns
+fire. Deduplication by MD5 text hash.
 
 ### Small Datasets (`extract_match/run.py`)
 
-Reads pre-merged JSONL from `data/merged_corpus.jsonl`. Sequential processing,
-no checkpoint (fast enough to re-run).
+Reads `data/merged_corpus.jsonl` (106K records). Full text preserved (reviews,
+tweets, and Reddit posts are short enough).
 
 ```bash
 python -m pipeline.extract_match.run                          # full extraction
@@ -320,61 +325,91 @@ python -m pipeline.extract_match.run --max-records 1000       # quick test
 python -m pipeline.extract_match.run --sample 10              # show samples
 ```
 
-Output: `data/pattern_candidates_small.jsonl` (~5.6M, ~150K candidates)
+Output: `data/pattern_candidates_small.jsonl`
+
+**Results** (106K records):
+- 5,227 candidates from 4,788 texts (4.5% hit rate)
+- 237 unique seed words matched
+- Top patterns: `sunt_adj_present` (3,090), `am_fost_adj_perfect` (1,001)
+- Top emotions: contentment (1,105), anticipation (928), sadness (791), joy (624)
+- Dominated by product review "sunt mulțumit/dezamăgit" from LaRoSeDa/RoSent
 
 ### Filmot API (`extract_match/filmot.py`)
 
-Queries all 20+ trigger phrases via the Filmot subtitle search API, filters
-each hit through PatternMatcher. Parallel query workers, checkpoint/resume.
+Queries **all** trigger phrases (27 queries: existing "simt"-family + new
+"sunt", "eram", "am fost", "mă fac", "aveam") via the Filmot subtitle search
+API. Each hit is immediately filtered through PatternMatcher — only candidates
+where a seed word follows the trigger are saved. Combined collect+extract in
+one step.
+
+Query list defined in `utils/pattern_matcher.get_filmot_queries_all()`. Parallel
+workers, checkpoint/resume. The API hits a server-side pagination limit at ~102
+pages per query (500 error), which the script handles gracefully.
 
 Requires: `pip install filmot python-dotenv` and `RAPIDAPI_KEY` in `.env`.
 
 ```bash
-python -m pipeline.extract_match.filmot                          # default (200K hits)
-python -m pipeline.extract_match.filmot --workers 8              # faster
-python -m pipeline.extract_match.filmot --resume                 # resume
-python -m pipeline.extract_match.filmot --max-pages-per-query 2  # quick test
+python -m pipeline.extract_match.filmot                                     # default
+python -m pipeline.extract_match.filmot --workers 8 --max-hits 1000000      # full run
+python -m pipeline.extract_match.filmot --resume                            # resume
+python -m pipeline.extract_match.filmot --max-pages-per-query 2             # quick test
 ```
 
-Output: `data/pattern_candidates_filmot.jsonl` (~19M, ~800K candidates)
+Output: `data/pattern_candidates_filmot.jsonl`
 
-### FULG (`extract_match/fulg.py`)
+**Results** (200 pages/query, 8 workers):
+- 331K hits scanned, 29,452 candidates saved (8.9% hit rate)
+- 364 unique seed words matched
+- Top patterns: `ma_simt_present` (10,071), `sunt_adj_present` (5,656),
+  `eram_adj_imperfect` (2,845)
+- Top emotions: joy (9,791), sadness (7,282), negative-fear (1,847)
+- Text is ~250 chars of YouTube auto-caption context (no periods, speaker
+  changes marked with `>>`, ~96% auto-generated subtitles)
 
-Streams the FULG dataset (150B tokens, 289GB) from HuggingFace, pre-filters by
-language score (≥0.8), text length, and trigger word presence, then runs
-PatternMatcher. Extracts sentence-level context (2 sentences before/after)
-instead of full pages. Soft domain categorization for analysis.
+### Filmot Post-Processing
 
-Supports parallel shard workers (`--workers N`) to overcome the single-stream
-network bottleneck. Checkpoint/resume with graceful Ctrl+C handling.
+YouTube auto-captions lack punctuation and may contain multiple speakers. Two
+post-processing scripts clean up the filmot candidates. Both preserve the
+original text and write to separate output files.
+
+**Heavy: Stanza-based 1st-person trimming** (`postprocess_filmot.py`)
+
+Uses Stanza NLP (tokenizer + POS + dependency parser) to detect the grammatical
+person of each sentence's root verb. Finds the anchor sentence (containing the
+match), expands outward keeping 1st-person and unknown sentences, stops at 2nd
+or 3rd person boundaries.
 
 ```bash
-python -m pipeline.extract_match.fulg                                       # default (50K)
-python -m pipeline.extract_match.fulg --max-samples 100000 --workers 4      # 100K, parallel
-python -m pipeline.extract_match.fulg --resume                              # resume
-python -m pipeline.extract_match.fulg --max-records 10000 --max-samples 100 # quick test
-python -m pipeline.extract_match.fulg --context-sentences 3                 # wider context
+python -m pipeline.extract_match.postprocess_filmot                    # full run (~16 min)
+python -m pipeline.extract_match.postprocess_filmot --max-records 200  # quick test
 ```
 
-Output: `data/pattern_candidates_fulg.jsonl` + `.checkpoint.json` + `.stats.json`
+Output: `data/pattern_candidates_filmot_pp.jsonl`
+- Each record has `text_pp` (post-processed) and `text_original`
+- 71% of records get trimmed (avg 5.0 → 2.7 sentences, 220 → 148 chars)
+- Requires: `pip install stanza` (downloads ~200MB Romanian model on first run)
 
-**100K run results** (4 workers, ~70 min):
-- 2.8M records scanned, 73K passed filters → 100K candidates
-- 522/524 seed words matched
-- Top patterns: `sunt_adj_present` (49%), `mie_short` (16%), `am_fost_adj_perfect` (9%)
-- Top emotions: joy (21%), sadness (16%), trust (9%), fear (7%)
-- ~67% precision (spot-check); main noise source is 3rd-person "sunt bine"
+**Light: rule-based cleanup** (`postprocess_filmot_light.py`)
 
-### Deduplication
+No ML — instant processing:
+1. Remove `#tags#` (music/sound markers like `#Muzică#`)
+2. Split on `>>` (speaker change markers) — keep segment with match
+3. Add periods at sentence boundaries (capitalization-based, skips proper noun
+   sequences and words after prepositions)
+4. Remove leading fragment if first word is not capitalized (incomplete sentence
+   from API context window)
 
-All three extractors deduplicate by MD5 text hash. FULG additionally deduplicates
-by `(source_domain, matched_sentence)` to filter cross-page boilerplate (e.g.,
-site footers repeated across thousands of pages from the same domain), and by
-`(page_id, matched_sentence)` to filter within-page duplicate matches.
+```bash
+python -m pipeline.extract_match.postprocess_filmot_light                    # full run (<1 sec)
+python -m pipeline.extract_match.postprocess_filmot_light --max-records 200  # quick test
+```
+
+Output: `data/pattern_candidates_filmot_light.jsonl`
+- Each record has `text_light` (post-processed) and `text_original`
 
 ### Output schema
 
-All extractors share a common schema:
+All extractors share a common base schema:
 
 ```json
 {
@@ -386,14 +421,12 @@ All extractors share a common schema:
   "seed_word": "fericit",
   "seed_word_normalized": "fericit",
   "emotion_category": ["happiness"],
-  "source": "fulg|filmot|laroseda|..."
+  "source": "filmot|laroseda|..."
 }
 ```
 
-FULG adds: `context_before`, `context_after`, `source_domain`, `source_category`,
-`url`, `title`, `full_text_length`.
-
-Filmot adds: `video_id`, `video_title`, `channel_name`, `youtube_url`, `view_count`.
+Filmot adds: `video_id`, `video_title`, `channel_name`, `youtube_url`,
+`view_count`.
 
 ## Embedding Extraction (`extract_embed/`) — EXPERIMENTAL
 
