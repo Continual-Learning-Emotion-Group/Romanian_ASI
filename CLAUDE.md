@@ -102,6 +102,20 @@ modal run scripts/filmot_api/llm_validate.py --resume
 # Custom batch size
 modal run scripts/filmot_api/llm_validate.py --batch-size 100
 
+# Pipeline: Pattern-based extraction (extract_match/)
+# Small datasets
+python -m pipeline.extract_match.run
+python -m pipeline.extract_match.run --max-records 1000 --sample 10
+
+# Filmot API (requires RAPIDAPI_KEY in .env)
+python -m pipeline.extract_match.filmot
+python -m pipeline.extract_match.filmot --workers 8 --resume
+
+# FULG (HuggingFace streaming, supports parallel shard workers)
+python -m pipeline.extract_match.fulg --max-samples 100000 --workers 4
+python -m pipeline.extract_match.fulg --resume
+python -m pipeline.extract_match.fulg --max-records 10000 --max-samples 100  # quick test
+
 # Extraction Strategy Experiments (on RedditRoAP + PoPreRo)
 python -m experiments.baseline_pattern_matching.extract_baseline
 python -m experiments.bootstrapping.bootstrap_candidates

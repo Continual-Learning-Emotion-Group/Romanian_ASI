@@ -12,7 +12,10 @@ pipeline/
 │   ├── fulg_enrichment_filtered.json  # FULG enrichment: 135 new nouns (manually filtered)
 │   ├── filmot_enrichment_filtered.json # Filmot enrichment: 4 new nouns (manually filtered)
 │   ├── filmot_raw.jsonl               # Raw filmot subtitle hits (88K records)
-│   └── ...                            # Provenance files (*_provenance.json, *_discovered.json)
+│   ├── pattern_candidates_small.jsonl # Extraction from small datasets (~150K candidates)
+│   ├── pattern_candidates_filmot.jsonl # Extraction from Filmot API (~800K candidates)
+│   ├── pattern_candidates_fulg.jsonl  # Extraction from FULG (100K candidates)
+│   └── ...                            # Provenance files, checkpoints, stats
 ├── utils/                             # Shared utilities
 │   ├── text_utils.py                  # Diacritics normalization, sentence splitting
 │   ├── inflect.py                     # Lemma → inflected forms (MULTEXT-East)
@@ -33,6 +36,10 @@ pipeline/
 │   ├── stream_fulg.py                 # Stream from FULG (trigger-filtered)
 │   ├── stream_filmot.py               # Stream from Filmot API (parallel workers)
 │   └── small_datasets/                # Raw source data
+├── extract_match/                     # Pattern-based ASI candidate extraction
+│   ├── run.py                         # Small datasets → pattern_candidates_small.jsonl
+│   ├── filmot.py                      # Filmot API → pattern_candidates_filmot.jsonl
+│   └── fulg.py                        # FULG streaming → pattern_candidates_fulg.jsonl
 └── seed_enrichment/                   # Seed enrichment
     ├── run.py                         # CLI: runs both methods on any source
     ├── bootstrapping.py               # MASIVE-style "I feel X and Y"
@@ -289,6 +296,97 @@ Note: new words are stored without diacritics (normalized form) because the
 distributional mining operates on normalized text. This is intentional — the
 pattern matcher normalizes during matching anyway, so diacritic-free storage
 avoids errors from incorrect diacritic restoration.
+
+## Pattern Extraction (`extract_match/`)
+
+Extracts ASI candidates from text corpora using the enriched seed (524 words)
+and 20 "I feel" regex patterns. Three data sources supported:
+
+### Small Datasets (`extract_match/run.py`)
+
+Reads pre-merged JSONL from `data/merged_corpus.jsonl`. Sequential processing,
+no checkpoint (fast enough to re-run).
+
+```bash
+python -m pipeline.extract_match.run                          # full extraction
+python -m pipeline.extract_match.run --max-records 1000       # quick test
+python -m pipeline.extract_match.run --sample 10              # show samples
+```
+
+Output: `data/pattern_candidates_small.jsonl` (~5.6M, ~150K candidates)
+
+### Filmot API (`extract_match/filmot.py`)
+
+Queries all 20+ trigger phrases via the Filmot subtitle search API, filters
+each hit through PatternMatcher. Parallel query workers, checkpoint/resume.
+
+Requires: `pip install filmot python-dotenv` and `RAPIDAPI_KEY` in `.env`.
+
+```bash
+python -m pipeline.extract_match.filmot                          # default (200K hits)
+python -m pipeline.extract_match.filmot --workers 8              # faster
+python -m pipeline.extract_match.filmot --resume                 # resume
+python -m pipeline.extract_match.filmot --max-pages-per-query 2  # quick test
+```
+
+Output: `data/pattern_candidates_filmot.jsonl` (~19M, ~800K candidates)
+
+### FULG (`extract_match/fulg.py`)
+
+Streams the FULG dataset (150B tokens, 289GB) from HuggingFace, pre-filters by
+language score (≥0.8), text length, and trigger word presence, then runs
+PatternMatcher. Extracts sentence-level context (2 sentences before/after)
+instead of full pages. Soft domain categorization for analysis.
+
+Supports parallel shard workers (`--workers N`) to overcome the single-stream
+network bottleneck. Checkpoint/resume with graceful Ctrl+C handling.
+
+```bash
+python -m pipeline.extract_match.fulg                                       # default (50K)
+python -m pipeline.extract_match.fulg --max-samples 100000 --workers 4      # 100K, parallel
+python -m pipeline.extract_match.fulg --resume                              # resume
+python -m pipeline.extract_match.fulg --max-records 10000 --max-samples 100 # quick test
+python -m pipeline.extract_match.fulg --context-sentences 3                 # wider context
+```
+
+Output: `data/pattern_candidates_fulg.jsonl` + `.checkpoint.json` + `.stats.json`
+
+**100K run results** (4 workers, ~70 min):
+- 2.8M records scanned, 73K passed filters → 100K candidates
+- 522/524 seed words matched
+- Top patterns: `sunt_adj_present` (49%), `mie_short` (16%), `am_fost_adj_perfect` (9%)
+- Top emotions: joy (21%), sadness (16%), trust (9%), fear (7%)
+- ~67% precision (spot-check); main noise source is 3rd-person "sunt bine"
+
+### Deduplication
+
+All three extractors deduplicate by MD5 text hash. FULG additionally deduplicates
+by `(source_domain, matched_sentence)` to filter cross-page boilerplate (e.g.,
+site footers repeated across thousands of pages from the same domain), and by
+`(page_id, matched_sentence)` to filter within-page duplicate matches.
+
+### Output schema
+
+All extractors share a common schema:
+
+```json
+{
+  "id": "source_123",
+  "text": "...",
+  "matched_sentence": "Mă simt fericit",
+  "pattern_used": "ma_simt_present",
+  "pattern_category": "primary",
+  "seed_word": "fericit",
+  "seed_word_normalized": "fericit",
+  "emotion_category": ["happiness"],
+  "source": "fulg|filmot|laroseda|..."
+}
+```
+
+FULG adds: `context_before`, `context_after`, `source_domain`, `source_category`,
+`url`, `title`, `full_text_length`.
+
+Filmot adds: `video_id`, `video_title`, `channel_name`, `youtube_url`, `view_count`.
 
 ## External Data (`seed/`)
 
