@@ -130,12 +130,74 @@ def parse_hits(video: dict, query: str) -> List[dict]:
     return results
 
 
+def _collect_one_query(
+    query: str,
+    query_index: int,
+    total_queries: int,
+    max_pages: int,
+    delay_pages: float,
+    start_page: int,
+    verbose: bool,
+) -> List[dict]:
+    """Collect all hits for a single query. Returns list of hit dicts."""
+    from filmot import Filmot
+    client = Filmot()
+
+    hits = []
+    page = start_page
+    consecutive_empty = 0
+
+    if verbose:
+        label = f"[{query_index + 1}/{total_queries}]"
+
+    while page < max_pages:
+        try:
+            results = client.send_api(
+                "getsearchsubtitles",
+                {"query": query, "lang": "ro", "page": page},
+            )
+        except Exception as e:
+            if verbose:
+                print(f"  {query}: API error page {page}: {e}")
+            break
+
+        video_list = (
+            results.get("result", []) if isinstance(results, dict)
+            else results if isinstance(results, list)
+            else []
+        )
+
+        if not video_list:
+            consecutive_empty += 1
+            if consecutive_empty >= 2:
+                break
+            page += 1
+            time.sleep(delay_pages)
+            continue
+
+        consecutive_empty = 0
+
+        for video in video_list:
+            hits.extend(parse_hits(video, query))
+
+        if verbose and page % 10 == 0:
+            print(f"  {query}: page {page}, {len(hits):,} hits")
+
+        page += 1
+        time.sleep(delay_pages)
+
+    if verbose:
+        print(f"  {query}: done — {len(hits):,} hits ({page - start_page} pages)")
+
+    return hits
+
+
 def stream_filmot(
     output_path: Path,
     max_hits: int = 50_000,
     max_pages_per_query: int = 500,
     delay_pages: float = 0.5,
-    delay_queries: float = 2.0,
+    workers: int = 4,
     include_secondary: bool = True,
     resume: bool = False,
     verbose: bool = True,
@@ -143,24 +205,24 @@ def stream_filmot(
     """
     Stream Filmot API hits and save as JSONL.
 
+    Runs queries in parallel (default 4 workers) for faster collection.
     Queries are sourced from pipeline.utils.pattern_matcher.get_filmot_queries().
 
     Args:
         output_path: Where to write the JSONL output.
         max_hits: Stop after this many total saved hits.
         max_pages_per_query: Max API pages per query (50 results/page).
-        delay_pages: Seconds between API pages.
-        delay_queries: Seconds between queries.
+        delay_pages: Seconds between API pages within a worker.
+        workers: Number of parallel query workers.
         include_secondary: Include no-diacritic variant queries.
         resume: Resume from checkpoint.
         verbose: Print progress.
     """
     setup_api_key()
 
-    from filmot import Filmot
+    from concurrent.futures import ThreadPoolExecutor, as_completed
     from pipeline.utils.pattern_matcher import get_filmot_queries
 
-    client = Filmot()
     queries = get_filmot_queries(include_secondary=include_secondary)
 
     checkpoint_path = output_path.with_suffix(".checkpoint.json")
@@ -176,98 +238,86 @@ def stream_filmot(
         seen = set()
         total = 0
 
+    # Build work list (skip fully completed queries on resume)
+    work = []
+    for qi, query in enumerate(queries):
+        completed_page = checkpoint["completed_pages"].get(query, -1)
+        start_page = completed_page + 1 if resume else 0
+        if start_page >= max_pages_per_query:
+            if verbose:
+                print(f"  Skipping {query} (already completed)")
+            continue
+        work.append((query, qi, start_page))
+
+    if verbose:
+        print(f"\nFilmot collection: {len(work)} queries, {workers} workers, "
+              f"max {max_pages_per_query} pages/query")
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
     write_mode = "a" if resume else "w"
 
     stats_by_query = {}
 
-    with open(output_path, write_mode, encoding="utf-8") as f:
-        for qi, query in enumerate(queries):
-            if total >= max_hits:
-                break
+    # Run queries in parallel
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {
+            executor.submit(
+                _collect_one_query,
+                query=query,
+                query_index=qi,
+                total_queries=len(queries),
+                max_pages=max_pages_per_query,
+                delay_pages=delay_pages,
+                start_page=start_page,
+                verbose=verbose,
+            ): query
+            for query, qi, start_page in work
+        }
 
-            # Skip completed queries on resume
-            completed_page = checkpoint["completed_pages"].get(query, -1)
-            start_page = completed_page + 1 if resume else 0
-
-            if verbose:
-                print(f"\n[{qi + 1}/{len(queries)}] Query: {query}"
-                      f"{f' (resuming from page {start_page})' if start_page > 0 else ''}")
-
-            page = start_page
-            consecutive_empty = 0
-            query_hits = 0
-
-            while page < max_pages_per_query and total < max_hits:
+        with open(output_path, write_mode, encoding="utf-8") as f:
+            for future in as_completed(futures):
+                query = futures[future]
                 try:
-                    results = client.send_api(
-                        "getsearchsubtitles",
-                        {"query": query, "lang": "ro", "page": page},
-                    )
-                    checkpoint["total_api_calls"] = checkpoint.get("total_api_calls", 0) + 1
+                    hits = future.result()
                 except Exception as e:
-                    print(f"  API error page {page}: {e}")
-                    break
-
-                video_list = (
-                    results.get("result", []) if isinstance(results, dict)
-                    else results if isinstance(results, list)
-                    else []
-                )
-
-                if not video_list:
-                    consecutive_empty += 1
-                    if consecutive_empty >= 2:
-                        break
-                    page += 1
-                    time.sleep(delay_pages)
+                    print(f"  {query}: worker failed: {e}")
                     continue
 
-                consecutive_empty = 0
-
-                for video in video_list:
-                    for hit in parse_hits(video, query):
-                        dedup_key = hashlib.md5(
-                            f"{hit['video_id']}_{hit['hit_start']}".encode()
-                        ).hexdigest()
-                        if dedup_key in seen:
-                            continue
-                        seen.add(dedup_key)
-
-                        f.write(json.dumps(hit, ensure_ascii=False) + "\n")
-                        total += 1
-                        query_hits += 1
-
-                        if total >= max_hits:
-                            break
+                query_hits = 0
+                for hit in hits:
                     if total >= max_hits:
                         break
+                    dedup_key = hashlib.md5(
+                        f"{hit['video_id']}_{hit['hit_start']}".encode()
+                    ).hexdigest()
+                    if dedup_key in seen:
+                        continue
+                    seen.add(dedup_key)
 
-                if verbose and page % 10 == 0:
-                    print(f"  page {page}, {query_hits:,} hits so far (total: {total:,})")
+                    f.write(json.dumps(hit, ensure_ascii=False) + "\n")
+                    total += 1
+                    query_hits += 1
 
-                # Update checkpoint every page
-                checkpoint["completed_pages"][query] = page
+                stats_by_query[query] = query_hits
+
+                # Update checkpoint
+                checkpoint["completed_pages"][query] = max_pages_per_query
                 checkpoint["total_hits"] = total
                 checkpoint["seen_hashes"] = list(seen)
                 save_checkpoint(checkpoint_path, checkpoint)
 
-                page += 1
-                time.sleep(delay_pages)
+                if verbose:
+                    print(f"  → {query}: {query_hits:,} new (total: {total:,})")
 
-            stats_by_query[query] = query_hits
-            if verbose:
-                print(f"  {query_hits:,} new hits (total: {total:,})")
-
-            if qi < len(queries) - 1 and total < max_hits:
-                time.sleep(delay_queries)
+                if total >= max_hits:
+                    executor.shutdown(wait=False, cancel_futures=True)
+                    break
 
     # Save final stats
     stats = {
         "total_hits": total,
-        "total_api_calls": checkpoint.get("total_api_calls", 0),
-        "unique_videos": total,
-        "queries_completed": len([q for q in stats_by_query]),
+        "total_api_calls": sum(stats_by_query.values()),
+        "queries_completed": len(stats_by_query),
         "stats_by_query": stats_by_query,
         "started_at": checkpoint.get("started_at", ""),
         "finished_at": datetime.now().isoformat(),
@@ -294,12 +344,12 @@ def main():
         help="Max API pages per query (default: 500)",
     )
     parser.add_argument(
-        "--delay-pages", type=float, default=0.5,
-        help="Seconds between API pages (default: 0.5)",
+        "--delay-pages", type=float, default=0.1,
+        help="Seconds between API pages per worker (default: 0.1)",
     )
     parser.add_argument(
-        "--delay-queries", type=float, default=2.0,
-        help="Seconds between queries (default: 2.0)",
+        "--workers", type=int, default=4,
+        help="Number of parallel query workers (default: 4)",
     )
     parser.add_argument(
         "--no-secondary", action="store_true",
@@ -326,7 +376,7 @@ def main():
         max_hits=args.max_hits,
         max_pages_per_query=args.max_pages_per_query,
         delay_pages=args.delay_pages,
-        delay_queries=args.delay_queries,
+        workers=args.workers,
         include_secondary=not args.no_secondary,
         resume=args.resume,
         verbose=not args.quiet,
