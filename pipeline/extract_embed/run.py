@@ -3,7 +3,7 @@
 Embedding similarity ASI extraction pipeline.
 
 Finds ASI expressions by computing semantic similarity between ALL sentences
-in the corpus and known-good ASI anchor sentences (from regex matching).
+in the corpus and synthetic anchor sentences (pattern × seed word combinations).
 No trigger-word pre-filter — embeds everything for maximum discovery.
 
 Output: one row per post, with a `hits` list of all qualifying sentences.
@@ -11,8 +11,8 @@ Output: one row per post, with a `hits` list of all qualifying sentences.
 Pipeline:
   1. Load all posts from merged_corpus.jsonl
   2. Split every post into sentences (no pre-filter)
-  3. Build anchor embeddings from regex-matched ASI sentences
-  4. Embed all candidate sentences on Modal GPU
+  3. Generate synthetic anchors: "mă simt fericit", "sunt trist", etc.
+  4. Embed anchors + all candidate sentences on Modal GPU
   5. Cosine similarity → group hits by post → output
 
 Usage:
@@ -22,7 +22,6 @@ Usage:
 """
 
 import argparse
-import hashlib
 import json
 import sys
 from pathlib import Path
@@ -34,7 +33,7 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from pipeline.utils.pattern_matcher import PatternMatcher
-from pipeline.utils.text_utils import split_into_sentences, normalize_text
+from pipeline.utils.text_utils import split_into_sentences
 from pipeline.utils.corpus_reader import iter_corpus
 from pipeline.seed.enriched import build_enriched_seed
 
@@ -83,13 +82,81 @@ def extract_all_sentences(posts: list[dict]) -> tuple[list[str], list[tuple[int,
 
 
 # ---------------------------------------------------------------------------
-# Anchor building (regex-matched ASI sentences)
+# Anchor building (synthetic: all pattern × seed word combinations)
 # ---------------------------------------------------------------------------
 
-def build_matcher() -> PatternMatcher:
-    """Build PatternMatcher with the enriched seed."""
+# Verb phrase templates for synthetic anchor generation.
+# Each: (pattern_name, verb_phrase, noun_only)
+ANCHOR_TEMPLATES = [
+    # Primary
+    ("ma_simt_present", "mă simt", False),
+    ("ma_simteam_imperfect", "mă simțeam", False),
+    ("mam_simtit_perfect", "m-am simțit", False),
+    ("ma_voi_simti_future", "mă voi simți", False),
+    ("o_sa_ma_simt_future", "o să mă simt", False),
+    ("mas_simti_conditional", "m-aș simți", False),
+    ("sa_ma_simt_subjunctive", "să mă simt", False),
+    ("simt_ca", "simt că sunt", False),
+    ("simt_noun", "simt", True),
+    ("simteam_noun", "simțeam", True),
+    # Secondary
+    ("sunt_adj_present", "sunt", False),
+    ("eram_adj_imperfect", "eram", False),
+    ("am_fost_adj_perfect", "am fost", False),
+    ("o_sa_fiu_future", "o să fiu", False),
+    ("ma_fac_reflexive", "mă fac", False),
+    ("imi_este_present", "îmi este", True),
+    ("imi_era_imperfect", "îmi era", True),
+    ("mie_short", "mi-e", True),
+    ("am_noun_present", "am", True),
+    ("aveam_noun_imperfect", "aveam", True),
+]
+
+
+def build_anchors() -> list[dict]:
+    """Generate synthetic anchor sentences: every pattern × seed word combination.
+
+    Returns list of {sentence, emotions, pattern_name, seed_word}.
+    """
     seed = build_enriched_seed()
-    # word_to_affect_categ maps word → string; PatternMatcher expects word → list
+    word_to_categ = seed["word_to_affect_categ"]
+
+    adjectives = set(seed.get("adjectives", {}).keys()) if isinstance(seed.get("adjectives"), dict) else set(seed.get("adjectives", []))
+    nouns_dict = seed.get("nouns", {})
+    nouns = set(nouns_dict.keys()) if isinstance(nouns_dict, dict) else set(nouns_dict)
+    adverbs = set(seed.get("adverbs", {}).keys()) if isinstance(seed.get("adverbs"), dict) else set(seed.get("adverbs", []))
+
+    # Non-noun words = adjectives + adverbs
+    non_noun_words = adjectives | adverbs
+
+    anchors = []
+    seen = set()
+
+    for pattern_name, verb_phrase, noun_only in ANCHOR_TEMPLATES:
+        words = nouns if noun_only else non_noun_words
+        for word in words:
+            sentence = f"{verb_phrase} {word}"
+            if sentence in seen:
+                continue
+            seen.add(sentence)
+
+            categ = word_to_categ.get(word, "unknown")
+            emotions = [categ] if isinstance(categ, str) else categ
+
+            anchors.append({
+                "sentence": sentence,
+                "emotions": emotions,
+                "pattern_name": pattern_name,
+                "seed_word": word,
+            })
+
+    print(f"Synthetic anchor sentences: {len(anchors)}")
+    return anchors
+
+
+def build_matcher() -> PatternMatcher:
+    """Build PatternMatcher with the enriched seed (for novelty tagging)."""
+    seed = build_enriched_seed()
     word_to_emotions = {
         word: [categ] if isinstance(categ, str) else categ
         for word, categ in seed["word_to_affect_categ"].items()
@@ -98,51 +165,6 @@ def build_matcher() -> PatternMatcher:
     if isinstance(noun_words, dict):
         noun_words = list(noun_words.keys())
     return PatternMatcher(word_to_emotions, noun_words=noun_words)
-
-
-def build_anchors(posts: list[dict], matcher: PatternMatcher) -> list[dict]:
-    """Run regex PatternMatcher on all posts to find known-good ASI sentences.
-
-    Returns list of {sentence, emotions, pattern_name, seed_word, post_id}.
-    """
-    anchors = []
-    seen_sentences = set()
-
-    for post in tqdm(posts, desc="Building anchors"):
-        text = post.get("text", "")
-        if not text:
-            continue
-
-        matches = matcher.find_matches(text, extract_sentences=True)
-        for match in matches:
-            sent = match.matched_text.strip()
-            sent_hash = hashlib.md5(sent.encode()).hexdigest()
-            if sent_hash not in seen_sentences:
-                seen_sentences.add(sent_hash)
-                anchors.append({
-                    "sentence": sent,
-                    "emotions": match.emotions,
-                    "pattern_name": match.pattern_name,
-                    "seed_word": match.seed_word,
-                    "post_id": post["id"],
-                })
-
-    print(f"Unique anchor sentences: {len(anchors)}")
-    return anchors
-
-
-def get_regex_matched_sentences(posts: list[dict], matcher: PatternMatcher) -> set[str]:
-    """Get MD5 hashes of all regex-matched sentences (for novelty tagging)."""
-    matched_hashes = set()
-    for post in posts:
-        text = post.get("text", "")
-        if not text:
-            continue
-        matches = matcher.find_matches(text, extract_sentences=True)
-        for match in matches:
-            sent = match.matched_text.strip()
-            matched_hashes.add(hashlib.md5(sent.encode()).hexdigest())
-    return matched_hashes
 
 
 # ---------------------------------------------------------------------------
@@ -234,21 +256,19 @@ def run_pipeline(
     print("=" * 60)
     all_sentences, sentence_to_post = extract_all_sentences(posts)
 
-    # Step 3: Build anchors from regex matches
+    # Step 3: Build synthetic anchors (pattern × seed word)
     print("\n" + "=" * 60)
-    print("STEP 3: Building anchor sentences from regex matches")
+    print("STEP 3: Building synthetic anchor sentences")
     print("=" * 60)
-    matcher = build_matcher()
-    anchors = build_anchors(posts, matcher)
+    anchors = build_anchors()
 
     if not anchors:
-        print("ERROR: No anchor sentences found. Cannot proceed.")
+        print("ERROR: No anchor sentences generated. Cannot proceed.")
         return
 
-    # Get regex-matched sentence hashes for novelty tagging
-    print("Identifying regex-matched sentences...")
-    regex_sentence_hashes = get_regex_matched_sentences(posts, matcher)
-    print(f"Regex-matched unique sentences: {len(regex_sentence_hashes)}")
+    # Build matcher for novelty tagging (which hits does regex also find?)
+    print("\nBuilding PatternMatcher for novelty tagging...")
+    matcher = build_matcher()
 
     if dry_run:
         print("\n" + "=" * 60)
@@ -256,8 +276,7 @@ def run_pipeline(
         print("=" * 60)
         print(f"  Posts: {len(posts):,}")
         print(f"  Sentences to embed: {len(all_sentences):,}")
-        print(f"  Anchor sentences: {len(anchors):,}")
-        print(f"  Regex-matched sentences: {len(regex_sentence_hashes):,}")
+        print(f"  Synthetic anchors: {len(anchors):,}")
         return
 
     # Step 4: Embed on Modal
@@ -294,8 +313,7 @@ def run_pipeline(
         anchor_idx = int(nearest_indices[sent_idx])
         anchor = anchors[anchor_idx]
         sentence = all_sentences[sent_idx]
-        sent_hash = hashlib.md5(sentence.strip().encode()).hexdigest()
-        is_novel = sent_hash not in regex_sentence_hashes
+        is_novel = not matcher.has_affective_pattern(sentence)
 
         hit = {
             "sentence": sentence,
