@@ -1,0 +1,354 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<html lang="ro">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <script type='text/javascript' src='https://s3.amazonaws.com/mturk-public/externalHIT_v1.js'></script>
+
+    <!-- BOOTSTRAP CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: "Open Sans", "Roboto", sans-serif;
+            line-height: 1.4;
+        }
+
+        #hitinfo .card, #exinfo .card { border-radius: 0; }
+        #hitinfo button.btn-link, #exinfo button.btn-link {
+            color: #fff; text-decoration: none;
+        }
+        #hitinfo button.btn-link:hover, #exinfo button.btn-link:hover {
+            text-decoration: none;
+        }
+
+        #hit ul.question-choice { list-style-type: none; }
+
+        input#submitButton {
+            margin: auto; display: block;
+            background-color: #2172a4; color: #fff;
+            font-size: 1.125rem; padding: .5rem 1rem;
+            cursor: pointer; border-radius: 1rem;
+        }
+        input#submitButton:hover { background-color: #06486F; }
+
+        input[type="radio"] {
+            cursor: pointer; transform: scale(1.5); display: inline;
+        }
+
+        .form-check {
+            text-align: center; border-left: 1px solid lightgray;
+        }
+
+        div.goal-category {
+            border-bottom: solid 1px #ccc; padding: 1rem 1rem;
+        }
+
+        li { margin: 0.6em; }
+
+        ul.likert {
+            list-style-type: none; padding-left: 0;
+        }
+        ul.likert li {
+            padding: 0.5em 0; border-bottom: 1px solid #eee;
+        }
+        ul.likert li:last-child { border-bottom: none; }
+
+        /* Score-based coloring */
+        ul.likert li:nth-child(1) label { color: #c0392b; }  /* 0 - red */
+        ul.likert li:nth-child(2) label { color: #e67e22; }  /* 1 - orange */
+        ul.likert li:nth-child(3) label { color: #27ae60; }  /* 2 - green */
+        ul.likert li:nth-child(4) label { color: #2980b9; }  /* 3 - blue */
+
+        .explanation-box { display: none; }
+
+        #full_post { display: none; }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $('input[name="affect"]').on("click", function() {
+                $(".explanation-box").css('display', 'block');
+            });
+        });
+
+        function toggle_post() {
+            if ($("#short_post").is(":visible")) {
+                $("#full_post").css('display', 'block');
+                $("#short_post").css('display', 'none');
+            } else {
+                $("#short_post").css('display', 'block');
+                $("#full_post").css('display', 'none');
+            }
+        }
+    </script>
+
+    <!-- HIT START -->
+    <div class="container" id="hit">
+
+        <!-- INSTRUCTIONS -->
+        <div class="col-12 accordion" id="hitinfo">
+            <div class="card">
+                <div class="card-header" id="instructionsHeading" style="background-color: #2c3e50;">
+                    <h5 class="mb-0">
+                        <button aria-controls="instructions" aria-expanded="true" class="btn btn-link"
+                                data-target="#instructions" data-toggle="collapse" type="button">
+                            Instrucțiuni (click pentru a extinde/restrânge)
+                        </button>
+                    </h5>
+                </div>
+                <div aria-labelledby="instructionsHeading" class="collapse ${show_inst}" data-parent="#hitinfo" id="instructions">
+                    <div class="card-body">
+                        <p>Vă mulțumim pentru ajutor în studiul nostru despre stări afective.</p>
+
+                        <h4>Instrucțiuni:</h4>
+                        <p>
+                            Vi se va prezenta o propoziție dintr-un text românesc, cu un termen evidențiat în
+                            <span style='background-color:#2dfe5f'> verde </span>.
+                            Dacă aveți nevoie de mai mult context, puteți comuta între contextul scurt (o propoziție) și contextul complet.
+                        </p>
+                        <p>
+                            Sarcina voastră este să determinați dacă termenul evidențiat, <strong>așa cum este folosit în context</strong>,
+                            reprezintă o <em>stare afectivă</em>.
+                        </p>
+
+                        <hr>
+
+                        <h5>Definiție:</h5>
+                        <p>
+                            <strong>Stare afectivă</strong> se referă la orice termen pe care oamenii îl folosesc pentru a descrie
+                            experiențele lor de simțire, inclusiv emoții, dispoziții și expresii figurative ale sentimentelor
+                            (de ex. „a vedea negru" ca expresie a disperării, nu a culorii).
+                        </p>
+                        <p>
+                            Include stări interne/cognitive (ex: anxios, fericit, trist).<br>
+                            <strong>Nu include</strong> stări fizice literale (ex: înfometat, înalt) sau expresii non-emoționale
+                            (ex: „sunt sigur că vine mâine").
+                        </p>
+
+                        <h5>Scala de evaluare (0–3):</h5>
+                        <ul>
+                            <li><strong style="color:#c0392b">0 — Nu este o stare afectivă:</strong> termenul nu se referă la o emoție, sentiment sau stare interioară.</li>
+                            <li><strong style="color:#e67e22">1 — Improbabil o stare afectivă:</strong> termenul se referă la altceva decât o emoție.</li>
+                            <li><strong style="color:#27ae60">2 — Probabil o stare afectivă:</strong> termenul pare să se refere la o emoție, sentiment sau stare interioară.</li>
+                            <li><strong style="color:#2980b9">3 — Categoric o stare afectivă:</strong> termenul este definitiv o emoție, sentiment sau stare interioară.</li>
+                        </ul>
+
+                        <br>
+                        <em><span style='color:red'>Textele pot conține limbaj vulgar sau pot discuta subiecte sensibile. Dacă un text vă face inconfortabil, puteți sări peste el.</span></em>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXAMPLES -->
+        <div class="col-12 accordion" id="exinfo">
+            <div class="card">
+                <div class="card-header" id="examplesHeading" style="background-color: #34495e;">
+                    <h5 class="mb-0">
+                        <button aria-controls="examples" aria-expanded="true" class="btn btn-link"
+                                data-target="#examples" data-toggle="collapse" type="button">
+                            Exemple (click pentru a extinde/restrânge)
+                        </button>
+                    </h5>
+                </div>
+                <div aria-labelledby="examplesHeading" class="collapse ${show_inst}" data-parent="#exinfo" id="examples">
+                    <div class="card-body">
+
+                        <!-- Example 1: score 3 -->
+                        <h5>Exemplu 1 — Scor: <strong style="color:#2980b9">3</strong> (Categoric o stare afectivă)</h5>
+                        <div class="pl-4 mb-3 pt-2 pb-2 border-bottom">
+                            <p><span class="badge badge-success">Context:</span>
+                                Mă simt <span style="background-color:#2dfe5f">fericit</span> și recunoscător pentru tot ce am primit.
+                            </p>
+                            <p><span class="badge badge-danger">Explicație:</span>
+                                <em>„Fericit" este clar o stare afectivă — descrie o emoție internă de bucurie.</em>
+                            </p>
+                        </div>
+
+                        <!-- Example 2: score 0 -->
+                        <h5>Exemplu 2 — Scor: <strong style="color:#c0392b">0</strong> (Nu este o stare afectivă)</h5>
+                        <div class="pl-4 mb-3 pt-2 pb-2 border-bottom">
+                            <p><span class="badge badge-success">Context:</span>
+                                Am fost la munte weekendul trecut și am <span style="background-color:#2dfe5f">încredere</span> că vom merge din nou.
+                            </p>
+                            <p><span class="badge badge-danger">Explicație:</span>
+                                <em>„Încredere" aici înseamnă certitudine/convingere, nu un sentiment. Nu este o stare afectivă.</em>
+                            </p>
+                        </div>
+
+                        <!-- Example 3: score 3 -->
+                        <h5>Exemplu 3 — Scor: <strong style="color:#2980b9">3</strong> (Categoric o stare afectivă)</h5>
+                        <div class="pl-4 mb-3 pt-2 pb-2 border-bottom">
+                            <p><span class="badge badge-success">Context:</span>
+                                Mi-e <span style="background-color:#2dfe5f">dor</span> de casa părinților, nu am mai fost de un an.
+                            </p>
+                            <p><span class="badge badge-danger">Explicație:</span>
+                                <em>„Dor" este o stare afectivă profundă — nostalgie, dorință intensă de a fi aproape de ceva drag.</em>
+                            </p>
+                        </div>
+
+                        <!-- Example 4: score 0 -->
+                        <h5>Exemplu 4 — Scor: <strong style="color:#c0392b">0</strong> (Nu este o stare afectivă)</h5>
+                        <div class="pl-4 mb-3 pt-2 pb-2 border-bottom">
+                            <p><span class="badge badge-success">Context:</span>
+                                Sunt <span style="background-color:#2dfe5f">sigur</span> că vine mâine, am vorbit cu el la telefon.
+                            </p>
+                            <p><span class="badge badge-danger">Explicație:</span>
+                                <em>„Sigur" aici exprimă certitudine, nu o emoție sau stare interioară.</em>
+                            </p>
+                        </div>
+
+                        <!-- Example 5: score 2 -->
+                        <h5>Exemplu 5 — Scor: <strong style="color:#27ae60">2</strong> (Probabil o stare afectivă)</h5>
+                        <div class="pl-4 mb-3 pt-2 pb-2 border-bottom">
+                            <p><span class="badge badge-success">Context:</span>
+                                Sunt <span style="background-color:#2dfe5f">confuz</span> de tot ce se întâmplă în jurul meu, nu înțeleg nimic.
+                            </p>
+                            <p><span class="badge badge-danger">Explicație:</span>
+                                <em>„Confuz" poate fi o stare cognitivă sau o stare emoțională. În acest context pare mai mult emoțional (frustare/neputință), dar este ambiguu.</em>
+                            </p>
+                        </div>
+
+                        <!-- Example 6: score 3 -->
+                        <h5>Exemplu 6 — Scor: <strong style="color:#2980b9">3</strong> (Categoric o stare afectivă)</h5>
+                        <div class="pl-4 mb-3 pt-2 pb-2 border-bottom">
+                            <p><span class="badge badge-success">Context:</span>
+                                Mă simt <span style="background-color:#2dfe5f">tulburată</span>, sau poate că nu neapărat asta e cuvântul potrivit, doar că nu știu eu să dau un nume la ce simt.
+                            </p>
+                            <p><span class="badge badge-danger">Explicație:</span>
+                                <em>„Tulburată" descrie clar o stare emoțională — persoana încearcă să-și numească o stare interioară.</em>
+                            </p>
+                        </div>
+
+                        <!-- Example 7: score 1 -->
+                        <h5>Exemplu 7 — Scor: <strong style="color:#e67e22">1</strong> (Improbabil o stare afectivă)</h5>
+                        <div class="pl-4 mb-3 pt-2 pb-2 border-bottom">
+                            <p><span class="badge badge-success">Context:</span>
+                                Eu nu am <span style="background-color:#2dfe5f">încredere</span> în acest produs, pare de calitate slabă.
+                            </p>
+                            <p><span class="badge badge-danger">Explicație:</span>
+                                <em>„Încredere" aici se referă la o evaluare a calității produsului, nu la un sentiment. Totuși, lipsa de încredere ar putea implica o ușoară frustrare, de aceea scorul nu este 0.</em>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MTURK INPUT -->
+        <div class="col-12 mt-3 mb-1 border-top">
+            <crowd-form answer-format="flatten-objects">
+                <input id="assignmentId" name="assignmentId" type="hidden" value="" />
+                <input id="ee" name="ee" type="hidden" />
+
+                <div class="question">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Sarcină:</h4>
+                            <p>Evaluați termenul <span style='background-color:#2dfe5f'> evidențiat </span> din contextul de mai jos.</p>
+                        </div>
+                    </div>
+
+                    <!-- Context display -->
+                    <div class="pl-5 mb-2 pt-2 pb-2 border-bottom">
+                        <div class="row" style="margin-bottom: 5px">
+                            <div class="col col-12 pt-2">
+                                <span class="badge badge-primary" style="font-weight:bold; background-color:#170080; font-size:12pt; min-width:15vw;">
+                                    Eșantion #:
+                                </span>
+                                ${id}
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 5px">
+                            <div class="col col-12 font-size-sm">
+                                <span class="badge badge-primary" style="font-weight:bold; background-color:#2c5e22; font-size:12pt; min-width:15vw;">
+                                    Context:
+                                </span>
+                            </div>
+                            <div id="short_post" class="col col-12 font-size-sm">${short_context}</div>
+                            <div id="full_post" class="col col-12 font-size-sm">${full_context}</div>
+                            <button type="button" onclick="toggle_post()" id="post_toggle_btn" class="btn btn-sm btn-outline-secondary mt-1 ml-3">
+                                Arată mai mult / mai puțin context
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Annotation question -->
+                    <div class="row" style="width:100%">
+                        <div class="col-md-12">
+                            <h4>Adnotare:</h4>
+                        </div>
+                    </div>
+
+                    <div class="pl-5 mb-2 pt-2 pb-2 border-bottom">
+                        <div style="font-size:13pt">
+                            <strong>Stare afectivă:</strong> Termenul
+                            <span style='background-color:#2dfe5f'> ${emo_term} </span>
+                            reflectă o stare afectivă?
+                        </div>
+                        <ul class='likert'>
+                            <li>
+                                <input type='radio' name="affect" value="not_affect">
+                                <label><strong>Nu este o stare afectivă (0): </strong> termenul nu se referă la o emoție, sentiment sau stare interioară.</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="affect" value="unlike_affect">
+                                <label><strong>Improbabil o stare afectivă (1): </strong> termenul se referă la altceva decât o emoție.</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="affect" value="like_affect">
+                                <label><strong>Probabil o stare afectivă (2): </strong> termenul pare să se refere la o emoție, sentiment sau stare interioară.</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="affect" value="is_affect">
+                                <label><strong>Categoric o stare afectivă (3): </strong> termenul este definitiv o emoție, sentiment sau stare interioară.</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Optional explanation -->
+                    <div class="pl-5 mb-2 pt-2 pb-2 explanation-box">
+                        <div style='font-size:13pt'>
+                            <strong>Explicație:</strong> (Opțional) Motivați răspunsul.
+                        </div>
+                        <textarea name='explanation' placeholder="Explicație..." style="width:100%; min-height:60px;"></textarea>
+                    </div>
+                </div>
+
+                <hr style="border:.5px dotted grey">
+            </crowd-form>
+
+            <script language='Javascript'>turkSetAssignmentID();</script>
+        </div>
+    </div>
+    <!-- HIT END -->
+
+    <!-- BOOTSTRAP JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <!-- TIME TRACKING -->
+    <script>
+        (function(){var e,t;e=this,t=function(){var r={startStopTimes:{},idleTimeoutMs:3e4,currentIdleTimeMs:0,checkStateRateMs:250,active:!1,idle:!1,currentPageName:"default-page-name",timeElapsedCallbacks:[],userLeftCallbacks:[],userReturnCallbacks:[],startTimer:function(e,t){if(e||(e=r.currentPageName),void 0===r.startStopTimes[e])r.startStopTimes[e]=[];else{var n=r.startStopTimes[e],i=n[n.length-1];if(void 0!==i&&void 0===i.stopTime)return}r.startStopTimes[e].push({startTime:t||new Date,stopTime:void 0}),r.active=!0,r.idle=!1},stopAllTimers:function(){for(var e=Object.keys(r.startStopTimes),t=0;t<e.length;t++)r.stopTimer(e[t])},stopTimer:function(e,t){e||(e=r.currentPageName);var n=r.startStopTimes[e];void 0!==n&&0!==n.length&&(void 0===n[n.length-1].stopTime&&(n[n.length-1].stopTime=t||new Date),r.active=!1)},getTimeOnCurrentPageInSeconds:function(){return r.getTimeOnPageInSeconds(r.currentPageName)},getTimeOnPageInSeconds:function(e){var t=r.getTimeOnPageInMilliseconds(e);return void 0===t?void 0:t/1e3},getTimeOnPageInMilliseconds:function(e){var t=r.startStopTimes[e];if(void 0!==t){for(var n=0,i=0;i<t.length;i++){var s=t[i].startTime,o=t[i].stopTime;void 0===o&&(o=new Date),n+=o-s}return Number(n)}},setIdleDurationInSeconds:function(e){var t=parseFloat(e);if(!1!==isNaN(t))throw{name:"InvalidDurationException",message:"Invalid duration: "+e};return r.idleTimeoutMs=1e3*e,this},setCurrentPageName:function(e){return r.currentPageName=e,this},resetIdleCountdown:function(){r.idle&&r.triggerUserHasReturned(),r.idle=!1,r.currentIdleTimeMs=0},triggerUserHasReturned:function(){if(!r.active)for(var e=0;e<r.userReturnCallbacks.length;e++){var t=r.userReturnCallbacks[e],n=t.numberOfTimesToInvoke;(isNaN(n)||void 0===n||0<n)&&(t.numberOfTimesToInvoke-=1,t.callback())}r.startTimer()},triggerUserHasLeftPage:function(){if(r.active)for(var e=0;e<r.userLeftCallbacks.length;e++){var t=r.userLeftCallbacks[e],n=t.numberOfTimesToInvoke;(isNaN(n)||void 0===n||0<n)&&(t.numberOfTimesToInvoke-=1,t.callback())}r.stopAllTimers()},checkState:function(){for(var e=0;e<r.timeElapsedCallbacks.length;e++)r.timeElapsedCallbacks[e].pending&&r.getTimeOnCurrentPageInSeconds()>r.timeElapsedCallbacks[e].timeInSeconds&&(r.timeElapsedCallbacks[e].callback(),r.timeElapsedCallbacks[e].pending=!1);!1===r.idle&&r.currentIdleTimeMs>r.idleTimeoutMs?(r.idle=!0,r.triggerUserHasLeftPage()):r.currentIdleTimeMs+=r.checkStateRateMs},listenForVisibilityEvents:function(){void 0!==document.hidden?(r.hiddenPropName="hidden",r.visibilityChangeEventName="visibilitychange"):void 0!==document.mozHidden?(r.hiddenPropName="mozHidden",r.visibilityChangeEventName="mozvisibilitychange"):void 0!==document.msHidden?(r.hiddenPropName="msHidden",r.visibilityChangeEventName="msvisibilitychange"):void 0!==document.webkitHidden&&(r.hiddenPropName="webkitHidden",r.visibilityChangeEventName="webkitvisibilitychange"),document.addEventListener(r.visibilityChangeEventName,function(){document[r.hiddenPropName]?r.triggerUserHasLeftPage():r.triggerUserHasReturned()},!1),window.addEventListener("blur",function(){r.triggerUserHasLeftPage()}),window.addEventListener("focus",function(){r.triggerUserHasReturned()}),document.addEventListener("mousemove",function(){r.resetIdleCountdown()}),document.addEventListener("keyup",function(){r.resetIdleCountdown()}),document.addEventListener("touchstart",function(){r.resetIdleCountdown()}),window.addEventListener("scroll",function(){r.resetIdleCountdown()}),setInterval(function(){r.checkState()},r.checkStateRateMs)},initialize:function(e){var t=r.idleTimeoutMs||30,n=r.currentPageName||"default-page-name",i=void 0;e&&(t=e.idleTimeoutInSeconds||t,n=e.currentPageName||n),r.setIdleDurationInSeconds(t).setCurrentPageName(n).listenForVisibilityEvents(),r.startTimer(void 0,void 0)}};return r},"undefined"!=typeof module&&module.exports?module.exports=t():"function"==typeof define&&define.amd?define([],function(){return e.TimeMe=t()}):e.TimeMe=t()}).call(this);
+
+        TimeMe.initialize({
+            currentPageName: "task",
+            idleTimeoutInSeconds: 30
+        });
+
+        $(document).ready(function() {
+            $('#submitButton').click(function() {
+                try {
+                    $('input[name=ee]').attr('value', TimeMe.getTimeOnCurrentPageInSeconds());
+                } catch(e) {}
+                return true;
+            });
+        });
+    </script>
+
+</html>

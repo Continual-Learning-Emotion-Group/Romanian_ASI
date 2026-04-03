@@ -1,0 +1,192 @@
+% This must be in the first 5 lines to tell arXiv to use pdfLaTeX, which is strongly recommended.
+\pdfoutput=1
+
+\documentclass[11pt]{article}
+
+\usepackage[final]{acl}
+
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+\title{Building a Romanian Affective State Identification Benchmark}
+
+\author{Alex Jerpelea (adj2150)}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This report describes ongoing work to create a Romanian-language benchmark for Affective State Identification (ASI), following the methodology of the MASIVE project \cite{masive2024}. The goal is to extract naturally occurring first-person expressions of emotion---e.g., \textit{``m\u{a} simt fericit''} (``I feel happy'')---from diverse Romanian text sources, producing an open-ended inventory of affective state terms grounded in real language use rather than a prescribed label set.
+
+We have built a multi-stage pipeline that constructs a high-quality seed lexicon of 524 Romanian affective state words by bridging RoEmoLex \cite{roemolex2019} with WordNet-Affect and enriching via distributional mining. The pipeline then applies 20 regex-based extraction patterns to three source categories: six existing Romanian NLP datasets (106K documents), YouTube subtitle data via the Filmot API (331K subtitle hits), and the FULG web corpus \cite{fulg2024} (150B tokens). Across all sources, we have extracted \textbf{134,657 raw ASI candidate expressions}, which deduplicate to \textbf{129,700 unique candidates}.
+
+Key findings so far include: (1) the WordNet-Affect bridge provides a principled seed construction method, filtering RoEmoLex's 9K entries down to 237 validated affective terms; (2) distributional mining discovers 139 additional emotion words, primarily nouns from FULG; (3) the \textit{``m\u{a} simt''} (``I feel'') pattern family is the single most reliable indicator of Romanian affective state expression; and (4) FULG is by far the most productive source, yielding 100K candidates from web text, while YouTube subtitles contribute 29K candidates of highly spontaneous spoken language.
+
+We are currently running LLM validation on the full candidate set using Qwen3.5-9B \cite{qwen2024} on Modal, and plan to conduct human evaluation to calibrate LLM judgments.
+
+
+\section{Background \& Related Work}
+
+\paragraph{MASIVE.} Our work directly follows the MASIVE framework \cite{masive2024}, which introduced open-ended ASI for English and Spanish. MASIVE extracts ``I feel [X]'' patterns from Reddit, bootstraps new affective state terms via conjunction co-occurrence (``I feel X and Y''), and validates candidates with LLM filtering. We adapt this approach to Romanian, addressing language-specific challenges described below.
+
+\paragraph{Romanian emotion resources.} RoEmoLex \cite{roemolex2019} provides a Romanian emotion lexicon with Plutchik \cite{plutchik1980} annotations for approximately 9,000 words. However, many entries are non-affective (professions, objects, external qualities), making it too noisy for direct use as an ASI seed. We use it as a starting point, filtering through WordNet-Affect to retain only words whose synsets are labeled as affective.
+
+\paragraph{Romanian as a challenge.} Romanian presents several specific challenges for ASI extraction. Adjectives inflect for gender (\textit{fericit/fericit\u{a}}), requiring automatic form expansion via morphological resources (MULTEXT-East, 428K entries). Diacritics (\u{a}, \c{s}, \c{t}, \^{a}, \^{i}) are frequently omitted in informal text, so all patterns match both normalized and original forms. The copular \textit{``sunt''} is ambiguous between 1st-person singular (``I am'') and 3rd-person plural (``they are''), introducing systematic noise that must be handled downstream. Romanian also has a rich reflexive verb system---the primary ASI verb \textit{``a se sim\c{t}i''} (``to feel'') appears in at least seven tense/mood forms we must capture.
+
+
+\section{Data}
+
+\subsection{Data Sources}
+
+We draw from three categories of sources: (1) six existing Romanian NLP datasets, (2) YouTube subtitle data via the Filmot API, and (3) the FULG web corpus.
+
+\begin{table*}[htbp]
+    \centering
+    \begin{tabular}{lccccc}
+        \toprule
+        Source & Domain & Register & Spontaneous & License & Available \\
+        \midrule
+        LaRoSeDa \cite{laroseda2021} & Product reviews & Mixed & Yes & Public & Dataset \\
+        PoPreRo \cite{poprero2022} & News articles & Formal & Mixed & Public & Dataset \\
+        RoSent \cite{rosent2022} & Reviews & Casual & Yes & Public & Dataset \\
+        RedditRoAP & Reddit (advice) & Casual & Yes & Public & Scraped \\
+        RED v1/v2 \cite{red2022} & Tweets, social media & Casual & Yes & Public & Dataset \\
+        Filmot API & YouTube subtitles & Casual & Yes & API (RapidAPI) & Transcripts \\
+        FULG \cite{fulg2024} & Web crawl (289GB) & Mixed & Mixed & Research & HuggingFace \\
+        \bottomrule
+    \end{tabular}
+    \caption{Qualitative overview of data sources. The small datasets and Filmot provide primarily casual, spontaneous text ideal for ASI extraction. FULG covers a broad web domain mix.}
+    \label{tab:qual-data}
+\end{table*}
+
+\begin{table*}[htbp]
+    \centering
+    \begin{tabular}{lrrrr}
+        \toprule
+        Source & Est. \# Docs/Hits & \# ASI Candidates & Match Rate & Unique Seeds \\
+        \midrule
+        RoSent & 27,338 & 1,956 & 7.2\% & -- \\
+        RedditRoAP & 26,269 & 1,467 & 5.6\% & -- \\
+        LaRoSeDa & 14,982 & 1,025 & 6.8\% & -- \\
+        PoPreRo & 28,103 & 467 & 1.7\% & -- \\
+        RED v1+v2 & 9,235 & 312 & 3.4\% & -- \\
+        \midrule
+        Small datasets total & 105,927 & 5,227 & 4.5\% & 237 \\
+        Filmot API & 331,000 & 29,452 & 8.9\% & 364 \\
+        FULG & 2.78M records & 100,000 & 3.6\% & 522 \\
+        \midrule
+        \textbf{Total (raw)} & -- & \textbf{134,657} & -- & -- \\
+        \textbf{Total (deduplicated)} & -- & \textbf{129,700} & -- & -- \\
+        \bottomrule
+    \end{tabular}
+    \caption{Quantitative statistics for each data source. Filmot's higher match rate reflects that API queries target trigger phrases directly. FULG is the largest contributor by volume. Deduplication is by matched sentence MD5 hash.}
+    \label{tab:quant-data}
+\end{table*}
+
+
+\subsection{Data Collection}
+
+Our pipeline consists of four main stages: seed construction, seed enrichment, pattern-based extraction, and LLM validation.
+
+\paragraph{Seed construction.} Rather than manually curating a word list, we construct the seed lexicon by bridging two existing resources. We map RoEmoLex V3 entries ($\sim$9K words) to WordNet 3.0 synsets, then filter to only words whose synsets appear in WordNet-Affect 1.1 \cite{strapparava2004}---a resource that labels $\sim$798 synsets as affective. This produces 479 candidate entries across parts of speech. Manual review retains \textbf{237 words} (92 adjectives, 131 nouns, 14 adverbs), rejecting words for causative meaning (e.g., \textit{``enervant''} describes an external quality, not an internal state), personality traits, or events. An additional 33 words are salvaged by converting causative adjectives to their participial forms (e.g., \textit{enervant} $\rightarrow$ \textit{enervat}). We then merge in 148 common affective words from an earlier curated list that the bridge missed (e.g., \textit{obosit}, \textit{stresat}, \textit{relaxat}), yielding a \textbf{merged seed of 385 words} (193 adjectives, 165 nouns, 27 adverbs).
+
+\paragraph{Seed enrichment.} We attempt two methods to expand the seed. \textbf{Bootstrapping} (MASIVE-style conjunction mining of \textit{``m\u{a} simt X \c{s}i Y''} patterns) proves unproductive---co-occurring Y words tend to be filler (adverbs, conjunctions) rather than affective states, likely because Romanian conjunction patterns differ from English. \textbf{Distributional mining} is far more successful: we search for explicit labeling patterns like \textit{``un sentiment de X''} (``a feeling of X'') and \textit{``o senza\c{t}ie de X''} (``a sensation of X'') across all sources. This discovers 139 new words---135 nouns from FULG and 4 from Filmot. The final \textbf{enriched seed contains 524 words} (193 adjectives, 304 nouns, 27 adverbs).
+
+\paragraph{Pattern extraction.} We designed 20 Romanian regex patterns split into two groups. \textbf{Primary patterns} (10) use unambiguous reflexive verb forms of \textit{``a se sim\c{t}i''} across seven tenses/moods: present (\textit{m\u{a} simt}), imperfect (\textit{m\u{a} sim\c{t}eam}), perfect (\textit{m-am sim\c{t}it}), future (\textit{m\u{a} voi sim\c{t}i}, \textit{o s\u{a} m\u{a} simt}), conditional (\textit{m-a\c{s} sim\c{t}i}), and subjunctive (\textit{s\u{a} m\u{a} simt}), plus \textit{simt/sim\c{t}eam [noun]}. \textbf{Secondary patterns} (10) use potentially ambiguous copular or possessive constructions: \textit{sunt/eram/am fost/o s\u{a} fiu [adj]}, \textit{m\u{a} fac [adj]}, \textit{\^{i}mi este/\^{i}mi era/mi-e [noun]}, \textit{am/aveam [noun]}. All patterns support optional intensity modifiers (\textit{foarte}, \textit{pu\c{t}in}, \textit{at\^{a}t de}, etc.) and handle diacritics normalization. Seed lemmas are automatically expanded to masculine and feminine singular forms using MULTEXT-East morphological data.
+
+\paragraph{FULG extraction.} The FULG corpus (150B tokens, 289GB of Romanian web text) is processed via HuggingFace streaming with parallel shard workers. Records are pre-filtered by Romanian language score ($>$0.8) and trigger word presence before applying pattern matching. Context is extracted at the sentence level (2 sentences before/after the match). Each candidate is tagged with a soft domain category (forum, social, blog, news, etc.) for downstream analysis. FULG extraction is complete, yielding \textbf{100,000 candidates}---the largest single source, accounting for 74\% of all raw candidates.
+
+\paragraph{Filmot API extraction.} To capture spoken Romanian, we query YouTube subtitle data through the Filmot API (via RapidAPI). Twenty-seven trigger queries are executed with 8 parallel workers at 200 pages per query, scanning 331K raw subtitle hits. Each hit is immediately filtered through the pattern matcher, yielding 29,452 candidates from 364 unique seed words. The API returns subtitle context directly (\textit{ctx\_before} + matched segment + \textit{ctx\_after}), eliminating the need for separate transcript downloads.
+
+\paragraph{Post-processing.} Filmot subtitle data requires special handling: we remove music/sound markers (\texttt{\#tags\#}), split on speaker changes (\texttt{>>}), and insert sentence boundaries based on capitalization patterns. A heavier Stanza-based variant trims context to first-person sentences only (reducing median context from 5.0 to 2.7 sentences).
+
+\paragraph{Unification.} Candidates from all three sources are merged into a single dataset, deduplicated by matched sentence MD5 hash. The unified dataset contains \textbf{129,700 unique candidates}.
+
+
+\subsection{Qualitative Discussion}
+
+The data exhibits clear domain effects. YouTube subtitle data (Filmot) is dominated by spoken Romanian from reality TV shows (e.g., \textit{Casa Iubirii}) and vlogs, producing highly spontaneous, emotionally charged expressions. The most common expression is \textit{``m\u{a} simt bine''} (``I feel good/well''). Reddit and review data contains more reflective, narrative-style emotion descriptions, with product reviews yielding many \textit{``sunt mul\c{t}umit/dezam\u{a}git''} (``I am satisfied/disappointed'') instances.
+
+Pattern distribution differs substantially across sources: \textit{``sunt [adj]''} dominates in small datasets (59\% of matches), while \textit{``m\u{a} simt [adj]''} dominates in Filmot (34\%). This likely reflects the difference between written self-description and spoken emotional expression. Auto-generated YouTube subtitles ($\sim$96\% of Filmot data) introduce noise---missing punctuation, speaker overlaps---but the volume compensates.
+
+
+\section{Methods}
+
+\subsection{Extraction Strategy Experiments}
+
+Prior to building the current pipeline, we conducted five extraction strategy experiments on a 54,623-text subset (RedditRoAP + PoPreRo) to compare approaches:
+
+\begin{enumerate}
+    \item \textbf{Pattern matching baseline}: 6 Ekman emotions only $\rightarrow$ 234 candidates (0.4\% match rate)
+    \item \textbf{MASIVE-style bootstrapping}: Conjunction mining $\rightarrow$ +4 new words, 428 candidates
+    \item \textbf{Embedding similarity}: \texttt{multilingual-e5-base} semantic search $\rightarrow$ 1,664 candidates (1,257 novel)
+    \item \textbf{Distributional mining}: Explicit labeling patterns $\rightarrow$ 538 candidates, 235 candidate words
+    \item \textbf{LLM filtering}: Qwen2.5-7B validation $\rightarrow$ 1,687/2,255 kept (74.8\%)
+\end{enumerate}
+
+These experiments informed our pipeline design: pattern matching with an enriched seed was adopted as the primary extraction method, distributional mining was incorporated for seed enrichment, and LLM filtering was scaled up for validation. Embedding similarity with synthetic anchors was found to offer poor discrimination (99.9\% of sentences pass a 0.75 threshold), though it did reveal new patterns to add (e.g., \textit{``am r\u{a}mas [adj]''}).
+
+\subsection{LLM Validation}
+
+We validate extracted candidates using Qwen3.5-9B \cite{qwen2024} deployed on Modal with an A100-80GB GPU via vLLM. The prompt follows MASIVE's verification design: given the matched sentence with the seed word highlighted in \texttt{<span>} tags, the model rates affective state validity on a 0--3 Likert scale (0 = not affective, 3 = definitely affective). Context is truncated to 5,000 characters with a 2,400-character window around the matched sentence. The prompt includes 7 in-context examples demonstrating the full scale range. This stage is currently in progress---200 of 129,700 candidates have been validated so far.
+
+% TODO: Add full LLM validation results (acceptance rates by pattern type, emotion category)
+% TODO: Add human evaluation methodology and inter-annotator agreement
+
+
+\section{Results}
+
+\begin{table}[t]
+    \centering
+    \small
+    \begin{tabular}{lrr}
+        \toprule
+        Source & Candidates & Seeds Matched \\
+        \midrule
+        Small datasets (6) & 5,227 & 237 / 524 \\
+        Filmot API & 29,452 & 364 / 524 \\
+        FULG & 100,000 & 522 / 524 \\
+        \midrule
+        Unified (deduplicated) & 129,700 & -- \\
+        \bottomrule
+    \end{tabular}
+    \caption{Extraction results by source. FULG dominates by volume. Filmot covers more of the seed lexicon (69\% vs 45\% for small datasets), likely due to the diversity of spoken language.}
+    \label{tab:extraction-results}
+\end{table}
+
+Table~\ref{tab:extraction-results} summarizes extraction yields. FULG is the dominant source by volume (100K candidates, 74\% of all raw candidates), which is expected given its scale (150B tokens of Romanian web text). The Filmot API contributes 29K candidates of highly spontaneous spoken language, and activates 364 of 524 seed words (69\%), compared to 237 (45\%) in the small datasets---suggesting that spoken Romanian covers a broader emotional vocabulary than the written domains in our small datasets. After deduplication by matched sentence, the unified dataset contains 129,700 unique candidates.
+
+\paragraph{Seed construction quality.} The WordNet-Affect bridge retains only 237 of 479 candidate entries (49\%) as genuine affective states, confirming that raw lexicon resources are too noisy for direct ASI use. The participial conversion step (e.g., \textit{enervant} $\rightarrow$ \textit{enervat}) salvages 33 otherwise-rejected words, addressing a systematic gap where RoEmoLex annotates causative forms but ASI requires experiencer forms.
+
+\paragraph{Seed enrichment.} Distributional mining expands the seed by 36\% (385 $\rightarrow$ 524 words), with nearly all growth in nouns discovered from FULG's web text. Bootstrapping, in contrast, produced raw conjunction matches across all sources (671 on FULG, 2,531 on Filmot) but the harvested Y words were consistently non-affective---conjunctions, verbs, and filler like \textit{``\^{i}ncerc''}, \textit{``iar''}, \textit{``de\c{s}i''}. All bootstrapped words were discarded after manual review, a notable divergence from MASIVE's English results that may reflect differences in Romanian conjunction patterns.
+
+\paragraph{Pattern distribution.} Pattern usage varies dramatically by source domain. In small datasets, \textit{``sunt [adj]''} accounts for 59\% of matches (3,090/5,227), reflecting the prevalence of copular self-description in product reviews. In Filmot, \textit{``m\u{a} simt [adj]''} leads at 34\% (10,071/29,452), consistent with explicit emotional self-report in spoken contexts. In FULG, \textit{``sunt [adj]''} dominates even more strongly at 49\% (48,646/100,000), likely because the web corpus includes many review-like texts. FULG also covers the broadest vocabulary, matching 522 of 524 seed words (99.6\%). The top emotion categories differ across sources: \textit{contentment} and \textit{anticipation} dominate in reviews, while \textit{joy} and \textit{sadness} dominate in YouTube speech.
+
+% TODO: Add LLM validation results table (acceptance rates by pattern, comparison to pilot)
+% TODO: Add human evaluation results (agreement, calibration against LLM)
+
+
+\section{Proposed Plans}
+
+For the remainder of the semester, I plan to focus on the following directions:
+
+\paragraph{1. Complete LLM validation and human evaluation.}
+We are currently running Qwen3.5-9B validation on all 129,700 unified candidates. Once complete, I will conduct a targeted human evaluation on a stratified sample to measure inter-annotator agreement and calibrate LLM acceptance thresholds. This will establish the reliability of automated filtering and identify systematic biases (e.g., over-filtering colloquial expressions or underfiltering epistemic uses of words like \textit{sigur}). These results will be incorporated into the final version of this report.
+
+\paragraph{2. Linguistic analysis of Romanian affective states.}
+With a validated dataset in hand, I am interested in analyzing the distribution and structure of Romanian affective expressions: How does the Romanian affective vocabulary compare to English/Spanish from MASIVE? What is the positive/negative valence distribution, and how does it vary by source domain (web text vs.\ YouTube speech vs.\ reviews)? Are there systematic gender patterns in adjective usage? I would also like to examine whether certain emotion categories are systematically expressed through different syntactic constructions (e.g., nouns with dative \textit{mi-e} vs.\ adjectives with reflexive \textit{m\u{a} simt}).
+
+\paragraph{3. Improved data collection and filtering.}
+With the core pipeline complete, there are several avenues for refinement. We could add new extraction patterns discovered via embedding analysis (e.g., \textit{``am r\u{a}mas [adj]''}, \textit{``s\u{a} fiu [adj]''}). We could also investigate phrase-level affective expressions beyond single words (e.g., \textit{``m\u{a} simt ca naiba''} / ``I feel like crap''). Finally, the FULG corpus could be processed more extensively---our current 100K candidates come from a fraction of the full 150B-token dataset.
+
+
+\bibliography{custom}
+
+\end{document}

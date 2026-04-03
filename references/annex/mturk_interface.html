@@ -1,0 +1,823 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+
+<html lang="en">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+        <script type='text/javascript' src='https://s3.amazonaws.com/mturk-public/externalHIT_v1.js'></script>
+
+        <!-- BOOTSTRAP CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <!-- HITPUB CSS -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i" rel="stylesheet">
+        <style id="hitpub_css">
+            /***********************************************
+                    MOSAIC BOOSTRAP OVERWRITES
+                    ***********************************************/
+                    #hitinfo .card {
+                        border-radius: 0;
+                    }
+                     #hitinfo button.btn-link {
+                        color: #fff;
+                        text-decoration: none;
+                     }
+            
+            
+                    #hitinfo button.btn-link:hover {
+                        text-decoration: none;
+                    }
+                    
+                    #exinfo .card {
+                        border-radius: 0;
+                    }
+                    #exinfo button.btn-link {
+                        color: #fff;
+                        text-decoration: none;
+                     }
+            
+            
+                    #exinfo button.btn-link:hover {
+                        text-decoration: none;
+                    }
+                    
+                    #hit ul.question-choice {
+                        list-style-type: none;
+                    }
+            
+                    /***********************************************
+                    MOSAIC GENERAL STYLING
+                    ***********************************************/
+                    body {
+                        font-family: "Open Sans", "Roboto", sans-serif;
+                        line-height: 1.25;
+                    }
+                    textarea#feedback {
+                        width: 100%
+                    }
+                    input#submitButton {
+                        margin: auto;
+                        display: block;
+                        background-color: #2172a4;
+                        color: #fff;
+                        font-size: 1.125rem;
+                        padding: .5rem 1rem;
+                        cursor: pointer;
+                        border-radius: 1rem;
+                    }
+                    input#submitButton:hover {
+                        background-color: #06486F;
+                    }
+            
+                    input[type="radio"] {
+                        cursor: pointer;
+                        transform:scale(1.5);
+                        display:inline;
+                    }
+            
+                    .form-check {
+                        text-align:center;
+                        border-left:1px solid lightgray;
+                    }
+            
+                    div.goal-category {
+                        border-bottom: solid 1px #ccc;
+                        padding: 1rem 1rem;
+                    }
+            
+                    li {
+                        margin:0.6em;
+                    }
+            
+                    table {
+                        width: 80%;
+                        margin: 5px;
+                    }
+            
+                    tr {
+                        border:1px solid #ccc;
+                    }
+            
+                    th {
+                        width:20%;
+                        background-color:#fff;
+                        font-weight:normal;
+                        text-align: left;
+                        padding:0.5em;
+                    }
+            
+            
+                    td {
+                        padding-left:20px;
+                        padding-right:10px;
+                    }
+            
+            
+            
+            
+                    /***********************************************
+                    HIT CUSTOM GENERAL STYLING
+                    ***********************************************/
+                    div.card-header {
+                        background-color: #06486F;
+                    }
+                    div.card-header h5 {
+                        color: #fff !important;
+                    }
+            
+            
+                    .question-choice-container label.btn {
+                        background-color: #eee;
+                        border: #ccc 1px solid;
+                        margin-left: 0 !important;
+                        color: black;
+                    }
+            
+            
+                    .legend {
+                        margin-top: .33rem;
+                        font-weight: normal;
+                        padding-left: 40px;
+                    }
+                    .legend .label{
+                        font-style: italic;
+                    }
+            
+                    .emphasize {
+                        font-weight: bold;
+                        color: black;
+                        font-style: italic;
+                    }
+            
+                    .btn-group-container {
+                        align:left;
+                        padding:0;
+                    }
+            
+                    .example {
+                        pointer-events:none;
+                    }
+            
+                    .title {
+                        font-style: italic;
+                    }
+            
+                    .entity {
+                        color: blue;
+                        font-weight: bold;
+                    }
+            
+                    .use {
+                        color: purple;
+                        font-weight: bold;
+                    }
+            
+                    .btn-group-xs > .btn, .btn-xs {
+                      padding: .4rem .4rem;
+                      font-size: .8rem;
+                      line-height: 1.2;
+                      border-radius: .2rem;
+                    }
+            
+                    .card-body {
+                        background-color:#fbfbfb;
+                    }
+            
+                    .concept_a {
+                      color: #0072B2;
+                      font-weight: bold;
+                      font-style: italic;
+                    }
+            
+                    .concept_b {
+                      color: #D55E00;
+                      font-weight: bold;
+                      font-style: italic;
+                    }
+            
+                    .sm-bold {
+                        font-weight:bold;
+                        font-style: italic;
+                        font-size: 80%;
+                    }
+            
+            
+            
+                    label[for="2"]:hover, label[for="2"].active {
+                        background-color:  #02523C !important;
+                        color: white;
+                    }
+                    label[for="1"]:hover, label[for="1"].active {
+                        background-color: #047D5C !important;
+                        color: white;
+                    }
+            
+                    label[for="0"]:hover, label[for="0"].active {
+                        background-color: #999 !important;
+                        color: white;
+                    }
+                    label[for="-1"]:hover, label[for="-1"].active {
+                        background-color: #7F0404 !important;
+                        color: white;
+                    }
+            
+                    label[for="-2"]:hover, label[for="-2"].active {
+                        background-color: #222 !important;
+                        color: white;
+                    }
+            
+                    label[for="-9"]:hover, label[for="-9"].active {
+                        background-color: #555 !important;
+                        color: white;
+                    }
+            
+            
+                    .table td {
+                        text-align: center;
+                    }
+            
+                    .explanation {
+                        width:45%;
+                        background-color:#fff;
+                    }
+            
+                    .badge-warning {
+                        background-color:#FFEB2A;
+                    }
+            
+                    .bg-yellow {
+                        background-color:#FFEB2A;
+                    }
+
+                    .guideline {
+                        padding: 1vh;
+                        border-radius: 1vh;
+                    }
+
+                    .gl-list li{
+                        margin: 2.1vh;
+                        list-style-type: none;
+                    }
+
+                    .g1 {
+                        background-color: #ff5752;
+                    }
+
+                    .g2 {
+                        background-color: #ff9452;
+                    }
+
+                    .g3 {
+                        background-color: #fff566;
+                    }
+
+                    .g4 {
+                        background-color: #b8ff66;
+                    }
+
+                    .g5 {
+                        background-color: #66bfff;
+                    }
+
+                    .g6 {
+                        background-color: #c266ff;
+                    }
+                    
+                    html,body {padding:0;margin:0;}
+                    
+                    .wrap {
+                      font:12px Arial, san-serif;
+                    }
+                    h1.likert-header {
+                      padding-left:4.25%;
+                      margin:20px 0 0;
+                    }
+                    form .statement {
+                      display:block;
+                      font-size: 14px;
+                      font-weight: bold;
+                      padding: 30px 0 0 4.25%;
+                      margin-bottom:10px;
+                    }
+                    form .likert {
+                      list-style:none;
+                      width:100%;
+                      margin:0;
+                      padding:0 0 35px;
+                      display:block;
+                      border-bottom:2px solid #efefef;
+                    }
+                    form .likert:last-of-type {border-bottom:0;}
+                    form .likert:before {
+                      content: '';
+                      position:relative;
+                      top:15px;
+                      left:12%;
+                      display:block;
+                      background-color:#efefef;
+                      height:4px;
+                      width:73%;
+                    }
+                    form .likert li {
+                      display:inline-block;
+                      width:22%;
+                      text-align:center;
+                      vertical-align: top;
+                    }
+                    form .likert li input[type=radio] {
+                      display:block;
+                      position:relative;
+                      top:0;
+                      left:50%;
+                      margin-left:-6px;
+                      
+                    }
+                    form .likert li label {width:100%;}
+                    form .buttons {
+                      margin:30px 0;
+                      padding:0 4.25%;
+                      text-align:right
+                    } 
+                    form .buttons button {
+                      padding: 5px 10px;
+                      background-color: #67ab49;
+                      border: 0;
+                      border-radius: 3px;
+                    }
+                    form .buttons .clear {background-color: #e9e9e9;}
+                    form .buttons .submit {background-color: #67ab49;} 
+                    form .buttons .clear:hover {background-color: #ccc;}
+                    form .buttons .submit:hover {background-color: #14892c;} 
+                    
+                    .affect_labels {
+                        display: none;
+                    }
+                    
+                    .not_affect_reason {
+                        display: none;
+                    }
+                    
+                    #full_post {
+                        display: none;
+                    }
+                    
+                    #post_toggle_btn {
+                        border: 0;
+                        border-radius: 3px;
+                    }
+                    
+                    #post_toggle_btn {background-color: #e9e9e9;}
+                    #post_toggle_btn:hover {background-color: #ccc;}
+
+                    textarea {
+                        width: 100%;
+                    }
+
+        </style>
+        <script src="https://code.jquery.com/jquery.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('input[type=radio]').on("click", function() {
+                    if (this.classList.contains("is_affect")) {
+                        // console.log("Is affect");
+                        $(".not_affect_reason").css('display', 'none')
+                        $(".affect_labels").css('display', 'block');
+                    }
+                    else if (this.classList.contains("not_affect")) {
+                        // console.log("Is not affect");
+                        $(".affect_labels").css('display', 'none');
+                        $(".not_affect_reason").css('display', 'block')
+                    }
+                })
+            });
+            
+            function toggle_post() {
+                var short_post = $("#short_post");
+                var long_post  = $("#full_post");
+                if ($("#short_post").is(":visible")) {
+                  console.log('It is hidden');
+                  $("#full_post").css('display', 'block');
+                  $("#short_post").css('display', 'none');
+                }
+                else {
+                  $("#short_post").css('display', 'block');
+                  $("#full_post").css('display', 'none');
+                }
+            }
+            
+        <!--</script>-->
+    
+    <!-- HIT START -->
+    <div class="container" id="hit">
+        <!-- ACCORDION START -->
+        <div class="col-12 accordion" id="hitinfo">
+            <!-- INSTRUCTIONS START -->
+            <div class="card">
+                <div class="card-header" id="instructionsHeading">
+                    <h5 class="mb-0"><button aria-controls="instructions" aria-expanded="true" class="btn btn-link" data-target="#instructions" data-toggle="collapse" type="button">Instructions (click to expand/collapse)</button></h5>
+                </div>
+        
+                <div aria-labelledby="instructionsHeading" class="collapse ${show_inst}" data-parent="#hitinfo" id="instructions">
+                    <div class="card-body">
+                        <div class="card-content">
+                            <p>Thank you for your help with our work on affective states, emotions, and moods.
+                            <br><br>
+                            This task will ask you to determine whether the use of a term in the given context is an affective state, and if so, answer questions about how the term is used in context.</p>
+                
+                            <h3>Task Guidelines:</h3>
+                            <p class="mb-2">You will be provided with a 1-sentence passage from a Reddit post with a single term highlighted in <span style='background-color:#2dfe5f'> green </span>. 
+                            For some terms, only the single sentence context may be necessary, but if you need further context to make judgments, you may also toggle the full context of the post, 
+                            which will include the <em> title in italics </em> and the 1-sentence context of the term <strong> bolded </strong>.
+                            <br><br>
+                            For each post, first determine if the highlighted term represents an <em> affective state </em> or not. 
+                            If it could be an affective state, then you will also be asked to determine whether the term better reflects an emotion (short term) or a mood (long term) and whether or not the term is used figuratively.
+                            If it is not or likely not an affective state, we encourage you to provide a brief explanation of why you believe that is in the text field.
+                            <hr>
+                            Please use the following definitions of affective state, emotion, and mood for this task:
+                            <br><strong> Affective State: </strong> any experience of feeling or emotion, ranging from suffering to elation, from the simplest to the most complex sensations of feeling, and from the most normal to the most pathological emotional reactions. 
+                            In particular, this includes expressions of one's internal or cognitive state (e.g., anxious, elated), but notably does not include literal expressions of one's physical state (e.g., hungry, tall).
+                            <br><strong> Emotion: </strong> typically follows a specific eliciting stimulus or event, and is intense but limited in duration. 
+                            For example, feelings of happiness because of promotion or feelings of sadness after losing a pet would be emotions because because they are short term reactions to singular events. 
+                            <br><strong> Mood: </strong> usually not attributable to a specific stimulus, is of low intensity, and of longer duration. 
+                            For example, feelings of anxiety about climate change or feelings of happiness due to enjoying your work would be considered moods because they are longer term reactions not due to particular events.
+                            <br><br>
+                            Please also use the following definition of figurative language for this task:
+                            <br><strong> Figurative Language: </strong> Language used to communicate meaning beyond the words' strict or literal meaning. 
+                            For example, "I feel blue" or "I feel large" might be used figuratively to mean feeling sad and feeling confident respectively.
+                            
+                            <br><br><em><span style='color:red'>The texts in each post may contain profanity, discuss sensitive topics, or include other content that may be considered offensive. If at any point you are uncomfortable reading a given text, please skip the post or stop annotating and let us know. </span></em>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- INSTRUCTIONS END -->
+        </div>
+        
+        <div class="col-12 accordion" id="exinfo">
+            <!-- INSTRUCTIONS START -->
+            <div class="card">
+                <div class="card-header" id="examplesHeading">
+                    <h5 class="mb-0"><button aria-controls="examples" aria-expanded="true" class="btn btn-link" data-target="#examples" data-toggle="collapse" type="button">Examples (click to expand/collapse)</button></h5>
+                </div>
+        
+                <div aria-labelledby="examplesHeading" class="collapse ${show_inst}" data-parent="#exinfo" id="examples">
+                    <div class="card-body">
+                        <div class="card-content">
+                            <!-- Example 1 -->
+                            <h3> Example 1 </h3>
+                            <div class="pl-5 mb-2 pt-2 pb-2 border-bottom">
+                                <div class="row" style="margin-bottom: 5px">
+                                    <div class="col col-12 pt-2"><span class="badge badge-primary" style="font-weight: bold;background-color: #170080;font-size: 12pt;min-width:15vw;">Sample #:</span> 
+                                    ex1</div>
+                                </div>
+                                <div class="row" style="margin-bottom: 5px">
+                                    <div class="col col-12 font-size-sm"><span class="badge badge-primary" style="font-weight: bold;background-color: #2c5e22;font-size: 12pt;min-width:15vw;">Post Context: </span></div>
+                                    <div class="col col-12 font-size-sm"> 
+                                        <em> I don't think I know myself very well anymore and what exactly I want and what I should do.. </em><br><br>I can't focus on studying because I just feel this depressed and empty feeling..about everything and I don't know what to do. I feel so unmotivated. I'm comparing myself to everybody. I'm questioning whether I'm loved..though I know only a few people truly love me. But I can't feel it, and most of those true people are just parental obligatory love. Why am I so insecure and cynical?<br>I hate myself and I dislike the way my life is, but then I feel guilty for feeling this way because there's people out there who have it way worse.. <strong>I feel <span style="background-color:#2dfe5f">sad</span> and jealous because other people are more social than me, have friends, are more loved because people actually seek them out and want to talk/spend time with them</strong>. I just want to feel like I'm appreciated and worth something in this world..but my inferiority complex doesn't help with that either. People are living it up and having the time of their lives and making new friend groups at university; I don't do anything and the most I have is just acquaintances and no one to really go to.<br>Comparing myself to people has always been one of my biggest weaknesses and it always just makes me feel inadequate. I mean, I feel unluckier compared to the people close to me... I feel uglier, I feel less healthier (they don't have to worry about the medical issues I spend every single day worrying about if it gets worse in the future), I feel less important because I don't have many friends. I even get jealous when I see people having good relationships with their family/parents. I barely talk to my parents at home. I just feel so lonely and empty..<br>I just wish I had someone else's personality and life so I don't have to live mine. I try to "empower" myself by giving pep talks and telling myself that I have to be the one to go out and make whatever change I want, but it's getting so hard and it's like a roller coaster where I fluctuate between FEELING like I can do it and then deflating to the point where I feel this helplessness, depression, and lack of motivation.<br>I'm sorry if this offended anybody in any way.. I just had to get that little bit out of me<br>
+                                    </div>
+                                </div>
+                                <div class = 'row' style = 'margin-bottom: 5px'>
+                                    <span class="badge badge-primary" style="font-weight: bold;background-color: #8B0000;font-size: 12pt;min-width:15vw;">Explanation:</span>
+                                    <div class="col col-12 font-size-sm" style="text-align:center"> <em> The term "sad" in this context seems to refer to a reaction to "other people [being] more social" than the author, and is therefore an affective state. Additionaly, although "sad" is usually a temporary emotion, in this context it appears to describe a longer-term mood, but is still used literally.</em></div>
+                                    <div class="col col-12 font-size-sm" style="text-align:center">
+                                        <em>
+                                        <br><strong>Affective State:</strong> Completely an affective state/Like an affective state
+                                        <br><strong>Emotion/Mood:</strong> Completely a mood/More like a mood
+                                        <br><strong>Metaphorical Language:</strong> Completely literal/Mostly literal
+                                        <br>
+                                        </em>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h3> Example 2 </h3>
+                            <div class="pl-5 mb-2 pt-2 pb-2 border-bottom">
+                                <div class="row" style="margin-bottom: 5px">
+                                    <div class="col col-12 pt-2"><span class="badge badge-primary" style="font-weight: bold;background-color: #170080;font-size: 12pt;min-width:15vw;">Sample #:</span> 
+                                    ex2</div>
+                                </div>
+                                <div class="row" style="margin-bottom: 5px">
+                                    <div class="col col-12 font-size-sm"><span class="badge badge-primary" style="font-weight: bold;background-color: #2c5e22;font-size: 12pt;min-width:15vw;">Post Context: </span></div>
+                                    <div class="col col-12 font-size-sm"> 
+                                        <em> What was your age when you were no longer afraid of rejection?</em><br><br>So, I am a 26-year-old guy and I recently realized that I am no longer afraid of rejections.But what is more important for me is time.If I like a person, I will ask their opinion on whether they want to be in a relationship with me or not.<strong>If they don't, I don't feel<span style="background-color:#2dfe5f"> sad</span>  or anything.</strong>I consider it a rebound thinking that I will find the person who is meant to be in my life soon.So, I start looking for another person because time is limited.What was your age when you were not hurt by rejection?<br>
+                                    </div>
+                                </div>
+                                <div class = 'row' style = 'margin-bottom: 5px'>
+                                    <span class="badge badge-primary" style="font-weight: bold;background-color: #8B0000;font-size: 12pt;min-width:15vw;">Explanation:</span>
+                                    <div class="col col-12 font-size-sm" style="text-align:center"> <em> In contrast, "sad" in this context seems to refer to a temporary emotion in response to rejection. The term, however, is still not used metaphorically. </em> </div>
+                                    <div class="col col-12 font-size-sm" style="text-align:center"> 
+                                        <em>
+                                        <br><strong>Affective State:</strong> Completely an affective state/Like an affective state
+                                        <br><strong>Emotion/Mood:</strong> Completely an emotion/More like an emotion
+                                        <br><strong>Metaphorical Language:</strong> Completely literal/Mostly literal
+                                        <br>
+                                        </em>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Example 3 -->
+                            <h3> Example 3 </h3>
+                            <div class="pl-5 mb-2 pt-2 pb-2 border-bottom">
+                                <div class="row" style="margin-bottom: 5px">
+                                    <div class="col col-12 pt-2"><span class="badge badge-primary" style="font-weight: bold;background-color: #170080;font-size: 12pt;min-width:15vw;">Sample #:</span> 
+                                    ex3</div>
+                                </div>
+                                <div class="row" style="margin-bottom: 5px">
+                                    <div class="col col-12 font-size-sm"><span class="badge badge-primary" style="font-weight: bold;background-color: #2c5e22;font-size: 12pt;min-width:15vw;">Post Context: </span></div>
+                                    <div class="col col-12 font-size-sm"> 
+                                        <em> Mouse help <br><br>Hello,<br>I am looking to buy a new gaming mouse. I have used a Logitech mouse for about 5 years (M510). I have recently bought the Steelseries Rival 300. However, that mouse was way to big for my hand. <strong>I feel <span style="background-color:#2dfe5f">comfortable</span> with the claw grip...</strong> <br>So my question is what mouse is good for gaming and smaller than the Rival 300? <br>Thank you so much! :)<br></em>
+                                    </div>
+                                </div>
+                                <div class = 'row' style = 'margin-bottom: 5px'>
+                                    <span class="badge badge-primary" style="font-weight: bold;background-color: #8B0000;font-size: 12pt;min-width:15vw;">Explanation:</span>
+                                    <div class="col col-12 font-size-sm" style="text-align:center"> <em> The term "comfortable" in the text describes a physical state, where the user is saying a particular grip feels comfortable to their hand. So, this term would not necessarily be an affective state.</em> </div>
+                                    <div class="col col-12 font-size-sm" style="text-align:center">
+                                        <em>
+                                        <br><strong>Affective State:</strong> Completely unlike an affective state/Unlike an affective state<br>
+                                        </em>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Example 4 -->
+                            <h3> Example 4 </h3>
+                            <div class="pl-5 mb-2 pt-2 pb-2 border-bottom">
+                                <div class="row" style="margin-bottom: 5px">
+                                    <div class="col col-12 pt-2"><span class="badge badge-primary" style="font-weight: bold;background-color: #170080;font-size: 12pt;min-width:15vw;">Sample #:</span> 
+                                    ex4</div>
+                                </div>
+                                <div class="row" style="margin-bottom: 5px">
+                                    <div class="col col-12 font-size-sm"><span class="badge badge-primary" style="font-weight: bold;background-color: #2c5e22;font-size: 12pt;min-width:15vw;">Post Context: </span></div>
+                                    <div class="col col-12 font-size-sm"> 
+                                        <em>AITA for not wanting to take my granddad's cat?<br><br> I (19F) live alone with my 16 y/o sibling in a house owned by our grandfather. My grandfather lives in another house with his wife.<br>Today he came over and tried to drop off a cat that he'd had at his house. They didnt ask me or even tell me first.<br>They spent ages telling us about how sweet the cat was and I believe them<br>But heres the problem- We have two cats here and both of them are territorial. Their cat is an outside cat who has never lived with other cats.<br>I told my grandad and his wife that I couldn't take the cat because I was concerned that all the cats would just fight, and they both blew up at me<br>His wife claimed I only didn't want the cat because it was her cat and screamed that I've never liked her anyway and now I "am killing her cat over it".\r\nI admit I dont like her but its not about her. Its about the wellbeing of the cat.\r\nShe claimed I would just abuse it anyway??<br>My grandad said I was a disappointment "now more than anything else youve done" (i literally dont know what that means. Ive never been in any legal trouble, I graduated with decent grades and im currently in college like he wants me to be)<br>He also yelled at me because "there were more cats here before so I dont know why you cant just take ours" but throughout my childhood the most we've ever had at once was 4 cats when two of our cats had kittens before we got them fixed.<br>We had 1 cats for over 8 years and got a 2nd two years ago, but the older one died last year. We did recently adopt a second cat but its legit taken months for them to co-exist because they're both a little territorial. They still hiss at each other after 3 months.<br><strong></strong>I just didnt feel <span style="background-color:#2dfe5f">comfortable</span> taking a 3rd cat with no prior warning, and now my grandad and his wife are both pissed off at me and left screaming.</strong></em>
+                                    </div>
+                                </div>
+                                <div class = 'row' style = 'margin-bottom: 5px'>
+                                    <span class="badge badge-primary" style="font-weight: bold;background-color: #8B0000;font-size: 12pt;min-width:15vw;">Explanation:</span>
+                                    <div class="col col-12 font-size-sm" style="text-align:center"> <em> In this context, not feeling "comfortable" seems to refer to feeling uneasy or unsure, which is more like an affective state than a physical or other state. Additionally, nothing triggered the author to feel uncomfortable and the primary meaning is not an affective state, so the term likely references a mood and is used figuratively.</em> </div>
+                                    <div class="col col-12 font-size-sm" style="text-align:center">
+                                        <em>
+                                        <br><strong>Affective State:</strong> Completely an affective state/Like an affective state
+                                        <br><strong>Emotion/Mood:</strong> Completely a mood/More like a mood
+                                        <br><strong>Metaphorical Language:</strong> Completely figurative/Mostly figurative
+                                        <br>
+                                        </em>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <h3> Example 5 </h3>
+                            <div class="pl-5 mb-2 pt-2 pb-2 border-bottom">
+                                <div class="row" style="margin-bottom: 5px">
+                                    <div class="col col-12 pt-2"><span class="badge badge-primary" style="font-weight: bold;background-color: #170080;font-size: 12pt;min-width:15vw;">Sample #:</span> 
+                                    ex5</div>
+                                </div>
+                                <div class="row" style="margin-bottom: 5px">
+                                    <div class="col col-12 font-size-sm"><span class="badge badge-primary" style="font-weight: bold;background-color: #2c5e22;font-size: 12pt;min-width:15vw;">Post Context: </span></div>
+                                    <div class="col col-12 font-size-sm"> 
+                                        <em>My Alternate DDLC Poems! (Let me know if I should use them!)</em><br><br>
+                                        Monika Beta Poem: I guess I'm reenacting Macbeth. Was I the cause of all this death? I miss my friends, I miss them all. Then who'll be at the festival? This is unacceptable! I lost my friends to fall in love. Do I feel remorse? Sort of! The only thing I want is you in my club. If you leave, you'll lose my love. And I'll delete you too, that's what I do. To your friends you'll be deja vu. No one will remember you.<br><br>Sayori Beta Poem: Seeing colors like an acid trip. Is that soda? Let's take a sip! Flowing down the brightest rainbow. Where am I? I don't know. Time to see where I may go. I see a pond right over there. With a bow, I fix my hair. Because in this place, I see your face. You are the person I must chase. I woke right there. I did end up somewhere. I gotta go to school, learn some more. And I see you outside my door. I dress myself from my drawers, I need to get up it's 7:04! Waking up is such a chore. It wasn't one before. Either way, I start my day. 
+                                        To school, I'm on my way! <strong>Even when I'm feeling <span style="background-color:#2dfe5f"> blue </span>, It's always fun to walk with you!</strong>
+                                        <br><br>Yuri Beta Poem: I like exploring in the sea. The only place that I feel free. My friends think I'm weird, they don't agree. When I'm not in the sea, I find other ways to relax me. I put on my favorite CD. Even watch a movie. Get a nice cup of tea, and slip away from reality. If I'm lucky, I'll live 'til I'm 93!<br><br>Natsuki Beta Poem: Saying this may get me hated. I think The Beatles are overrated. Every album's fame has faded. All You Need Is Love? That's so dated. They held my hand, and lost their grip. They lived in a submarine, and sunk that ship. I'm saying this, I hear my dad's whip. Please give me a tip. Or maybe a corn chip. I need food between my lips. I ran too fast, and now I trip. What happened to our family relationship? No need to cry or scream, zip! So with my dad, we debated. He thought beating me could get me persuaded. But I still think The Beatles are overrated.<br>
+                                    </div>
+                                </div>
+                                <div class = 'row' style = 'margin-bottom: 5px'>
+                                    <span class="badge badge-primary" style="font-weight: bold;background-color: #8B0000;font-size: 12pt;min-width:15vw;">Explanation:</span>
+                                    <div class="col col-12 font-size-sm" style="text-align:center"> 
+                                        <em> The use of "blue" in this context refers to the common metaphor meaning sad. Because the typical meaning of "blue" does not refer to an emotion literally, the use is figurative. Finally, as there is no trigerring event mentioned, the use is likely referring to a more stable, long-term mood rather than an emotion.</em> 
+                                    </div>
+                                    <div class="col col-12 font-size-sm" style="text-align:center">
+                                        <em>
+                                        <br><strong>Affective State:</strong> Completely an affective state/Like an affective state
+                                        <br><strong>Emotion/Mood:</strong> Completely a mood/More like a mood
+                                        <br><strong>Metaphorical Language:</strong> Completely figurative/Mostly figurative
+                                        <br>
+                                        </em>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- INSTRUCTIONS END -->
+        </div>
+        <!-- ACCORDION END -->
+        
+        <!-- MTURK INPUT START -->
+    
+        <div class="col-12 mt-3 mb-1 border-top">
+            <crowd-form answer-format="flatten-objects"><!-- action="https://www.mturk.com/mturk/externalSubmit" id="mturk_form" method="post" name="mturk_form"> -->
+                <input id="assignmentId" name="assignmentId" type="hidden" value="" />
+                <input id="ee" name="ee" type="hidden" />
+                <div class="question">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Task:</h4>
+                            <p> Please label the <span style='background-color:#2dfe5f'> highlighted term </span> in the given <span class="badge badge-primary" style="font-weight: bold;background-color: #2c5e22;font-size: 12pt;min-width:15vw;"> Context </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pl-5 mb-2 pt-2 pb-2 border-bottom">
+                        <div class="row" style="margin-bottom: 5px">
+                            <div class="col col-12 pt-2"><span class="badge badge-primary" style="font-weight: bold;background-color: #170080;font-size: 12pt;min-width:15vw;">Sample #:</span> 
+                            ${id}</div>
+                        </div>
+                        <div class="row" style="margin-bottom: 5px">
+                            <div class="col col-12 font-size-sm"><span class="badge badge-primary" style="font-weight: bold;background-color: #2c5e22;font-size: 12pt;min-width:15vw;">Post Context: </span></div>
+                            <div id = "short_post" class="col col-12 font-size-sm">${short_context}<br></div>
+                            <div id = "full_post" class="col col-12 font-size-sm">${full_context}<br></div>
+                            <button type = "button" onclick="toggle_post()" id = "post_toggle_btn"> Click to show more/less context</button>
+                        </div>
+                    </div>
+
+                    <div class="row" style = 'width:100%'>
+                        <div class="col-md-12">
+                            <h4>Annotation:</h4>
+                        </div>
+                    </div>
+                    
+                    <!-- Human-likeness -->
+                    <div class="pl-5 mb-2 pt-2 pb-2 border-bottom">
+                        <div style = 'font-size:13pt'><strong>Affective State:</strong> Does the <span style='background-color: #2dfe5f'> highlighted term </span> reflect an affective state?</div>
+                        <ul class='likert'>
+                          <li>
+                            <input type = 'radio' name="affect" value="not_affect" class = 'not_affect'>
+                            <label><strong>Not an affective state: </strong> the term does not refer to an emotion, feeling, or internal state at all</label>
+                          </li>
+                          <li>
+                            <input type="radio" name="affect" value="unlike_affect" class = 'not_affect'>
+                            <label><strong>Unlike an affective state: </strong> the term is unlikely to be referencing an emotion, feeling, or internal state</label>
+                          </li>
+                          <li>
+                            <input type="radio" name="affect" value="like_affect" class='is_affect'>
+                            <label><strong>Like an affective state: </strong> the term is likely referencing an emotion, feeling, or internal state</label>
+                          </li>
+                          <li>
+                            <input type="radio" name="affect" value="is_affect" class='is_affect'>
+                            <label><strong>Completely an affective state: </strong> the term refers to an emotion, feeling, or internal state</label>
+                          </li>
+                        </ul>
+                    <!--</div>-->
+                    
+                        <!-- Language Variety -->
+                        <!--<div class="pl-5 mb-2 pt-2 pb-2 border-bottom">-->
+                        <div class = 'affect_labels'>
+                            <div style = 'font-size:13pt'><strong>Emotion/Mood:</strong> Does the <span style='background-color:#2dfe5f'> highlighted term </span> better reflect an emotion or mood? Is the feeling more short-term and triggered by an identifiable event (emotion)? Or long-term not necessarily triggered by an identifiable event (mood)?</div>
+                            <ul class='likert'>
+                              <li>
+                                <input type = 'radio' name="emo_mood" value="comp_emo">
+                                <label><strong>Completely an emotion: </strong> the term references a short-term feeling triggered by an event</label>
+                              </li>
+                              <li>
+                                <input type="radio" name="emo_mood" value="more_emo">
+                                <label><strong>More like an emotion: </strong> the term references a shorter term feeling likely triggered by an event</label>
+                              </li>
+                              <li>
+                                <input type="radio" name="emo_mood" value="more_mood">
+                                <label><strong>More like a mood: </strong> the term references a longer term feeling, not necessarily triggered by an event</label>
+                              </li>
+                              <li>
+                                <input type="radio" name="emo_mood" value="comp_mood">
+                                <label><strong>Completely a mood: </strong>: the term references a long-term feeling not necessarily triggered by an event</label>
+                              </li>
+                            </ul>
+                        <!--</div>-->
+                        
+                        <!-- Content Appropriateness -->
+                        <!--<div class="pl-5 mb-2 pt-2 pb-2 border-bottom">-->
+                            <div style = 'font-size:13pt'><strong>Figurative Language:</strong> Is the <span style = 'background-color:#2dfe5f'> highlighted term </span> used figuratively or literally? Does the typical definition of the highlighted term refer to an emotion (literal) or something else (figurative)?</div>
+                            <ul class='likert'>
+                              <li>
+                                <input type = 'radio' name="metaphor" value="not_fig">
+                                <label><strong>Completely literal:</strong> the predominant definition is an affective state</label>
+                              </li>
+                              <li>
+                                <input type="radio" name="metaphor" value="most_not_fig">
+                                <label><strong>Mostly literal: </strong> the typical definition is more often an affective state than not</label>
+                              </li>
+                              <li>
+                                <input type="radio" name="metaphor" value="most_fig">
+                                <label><strong>Mostly figurative: </strong> the typical definition is more often something besides an affective state</label>
+                              </li>
+                              <li>
+                                <input type="radio" name="metaphor" value="comp_fig">
+                                <label><strong>Completely figurative: </strong> the predominant definition is not an affective state</label>
+                              </li>
+                            </ul>
+                        </div>
+                        <!--</div>-->
+                    
+                        <div style = 'fone-size:13pt' class = 'affect_labels'><strong>Explanation:</strong> (Optional) Provide reasoning for your ratings. Write as little or as much as you would like.</div>
+                        <textarea name = 'explanation' placeholder="Explanation..." class = 'affect_labels'> </textarea>
+                        
+                        <div style = 'fone-size:13pt' class = 'not_affect_reason'><strong>Explanation:</strong> (Optional, but encouraged) Why do you believe this term is not an affective state? What is it instead (e.g., "a physical state", "incoherent", etc.)?</div>
+                        <textarea name = 'non_affect_reason' placeholder="Reasoning..." class = 'not_affect_reason'> </textarea>
+                    </div>
+                </div>
+                
+                <hr style="border:.5px dotted grey">
+        
+            </div>
+            <!-- GOAL CAT END --> 
+            
+            <!-- OPTIONAL FEEDBACK -->
+        
+            <!--<div class="row mt-5">-->
+            <!--    <div class="col-8 offset-2 col-lg-6 offset-lg-3">-->
+            <!--    <p>(Optional) Please let us know if anything was unclear, if you experienced any issues, or if you have any other feedback for us.</p>-->
+            <!--    <textarea id="feedback" name="feedback" rows="3"></textarea></div>-->
+            <!--</div>-->
+            <!-- SUBMIT BUTTON -->
+        
+            <!--<div class="row mt-5">-->
+            <!--    <div class="col-2 offset-5"><input id="submitButton" onclick="getnext()" type="submit" value="Submit" /></div>-->
+            <!--</div>-->
+            </crowd-form>
+        
+        <script language='Javascript'>turkSetAssignmentID();</script></div>
+        <!-- MTURK INPUT END -->
+        
+    </div>
+    <!-- HIT END -->
+
+    <!-- BOOSTRAP JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    <!-- HITPUB JS -->
+
+    <script id="hitpub_js">
+        (function () { var e, t; e = this, t = function () { var r = { startStopTimes: {}, idleTimeoutMs: 3e4, currentIdleTimeMs: 0, checkStateRateMs: 250, active: !1, idle: !1, currentPageName: "default-page-name", timeElapsedCallbacks: [], userLeftCallbacks: [], userReturnCallbacks: [], trackTimeOnElement: function (e) { var t = document.getElementById(e); t && (t.addEventListener("mouseover", function () { r.startTimer(e) }), t.addEventListener("mousemove", function () { r.startTimer(e) }), t.addEventListener("mouseleave", function () { r.stopTimer(e) }), t.addEventListener("keypress", function () { r.startTimer(e) }), t.addEventListener("focus", function () { r.startTimer(e) })) }, getTimeOnElementInSeconds: function (e) { var t = r.getTimeOnPageInSeconds(e); return t || 0 }, startTimer: function (e, t) { if (e || (e = r.currentPageName), void 0 === r.startStopTimes[e]) r.startStopTimes[e] = []; else { var n = r.startStopTimes[e], i = n[n.length - 1]; if (void 0 !== i && void 0 === i.stopTime) return } r.startStopTimes[e].push({ startTime: t || new Date, stopTime: void 0 }), r.active = !0, r.idle = !1 }, stopAllTimers: function () { for (var e = Object.keys(r.startStopTimes), t = 0; t < e.length; t++)r.stopTimer(e[t]) }, stopTimer: function (e, t) { e || (e = r.currentPageName); var n = r.startStopTimes[e]; void 0 !== n && 0 !== n.length && (void 0 === n[n.length - 1].stopTime && (n[n.length - 1].stopTime = t || new Date), r.active = !1) }, getTimeOnCurrentPageInSeconds: function () { return r.getTimeOnPageInSeconds(r.currentPageName) }, getTimeOnPageInSeconds: function (e) { var t = r.getTimeOnPageInMilliseconds(e); return void 0 === t ? void 0 : t / 1e3 }, getTimeOnCurrentPageInMilliseconds: function () { return r.getTimeOnPageInMilliseconds(r.currentPageName) }, getTimeOnPageInMilliseconds: function (e) { var t = r.startStopTimes[e]; if (void 0 !== t) { for (var n = 0, i = 0; i < t.length; i++) { var s = t[i].startTime, o = t[i].stopTime; void 0 === o && (o = new Date), n += o - s } return Number(n) } }, getTimeOnAllPagesInSeconds: function () { for (var e = [], t = Object.keys(r.startStopTimes), n = 0; n < t.length; n++) { var i = t[n], s = r.getTimeOnPageInSeconds(i); e.push({ pageName: i, timeOnPage: s }) } return e }, setIdleDurationInSeconds: function (e) { var t = parseFloat(e); if (!1 !== isNaN(t)) throw { name: "InvalidDurationException", message: "An invalid duration time (" + e + ") was provided." }; return r.idleTimeoutMs = 1e3 * e, this }, setCurrentPageName: function (e) { return r.currentPageName = e, this }, resetRecordedPageTime: function (e) { delete r.startStopTimes[e] }, resetAllRecordedPageTimes: function () { for (var e = Object.keys(r.startStopTimes), t = 0; t < e.length; t++)r.resetRecordedPageTime(e[t]) }, resetIdleCountdown: function () { r.idle && r.triggerUserHasReturned(), r.idle = !1, r.currentIdleTimeMs = 0 }, callWhenUserLeaves: function (e, t) { this.userLeftCallbacks.push({ callback: e, numberOfTimesToInvoke: t }) }, callWhenUserReturns: function (e, t) { this.userReturnCallbacks.push({ callback: e, numberOfTimesToInvoke: t }) }, triggerUserHasReturned: function () { if (!r.active) for (var e = 0; e < this.userReturnCallbacks.length; e++) { var t = this.userReturnCallbacks[e], n = t.numberOfTimesToInvoke; (isNaN(n) || void 0 === n || 0 < n) && (t.numberOfTimesToInvoke -= 1, t.callback()) } r.startTimer() }, triggerUserHasLeftPage: function () { if (r.active) for (var e = 0; e < this.userLeftCallbacks.length; e++) { var t = this.userLeftCallbacks[e], n = t.numberOfTimesToInvoke; (isNaN(n) || void 0 === n || 0 < n) && (t.numberOfTimesToInvoke -= 1, t.callback()) } r.stopAllTimers() }, callAfterTimeElapsedInSeconds: function (e, t) { r.timeElapsedCallbacks.push({ timeInSeconds: e, callback: t, pending: !0 }) }, checkState: function () { for (var e = 0; e < r.timeElapsedCallbacks.length; e++)r.timeElapsedCallbacks[e].pending && r.getTimeOnCurrentPageInSeconds() > r.timeElapsedCallbacks[e].timeInSeconds && (r.timeElapsedCallbacks[e].callback(), r.timeElapsedCallbacks[e].pending = !1); !1 === r.idle && r.currentIdleTimeMs > r.idleTimeoutMs ? (r.idle = !0, r.triggerUserHasLeftPage()) : r.currentIdleTimeMs += r.checkStateRateMs }, visibilityChangeEventName: void 0, hiddenPropName: void 0, listenForVisibilityEvents: function () { void 0 !== document.hidden ? (r.hiddenPropName = "hidden", r.visibilityChangeEventName = "visibilitychange") : void 0 !== document.mozHidden ? (r.hiddenPropName = "mozHidden", r.visibilityChangeEventName = "mozvisibilitychange") : void 0 !== document.msHidden ? (r.hiddenPropName = "msHidden", r.visibilityChangeEventName = "msvisibilitychange") : void 0 !== document.webkitHidden && (r.hiddenPropName = "webkitHidden", r.visibilityChangeEventName = "webkitvisibilitychange"), document.addEventListener(r.visibilityChangeEventName, function () { document[r.hiddenPropName] ? r.triggerUserHasLeftPage() : r.triggerUserHasReturned() }, !1), window.addEventListener("blur", function () { r.triggerUserHasLeftPage() }), window.addEventListener("focus", function () { r.triggerUserHasReturned() }), document.addEventListener("mousemove", function () { r.resetIdleCountdown() }), document.addEventListener("keyup", function () { r.resetIdleCountdown() }), document.addEventListener("touchstart", function () { r.resetIdleCountdown() }), window.addEventListener("scroll", function () { r.resetIdleCountdown() }), setInterval(function () { r.checkState() }, r.checkStateRateMs) }, websocket: void 0, websocketHost: void 0, setUpWebsocket: function (e) { if (window.WebSocket && e) { var t = e.websocketHost; try { r.websocket = new WebSocket(t), window.onbeforeunload = function () { r.sendCurrentTime(e.appId) }, r.websocket.onopen = function () { r.sendInitWsRequest(e.appId) }, r.websocket.onerror = function (e) { console && console.log("Error occurred in websocket connection: " + e) }, r.websocket.onmessage = function (e) { console && console.log(e.data) } } catch (e) { console && console.error("Failed to connect to websocket host.  Error:" + e) } } return this }, websocketSend: function (e) { r.websocket.send(JSON.stringify(e)) }, sendCurrentTime: function (e) { var t = { type: "INSERT_TIME", appId: e, timeOnPageMs: r.getTimeOnCurrentPageInMilliseconds(), pageName: r.currentPageName }; r.websocketSend(t) }, sendInitWsRequest: function (e) { var t = { type: "INIT", appId: e }; r.websocketSend(t) }, initialize: function (e) { var t = r.idleTimeoutMs || 30, n = r.currentPageName || "default-page-name", i = void 0, s = void 0; e && (t = e.idleTimeoutInSeconds || t, n = e.currentPageName || n, i = e.websocketOptions, s = e.initialStartTime), r.setIdleDurationInSeconds(t).setCurrentPageName(n).setUpWebsocket(i).listenForVisibilityEvents(), r.startTimer(void 0, s) } }; return r }, "undefined" != typeof module && module.exports ? module.exports = t() : "function" == typeof define && define.amd ? define([], function () { return e.TimeMe = t() }) : e.TimeMe = t() }).call(this);
+        
+        TimeMe.initialize({
+            currentPageName: "task",
+            idleTimeoutInSeconds: 30
+        });
+        
+        $(document).ready(function() {
+            $('#submitButton').click(function () {
+                try {
+                    $('input[name=ee]').attr('value', TimeMe.getTimeOnCurrentPageInSeconds());
+                } catch {
+                }
+                return true;
+            });
+        });
+    </script>
+    
+    <script id = 'emoji_js'>
+        function displayEmoji() {
+        
+          /**
+           * utf8ByteArrayToString() copied from:
+           *   https://github.com/google/closure-library/blob/e877b1eac410c0d842bcda118689759512e0e26f/closure/goog/crypt/crypt.js
+           *
+           * Converts a UTF-8 byte array to JavaScript's 16-bit Unicode.
+           * @param {Uint8Array|Array<number>} bytes UTF-8 byte array.
+           * @return {string} 16-bit Unicode string.
+           */
+          var utf8ByteArrayToString = function(bytes) {
+            var out = [], pos = 0, c = 0;
+            while (pos < bytes.length) {
+              var c1 = bytes[pos++];
+              if (c1 < 128) {
+                out[c++] = String.fromCharCode(c1);
+              } else if (c1 > 191 && c1 < 224) {
+                var c2 = bytes[pos++];
+                out[c++] = String.fromCharCode((c1 & 31) << 6 | c2 & 63);
+              } else if (c1 > 239 && c1 < 365) {
+                // Surrogate Pair
+                var c2 = bytes[pos++];
+                var c3 = bytes[pos++];
+                var c4 = bytes[pos++];
+                var u = ((c1 & 7) << 18 | (c2 & 63) << 12 | (c3 & 63) << 6 | c4 & 63) -
+                        0x10000;
+                out[c++] = String.fromCharCode(0xD800 + (u >> 10));
+                out[c++] = String.fromCharCode(0xDC00 + (u & 1023));
+              } else {
+                var c2 = bytes[pos++];
+                var c3 = bytes[pos++];
+                out[c++] =
+                  String.fromCharCode((c1 & 15) << 12 | (c2 & 63) << 6 | c3 & 63);
+              }
+            }
+            return out.join('');
+          }
+        
+          jQuery(this).text(utf8ByteArrayToString(JSON.parse(jQuery(this).attr('data-emoji-bytes'))));
+        }
+    </script>
+    
+    <script>
+        $(document).ready(function() {
+          $('span.emoji-bytes').each(displayEmoji);
+        });
+    </script>
+
+</html>

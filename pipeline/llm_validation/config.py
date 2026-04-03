@@ -45,5 +45,5 @@ Răspuns:"""
 # Defaults
 DEFAULT_BATCH_SIZE = 500
 DEFAULT_MAX_CANDIDATES = 0  # 0 = all
-MAX_CONTEXT_CHARS = 1200
-CONTEXT_WINDOW = 500  # chars before/after match for truncation
+MAX_CONTEXT_CHARS = 5000
+CONTEXT_WINDOW = 2400  # chars before/after match for truncation
