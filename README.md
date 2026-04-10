@@ -868,6 +868,57 @@ where the gold word appears in the top-k predictions. MRR = mean reciprocal rank
 Translation verification rate: 45.1% (seed word found in translated text),
 54.9% fallback (placeholder-based translation).
 
+#### By data source (Acc@1)
+
+| Model | Filmot (n=579) | FULG (n=1986) | Merged corpus (n=93) |
+|-------|------:|------:|------:|
+| ro-bert | 31.4% | 37.6% | 19.4% |
+| mT5-large | 26.8% | 28.5% | 21.5% |
+| RoBERT-base | 25.7% | 23.6% | 6.5% |
+| Qwen3.5-9B | 16.4% | 23.7% | 21.5% |
+| RoGemma2-9b | 11.9% | 21.3% | 24.7% |
+| XLM-R-large | 20.4% | 17.0% | 2.2% |
+| RoLlama3.1-8b | 5.5% | 7.9% | 16.1% |
+
+FULG (web text) is generally the easiest source. MLMs struggle on merged corpus
+(product reviews — shorter, more formulaic text). Filmot (YouTube auto-captions)
+is hardest for most generative models.
+
+#### By pattern type (Acc@1)
+
+| Model | Primary (n=361) | Secondary (n=2297) |
+|-------|------:|------:|
+| ro-bert | 32.7% | 36.1% |
+| mT5-large | 28.3% | 27.8% |
+| RoBERT-base | 31.0% | 22.2% |
+| Qwen3.5-9B | 17.5% | 22.7% |
+| RoGemma2-9b | 7.5% | 21.3% |
+| XLM-R-large | 30.2% | 15.2% |
+| RoLlama3.1-8b | 2.5% | 8.5% |
+
+MLMs (RoBERT, XLM-R) do relatively better on primary patterns ("mă simt [X]")
+which are close to standard `[MASK]` prediction. Generative models (Qwen,
+RoGemma) do better on secondary patterns ("sunt [X]", "am [X]") which benefit
+from broader contextual reasoning.
+
+#### By seed word gender (Acc@1)
+
+| Model | Masculine (n=1272) | Feminine (n=1013) | Nouns (n=373) |
+|-------|------:|------:|------:|
+| ro-bert | 35.4% | 30.3% | 50.9% |
+| mT5-large | 30.0% | 22.1% | 36.5% |
+| RoBERT-base | 19.7% | 19.2% | 48.0% |
+| Qwen3.5-9B | 18.7% | 22.5% | 31.9% |
+| RoGemma2-9b | 25.6% | 7.5% | 30.6% |
+| XLM-R-large | 25.8% | 0.1% | 34.3% |
+| RoLlama3.1-8b | 10.8% | 4.0% | 6.7% |
+
+XLM-R almost completely fails on feminine adjective forms (0.1%) — it predicts
+masculine forms exclusively. RoGemma shows a similar but less extreme bias
+(7.5% feminine vs 25.6% masculine). Emotion nouns are easiest for MLMs (no
+gender agreement needed). Qwen is the only generative model with no gender bias
+(18.7% masc vs 22.5% fem).
+
 #### Key findings
 
 1. **Romanian monolingual MLM dominates** — ro-bert (124M params) beats all
@@ -880,6 +931,12 @@ Translation verification rate: 45.1% (seed word found in translated text),
 4. **Romanian instruction-tuned LLMs underperform** — RoLlama (7.7%) and
    RoGemma (19.4%) score below the multilingual Qwen (22.0%), despite being
    specifically trained on Romanian data.
+5. **Severe gender bias in multilingual MLMs** — XLM-R predicts almost
+   exclusively masculine forms (0.1% feminine accuracy). This reflects training
+   data bias where masculine is the default/unmarked form.
+6. **MLMs prefer primary patterns, LLMs prefer secondary** — MLMs excel at
+   direct "mă simt [MASK]" prediction; LLMs handle the more ambiguous "sunt
+   [X]" patterns better through contextual reasoning.
 
 ### Metrics
 
