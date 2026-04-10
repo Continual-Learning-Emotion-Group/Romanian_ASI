@@ -16,7 +16,8 @@ Old experiments and scripts are archived in `deprecated/`.
 7. [LLM Validation (`llm_validation/`)](#llm-validation-llm_validation)
 8. [Human Evaluation (`human_eval/`)](#human-evaluation-human_eval)
    - [Benchmark Construction](#benchmark-construction-build_benchmarkpy)
-9. [External Data (`seed/`)](#external-data-seed)
+9. [Zero-Shot Evaluation (`eval/`)](#zero-shot-evaluation-eval)
+10. [External Data (`seed/`)](#external-data-seed)
 
 ```
 pipeline/
@@ -41,6 +42,13 @@ pipeline/
 │   ├── human_eval_results.json        # Agreement metrics + per-item scores
 │   ├── benchmark_ro_asi.jsonl         # Final benchmark (73K, LLM >= 3)
 │   ├── benchmark_ro_asi.stats.json    # Benchmark distribution stats
+│   ├── splits/                        # Train/test splits for evaluation
+│   │   ├── train.jsonl                # Training split (50,496 samples)
+│   │   ├── test.jsonl                 # Test split (2,658 samples)
+│   │   └── test_translated_en.jsonl   # Test translated to English (NLLB-200)
+│   ├── eval_results/                  # Zero-shot evaluation outputs
+│   │   ├── *_results.jsonl            # Per-sample predictions (9 model×lang combos)
+│   │   └── *_metrics.json             # Aggregate metrics per model
 │   └── ...                            # Provenance files, checkpoints, stats
 ├── utils/                             # Shared utilities
 │   ├── text_utils.py                  # Diacritics normalization, sentence splitting
@@ -84,6 +92,13 @@ pipeline/
 │   ├── mturk_interface.html           # Romanian MTurk annotation interface
 │   ├── agreement.py                   # Inter-annotator agreement + LLM correlation
 │   └── build_benchmark.py             # Final benchmark construction (LLM >= 3)
+├── eval/                              # Zero-shot evaluation pipeline
+│   ├── split.py                       # Train/test split (dedup + stratified)
+│   ├── metrics.py                     # Acc@k, MRR, contextual similarity
+│   ├── eval_mlm.py                    # MLM evaluation (encoder models)
+│   ├── eval_generative.py             # Generative evaluation (mT5, vLLM)
+│   ├── translate.py                   # NLLB-200 RO→EN translation
+│   └── report.py                      # Comparison tables (markdown/LaTeX)
 └── seed_enrichment/                   # Seed enrichment
     ├── run.py                         # CLI: runs both methods on any source
     ├── bootstrapping.py               # MASIVE-style "I feel X and Y"
@@ -774,6 +789,122 @@ python -m pipeline.human_eval.build_benchmark --threshold 2 --output data/benchm
 | `data/human_eval_results.json` | All metrics + per-item scores (both annotators + LLM) |
 | `data/benchmark_ro_asi.jsonl` | **Final benchmark** (73,427 candidates, LLM ≥ 3) |
 | `data/benchmark_ro_asi.stats.json` | Benchmark distribution stats |
+
+## Zero-Shot Evaluation (`eval/`)
+
+Evaluates how well existing models predict masked emotion words in the benchmark
+**without any task-specific training**. Following the MASIVE paper methodology
+(Sections 4–5), this establishes baselines before fine-tuning.
+
+### Setup
+
+The benchmark is deduplicated by `(id, seed_word_normalized)` and split into
+95/5 stratified train/test (by source). Test set: 2,658 samples, 212 unique
+seed words.
+
+```bash
+# Create train/test splits (local, no GPU)
+python -m pipeline.eval.split
+```
+
+### Evaluation approaches
+
+**1. MLM (Masked Language Modeling)** — Encoder models predict the `[MASK]` token
+directly using their pre-trained masked LM head.
+
+**2. Generative** — Decoder-only LLMs and encoder-decoder models (mT5) are
+prompted to fill in the blank. Uses proper chat templates for instruction-tuned
+models. Multiple completions (`n=5`, temperature=0.5) ranked by cumulative
+log-probability for top-k predictions.
+
+**3. Translate-test** — Benchmark samples are translated RO→EN using
+NLLB-200-distilled-1.3B, then evaluated with the same multilingual models to
+compare native vs. translated performance.
+
+```bash
+# MLM evaluation (GPU)
+python -m pipeline.eval.eval_mlm --model dumitrescustefan/bert-base-romanian-cased-v1 --split test --no-similarity
+python -m pipeline.eval.eval_mlm --model readerbench/RoBERT-base --split test --no-similarity
+python -m pipeline.eval.eval_mlm --model FacebookAI/xlm-roberta-large --split test --no-similarity
+
+# Generative evaluation (GPU, vLLM)
+python -m pipeline.eval.eval_generative --model google/mt5-large --split test --backend transformers --no-similarity
+python -m pipeline.eval.eval_generative --model Qwen/Qwen3.5-9B --split test --backend vllm --no-similarity
+python -m pipeline.eval.eval_generative --model OpenLLM-Ro/RoGemma2-9b-Instruct --split test --backend vllm --no-similarity
+python -m pipeline.eval.eval_generative --model OpenLLM-Ro/RoLlama3.1-8b-Instruct --split test --backend vllm --no-similarity
+
+# Translation (GPU)
+python -m pipeline.eval.translate --split test --batch-size 64
+
+# Translated evaluation (GPU)
+python -m pipeline.eval.eval_mlm --model FacebookAI/xlm-roberta-large --split test --translated --no-similarity
+python -m pipeline.eval.eval_generative --model Qwen/Qwen3.5-9B --split test --translated --backend vllm --no-similarity
+```
+
+### Results
+
+All results on the test split (2,658 samples). Acc@k = fraction of samples
+where the gold word appears in the top-k predictions. MRR = mean reciprocal rank.
+
+#### Romanian (native)
+
+| Model | Type | Params | Acc@1 | Acc@3 | Acc@5 | MRR |
+|-------|------|-------:|------:|------:|------:|----:|
+| ro-bert | MLM | 124M | **35.6%** | **54.0%** | **61.1%** | **0.469** |
+| mT5-large | Gen (enc-dec) | 1.2B | 27.9% | 34.6% | 34.6% | 0.311 |
+| RoBERT-base | MLM | 125M | 23.4% | 32.7% | 36.0% | 0.287 |
+| Qwen3.5-9B | Gen (LLM) | 9B | 22.0% | 33.4% | 34.5% | 0.275 |
+| RoGemma2-9b | Gen (LLM) | 9B | 19.4% | 28.9% | 29.8% | 0.239 |
+| XLM-R-large | MLM | 550M | 17.2% | 20.5% | 21.9% | 0.193 |
+| RoLlama3.1-8b | Gen (LLM) | 8B | 7.7% | 14.3% | 15.6% | 0.110 |
+
+#### Translate-test (RO→EN via NLLB-200)
+
+| Model | Type | Acc@1 (RO) | Acc@1 (EN) | Delta |
+|-------|------|------:|------:|------:|
+| XLM-R-large | MLM | 17.2% | 14.5% | -16% |
+| Qwen3.5-9B | Gen (LLM) | 22.0% | 12.9% | -41% |
+
+Translation verification rate: 45.1% (seed word found in translated text),
+54.9% fallback (placeholder-based translation).
+
+#### Key findings
+
+1. **Romanian monolingual MLM dominates** — ro-bert (124M params) beats all
+   models including 9B-parameter LLMs, especially at Acc@5 (61.1%).
+2. **Native data > translated data** — both XLM-R and Qwen perform worse on
+   translated English, confirming MASIVE's Takeaway #6 that machine translation
+   is insufficient for cross-lingual ASI transfer.
+3. **mT5-large is the best generative model** — consistent with MASIVE's finding
+   that smaller fine-tuned encoder-decoder models outperform larger LLMs.
+4. **Romanian instruction-tuned LLMs underperform** — RoLlama (7.7%) and
+   RoGemma (19.4%) score below the multilingual Qwen (22.0%), despite being
+   specifically trained on Romanian data.
+
+### Metrics
+
+- **Acc@k**: top-k exact match accuracy (after diacritic-free normalization)
+- **MRR**: mean reciprocal rank of the gold word among predictions
+- Contextual similarity metrics (MASIVE Section 4.2) available via `--similarity`
+  flag but omitted from main runs for speed.
+
+### Output files
+
+| Directory | Contents |
+|-----------|----------|
+| `data/splits/` | `train.jsonl`, `test.jsonl`, `test_translated_en.jsonl`, stats |
+| `data/eval_results/` | Per-model `*_results.jsonl` (per-sample predictions) + `*_metrics.json` (aggregate) |
+
+### Code
+
+| File | Purpose |
+|------|---------|
+| `eval/split.py` | Deduplication + stratified train/test split |
+| `eval/metrics.py` | Acc@k, MRR, contextual similarity scorer |
+| `eval/eval_mlm.py` | Zero-shot MLM evaluation (encoder models) |
+| `eval/eval_generative.py` | Zero-shot generative evaluation (mT5, vLLM decoder-only) |
+| `eval/translate.py` | NLLB-200 RO→EN translation with two-pass mask handling |
+| `eval/report.py` | Aggregate comparison tables (markdown/LaTeX) |
 
 ## External Data (`seed/`)
 
