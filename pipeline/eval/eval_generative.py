@@ -78,24 +78,97 @@ def load_split(split: str, translated: bool = False) -> list[dict]:
     return records
 
 
+def truncate_around_mask(masked_text: str, max_chars: int = 3000) -> str:
+    """Truncate text keeping a window centered on [MASK]."""
+    if len(masked_text) <= max_chars:
+        return masked_text
+    mask_pos = masked_text.find("[MASK]")
+    if mask_pos == -1:
+        return masked_text[:max_chars]
+    half = max_chars // 2
+    start = max(0, mask_pos - half)
+    end = min(len(masked_text), mask_pos + half)
+    result = masked_text[start:end]
+    if start > 0:
+        result = "..." + result
+    if end < len(masked_text):
+        result = result + "..."
+    return result
+
+
 def build_prompt(masked_text: str, translated: bool = False) -> str:
     """Build fill-in-the-blank prompt for decoder-only models."""
-    display_text = masked_text.replace("[MASK]", "___")
+    truncated = truncate_around_mask(masked_text)
+    display_text = truncated.replace("[MASK]", "___")
     template = PROMPT_TEMPLATE_EN if translated else PROMPT_TEMPLATE_RO
     return template.format(masked_text=display_text)
 
 
 def parse_single_word(response: str) -> str:
-    """Extract first word from model response."""
-    # Strip common prefixes models add
-    text = response.strip().strip('"\'`').strip()
-    # Take first word
-    words = re.split(r"[\s,;.!?\n]+", text)
+    """Extract the affective state word from model response.
+
+    Handles:
+    - <think>...</think> blocks (Qwen3.5 thinking mode)
+    - **bold** markdown formatting
+    - "Cuvântul lipsă este: X" and similar prefixes (anywhere in text)
+    - Multiple-choice format: "A) word\nB) word" → extracts option A
+    - Leading underscores/blanks before the actual answer
+    - Numbered lists: "1. word\n2. word"
+    """
+    text = response.strip()
+
+    # Strip <think>...</think> blocks
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
+
+    # Strip markdown bold
+    text = text.replace("**", "")
+
+    # Strip leading underscores, dots, and whitespace (models echo the blank)
+    text = re.sub(r"^[_\s.]+", "", text).strip()
+
+    # Look for "Cuvântul lipsă este: X" anywhere in text (not just start)
+    for prefix_pat in [
+        r"[Cc]uvântul\s+lipsă\s+este\s*:\s*",
+        r"[Tt]he\s+missing\s+word\s+is\s*:\s*",
+        r"[Rr]ăspuns\s*:\s*",
+    ]:
+        m = re.search(prefix_pat, text)
+        if m:
+            text = text[m.end():].strip()
+            break
+
+    # Handle multiple-choice format: "A) word" or "A: word" → take option A's word
+    mc_match = re.match(r"^[A-D][):.]\s*(\S+)", text)
+    if mc_match:
+        text = mc_match.group(1)
+
+    # Handle numbered list: "1. word" or "1) word"
+    num_match = re.match(r"^\d+[).]\s*(\S+)", text)
+    if num_match:
+        text = num_match.group(1)
+
+    # Strip quotes and formatting
+    text = text.strip('"\'`*_').strip()
+
+    # Junk words that are never valid emotion predictions
+    junk = {"a", "de", "cu", "si", "în", "in", "la", "pe", "un", "o", "se",
+            "nu", "ce", "ca", "și", "răspunde", "cuvântul", "cuvantul",
+            "text", "sunt", "este"}
+
+    # Take first valid word
+    words = re.split(r"[\s,;.!?\n()+]+", text)
     for w in words:
-        w = w.strip('"\'`()[]{}')
-        if w and len(w) >= 2:
+        w = w.strip('"\'`*_()[]{}:')
+        w_lower = w.lower()
+        if w and len(w) >= 2 and w[0] != '<' and w_lower not in junk:
             return w
-    return words[0] if words else ""
+
+    # Fallback: return first non-empty word even if in junk
+    for w in words:
+        w = w.strip('"\'`*_()[]{}:')
+        if w and len(w) >= 2 and w[0] != '<':
+            return w
+    return words[0].strip('"\'`*_()[]{}:') if words else ""
 
 
 # ---------------------------------------------------------------------------
@@ -194,8 +267,9 @@ def predict_decoder_only_vllm(
     translated: bool = False,
     gpu_memory_utilization: float = 0.90,
 ) -> list[dict]:
-    """Decoder-only inference via vLLM with logprobs for top-k."""
+    """Decoder-only inference via vLLM with multiple samples for top-k."""
     from vllm import LLM, SamplingParams
+    from transformers import AutoTokenizer
 
     llm = LLM(
         model=model_id,
@@ -204,37 +278,55 @@ def predict_decoder_only_vllm(
         max_model_len=4096,
     )
 
-    prompts = [build_prompt(r["masked_text"], translated=translated) for r in records]
+    # Apply chat template for instruction-tuned models
+    tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
+    raw_prompts = [build_prompt(r["masked_text"], translated=translated) for r in records]
 
-    # Strategy: generate with logprobs to get top-k at first token
+    if tokenizer.chat_template:
+        prompts = []
+        for p in tqdm(raw_prompts, desc="Rendering prompts"):
+            messages = [{"role": "user", "content": p}]
+            # Disable thinking mode for Qwen3.5 to avoid wasting tokens
+            template_kwargs = {}
+            if "qwen" in model_id.lower():
+                template_kwargs["enable_thinking"] = False
+            formatted = tokenizer.apply_chat_template(
+                messages, tokenize=False, add_generation_prompt=True,
+                **template_kwargs,
+            )
+            prompts.append(formatted)
+    else:
+        prompts = raw_prompts
+
+    # Generate multiple completions per prompt for real top-k diversity.
+    # temperature=0.5 keeps top-1 close to greedy while allowing alternatives.
     params = SamplingParams(
-        temperature=0,
+        temperature=0.5,
         max_tokens=max_tokens,
-        logprobs=top_k,
+        n=top_k,
     )
 
     outputs = llm.generate(prompts, params)
     results = []
 
     for r, output in zip(records, outputs):
-        generated_text = output.outputs[0].text.strip()
-        main_word = parse_single_word(generated_text)
+        # Sort completions by cumulative logprob (most likely first)
+        sorted_completions = sorted(
+            output.outputs,
+            key=lambda o: o.cumulative_logprob or 0,
+            reverse=True,
+        )
 
-        # Extract top-k from logprobs of first token
-        preds_raw = [main_word] if main_word else []
-        if output.outputs[0].logprobs and len(output.outputs[0].logprobs) > 0:
-            first_token_logprobs = output.outputs[0].logprobs[0]
-            for token_id, logprob_obj in sorted(
-                first_token_logprobs.items(),
-                key=lambda x: x[1].logprob,
-                reverse=True,
-            ):
-                word = logprob_obj.decoded_token.strip()
-                if word and len(word) >= 2 and word.isalpha():
-                    if word not in preds_raw:
-                        preds_raw.append(word)
-                if len(preds_raw) >= top_k:
-                    break
+        preds_raw = []
+        seen_norm = set()
+        for comp in sorted_completions:
+            word = parse_single_word(comp.text.strip())
+            norm = normalize_prediction(word) if word else ""
+            if norm and norm not in seen_norm:
+                seen_norm.add(norm)
+                preds_raw.append(word)
+            if len(preds_raw) >= top_k:
+                break
 
         preds_norm = [normalize_prediction(p) for p in preds_raw]
 
@@ -249,7 +341,8 @@ def predict_decoder_only_vllm(
             "masked_text": r["masked_text"],
             "predictions_raw": preds_raw[:20],
             "predictions_normalized": preds_norm[:20],
-            "generated_text": generated_text,
+            "generated_texts": [c.text.strip() for c in sorted_completions],
+            "generated_text": sorted_completions[0].text.strip() if sorted_completions else "",
         })
 
     return results
@@ -448,7 +541,7 @@ def run_evaluation(
 def main():
     parser = argparse.ArgumentParser(description="Zero-shot generative evaluation")
     parser.add_argument("--model", required=True, help="HuggingFace model ID")
-    parser.add_argument("--split", required=True, choices=["test", "unseen"])
+    parser.add_argument("--split", required=True, help="Split name (test, unseen, or custom)")
     parser.add_argument("--translated", action="store_true")
     parser.add_argument("--backend", choices=["vllm", "transformers", "auto"], default="auto")
     parser.add_argument("--top-k", type=int, default=5)

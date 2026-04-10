@@ -122,59 +122,74 @@ def translate_records(
 
     # Step 3: Locate translated seed word in translated text and mask it
     print("Pass 3: Locating and masking ...")
-    results = []
+    results = [None] * len(records)
     n_verified = 0
-    n_fallback = 0
+    fallback_indices = []
+    fallback_texts = []
 
-    for r, text_en in zip(records, all_text_en):
+    for idx, (r, text_en) in enumerate(zip(records, all_text_en)):
         seed_word_en = seed_translations[r["seed_word"]]
         span = locate_word_in_text(text_en, seed_word_en)
 
         if span is not None:
             start, end = span
             masked_text_en = text_en[:start] + "[MASK]" + text_en[end:]
-            mask_verified = True
+            translated_record = dict(r)
+            translated_record["text_en"] = text_en
+            translated_record["masked_text_en"] = masked_text_en
+            translated_record["seed_word_en"] = seed_word_en
+            translated_record["mask_verified"] = True
+            results[idx] = translated_record
             n_verified += 1
         else:
-            # Fallback: translate the masked text directly with a placeholder
+            fallback_indices.append(idx)
             placeholder = "XXXMASKXXX"
-            text_with_placeholder = r["masked_text"].replace("[MASK]", placeholder)
-            translated_masked = translate_batch(
-                [text_with_placeholder], model, tokenizer, device=device,
-            )[0]
-            # Restore [MASK]
-            masked_text_en = translated_masked
-            for variant in [placeholder, "XXXMASKXXX", "xxx mask xxx", "XXX MASK XXX"]:
-                if variant.lower() in masked_text_en.lower():
-                    idx = masked_text_en.lower().index(variant.lower())
-                    masked_text_en = (
-                        masked_text_en[:idx] + "[MASK]"
-                        + masked_text_en[idx + len(variant):]
-                    )
-                    break
-            else:
-                # Placeholder was translated away — insert [MASK] at start as last resort
-                masked_text_en = "[MASK] " + masked_text_en
+            fallback_texts.append(r["masked_text"].replace("[MASK]", placeholder))
 
-            mask_verified = False
-            n_fallback += 1
+    # Batch-translate all fallbacks at once
+    n_fallback = len(fallback_indices)
+    print(f"  Verified: {n_verified} ({n_verified / len(records) * 100:.1f}%)")
+    print(f"  Fallback: {n_fallback} ({n_fallback / len(records) * 100:.1f}%) — translating ...")
+
+    all_fallback_en = []
+    for i in tqdm(range(0, len(fallback_texts), batch_size), desc="Fallback batches"):
+        batch = fallback_texts[i : i + batch_size]
+        all_fallback_en.extend(translate_batch(batch, model, tokenizer, device=device))
+
+    placeholder = "XXXMASKXXX"
+    for fi, fb_idx in enumerate(fallback_indices):
+        r = records[fb_idx]
+        text_en = all_text_en[fb_idx]
+        translated_masked = all_fallback_en[fi]
+
+        # Restore [MASK] from placeholder
+        masked_text_en = translated_masked
+        for variant in [placeholder, "xxx mask xxx", "XXX MASK XXX"]:
+            if variant.lower() in masked_text_en.lower():
+                loc = masked_text_en.lower().index(variant.lower())
+                masked_text_en = (
+                    masked_text_en[:loc] + "[MASK]"
+                    + masked_text_en[loc + len(variant):]
+                )
+                break
+        else:
+            masked_text_en = "[MASK] " + masked_text_en
 
         translated_record = dict(r)
         translated_record["text_en"] = text_en
         translated_record["masked_text_en"] = masked_text_en
-        translated_record["seed_word_en"] = seed_word_en
-        translated_record["mask_verified"] = mask_verified
-        results.append(translated_record)
+        translated_record["seed_word_en"] = seed_translations[r["seed_word"]]
+        translated_record["mask_verified"] = False
+        results[fb_idx] = translated_record
 
-    print(f"\n  Verified: {n_verified} ({n_verified / len(records) * 100:.1f}%)")
-    print(f"  Fallback: {n_fallback} ({n_fallback / len(records) * 100:.1f}%)")
+    print(f"  Total: {len(records)}, verified: {n_verified}, fallback: {n_fallback}")
 
     return results
 
 
 def main():
     parser = argparse.ArgumentParser(description="Translate RO benchmark to EN")
-    parser.add_argument("--split", required=True, choices=["test", "unseen"])
+    parser.add_argument("--split", required=True, help="Split name (test, unseen, or custom)")
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--device", type=str, default=None)
     parser.add_argument("--model", type=str, default=TRANSLATION_MODEL)

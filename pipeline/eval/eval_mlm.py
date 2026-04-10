@@ -114,9 +114,14 @@ def predict_batch(
     device: str = "cuda",
 ) -> list[list[tuple[str, float]]]:
     """Run MLM inference on a batch. Returns top-k (token_str, log_prob) per sample."""
+    max_len = min(
+        getattr(tokenizer, "model_max_length", 512),
+        getattr(model.config, "max_position_embeddings", 512),
+        8192,  # cap for models with very large context
+    )
     enc = tokenizer(
         texts, return_tensors="pt", padding=True, truncation=True,
-        max_length=getattr(model.config, "max_position_embeddings", 512),
+        max_length=max_len,
     ).to(device)
 
     with torch.no_grad():
@@ -314,7 +319,7 @@ def run_evaluation(
 def main():
     parser = argparse.ArgumentParser(description="Zero-shot MLM evaluation")
     parser.add_argument("--model", required=True, help="HuggingFace model ID")
-    parser.add_argument("--split", required=True, choices=["test", "unseen"])
+    parser.add_argument("--split", required=True, help="Split name (test, unseen, or custom e.g. test_tiny)")
     parser.add_argument("--translated", action="store_true", help="Use translated EN data")
     parser.add_argument("--top-k", type=int, default=50)
     parser.add_argument("--batch-size", type=int, default=32)

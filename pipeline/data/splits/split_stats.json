@@ -1,77 +1,25 @@
 {
-  "total": 70289,
-  "train": 55762,
-  "test": 6196,
-  "unseen": 8331,
-  "unseen_words": [
-    "bucuros",
-    "curioasa",
-    "dezamagita",
-    "entuziasmata",
-    "excitat",
-    "fericita",
-    "furioasa",
-    "groaza",
-    "incantat",
-    "indiferent",
-    "ingrijorata",
-    "necajita",
-    "nelinistit",
-    "socat",
-    "vesel"
-  ],
-  "unseen_word_freqs": {
-    "bucuros": 1512,
-    "curioasa": 93,
-    "dezamagita": 729,
-    "entuziasmata": 293,
-    "excitat": 12,
-    "fericita": 3349,
-    "furioasa": 130,
-    "groaza": 230,
-    "incantat": 1019,
-    "indiferent": 31,
-    "ingrijorata": 286,
-    "necajita": 40,
-    "nelinistit": 44,
-    "socat": 538,
-    "vesel": 25
+  "total_raw": 70289,
+  "total_deduped": 53154,
+  "train": 50496,
+  "test": 2658,
+  "test_frac": 0.05,
+  "seed": 42,
+  "unique_seed_words": {
+    "train": 369,
+    "test": 215,
+    "shared": 212
   },
-  "unseen_emotion_coverage": [
-    "anger",
-    "anticipation",
-    "cheerfulness",
-    "discovered",
-    "distress",
-    "fear",
-    "gladness",
-    "happiness",
-    "indifference",
-    "joy",
-    "panic",
-    "sadness",
-    "surprise"
-  ],
   "source_distribution": {
     "train": {
-      "fulg": 43241,
-      "filmot": 10189,
-      "merged_corpus": 2332
+      "fulg": 37732,
+      "filmot": 11007,
+      "merged_corpus": 1757
     },
     "test": {
-      "filmot": 1132,
-      "fulg": 4805,
-      "merged_corpus": 259
-    },
-    "unseen": {
-      "merged_corpus": 193,
-      "fulg": 7243,
-      "filmot": 895
+      "fulg": 1986,
+      "filmot": 579,
+      "merged_corpus": 93
     }
-  },
-  "unique_seed_words": {
-    "train": 354,
-    "test": 255,
-    "unseen": 15
   }
 }
