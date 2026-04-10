@@ -1,0 +1,214 @@
+% This must be in the first 5 lines to tell arXiv to use pdfLaTeX, which is strongly recommended.
+\pdfoutput=1
+
+\documentclass[11pt]{article}
+
+\usepackage[final]{acl}
+
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+\title{Zero-Shot Evaluation of the Romanian ASI Benchmark}
+
+\author{Alex Jerpelea (adj2150)}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+Following the construction of the Romanian ASI benchmark (73,427 validated candidates, 910 unique affective state terms), we evaluate how well existing models can predict masked emotion words \textbf{without any task-specific training}. This zero-shot evaluation establishes baselines before fine-tuning, following the MASIVE methodology \cite{masive2024} (Sections~4--5).
+
+We evaluate three classes of models: (1)~encoder-based masked language models (MLMs) that predict the \texttt{[MASK]} token directly, (2)~generative models (encoder-decoder and decoder-only LLMs) prompted to fill in the blank, and (3)~the same multilingual models on machine-translated English data to quantify cross-lingual transfer loss.
+
+
+\section{Experimental Setup}
+
+\subsection{Data Preparation}
+
+The benchmark is deduplicated by \texttt{(id, seed\_word\_normalized)}, removing 17,135 exact duplicates (same text, same seed word). The remaining 53,154 unique samples are split into 95/5 stratified train/test by source, yielding a test set of \textbf{2,658 samples} covering 212 unique seed words.
+
+\subsection{Models}
+
+Table~\ref{tab:models} lists all evaluated models. We select models spanning three categories: Romanian monolingual encoders, multilingual models, and Romanian instruction-tuned LLMs.
+
+\begin{table}[t]
+    \centering
+    \small
+    \begin{tabular}{llr}
+        \toprule
+        Model & Type & Params \\
+        \midrule
+        \multicolumn{3}{l}{\textit{MLM (encoder, zero-shot \texttt{[MASK]} prediction)}} \\
+        ro-bert\textsuperscript{a} & RO monolingual & 124M \\
+        RoBERT-base\textsuperscript{b} & RO monolingual & 125M \\
+        XLM-R-large\textsuperscript{c} & Multilingual & 550M \\
+        \midrule
+        \multicolumn{3}{l}{\textit{Generative (prompted fill-in-the-blank)}} \\
+        mT5-large\textsuperscript{d} & Enc-dec, multilingual & 1.2B \\
+        Qwen3.5-9B\textsuperscript{e} & Decoder-only, multilingual & 9B \\
+        RoGemma2-9b\textsuperscript{f} & Decoder-only, RO instruct & 9B \\
+        RoLlama3.1-8b\textsuperscript{g} & Decoder-only, RO instruct & 8B \\
+        \bottomrule
+    \end{tabular}
+    \caption{Models evaluated. \textsuperscript{a}\texttt{dumitrescustefan/bert-base-romanian-cased-v1}, \textsuperscript{b}\texttt{readerbench/RoBERT-base}, \textsuperscript{c}\texttt{FacebookAI/xlm-roberta-large}, \textsuperscript{d}\texttt{google/mt5-large}, \textsuperscript{e}\texttt{Qwen/Qwen3.5-9B}, \textsuperscript{f}\texttt{OpenLLM-Ro/RoGemma2-9b-Instruct}, \textsuperscript{g}\texttt{OpenLLM-Ro/RoLlama3.1-8b-Instruct}.}
+    \label{tab:models}
+\end{table}
+
+\subsection{Evaluation Methods}
+
+\paragraph{MLM evaluation.} For encoder models, we replace the literal \texttt{[MASK]} in \texttt{masked\_text} with the model's mask token (\texttt{[MASK]} for BERT variants, \texttt{<mask>} for XLM-R). We perform a forward pass and extract the top-$k$ predictions at the mask position, filtering out subword continuation tokens (\texttt{\#\#}-prefixed for BERT, non-\texttt{\_}-prefixed for SentencePiece models).
+
+\paragraph{Generative evaluation.} For mT5, we replace \texttt{[MASK]} with \texttt{<extra\_id\_0>} and use beam search ($k$ beams, $k$ return sequences). For decoder-only LLMs, we construct a Romanian fill-in-the-blank prompt and generate via vLLM \cite{vllm2023} with proper chat templates for instruction-tuned models. We generate $n{=}5$ completions per prompt (temperature$=$0.5) ranked by cumulative log-probability, parsing each completion to extract the predicted word. The Romanian prompt instructs the model: \textit{``Completeaz\u{a} cuv\^{a}ntul lips\u{a} care descrie o stare afectiv\u{a} \ldots R\u{a}spunde cu UN SINGUR cuv\^{a}nt.''}
+
+\paragraph{Translate-test.} Following MASIVE's cross-lingual experiments \cite{masive2024}, we translate the test set from Romanian to English using NLLB-200-distilled-1.3B. A two-pass approach handles the \texttt{[MASK]} token: (1)~translate the full text (with the emotion word present) and translate the seed word in a minimal context (\textit{``M\u{a} simt \{word\}''} $\rightarrow$ \textit{``I feel \{X\}''}); (2)~locate the translated seed word in the translated text and replace with \texttt{[MASK]}. When the seed word is not found (54.9\% of samples), a fallback translates the masked text with a placeholder token.
+
+\paragraph{Metrics.} We report Acc@$k$ (fraction of samples where the gold word appears in the top-$k$ predictions) for $k \in \{1, 3, 5\}$, and MRR (mean reciprocal rank). All comparisons are performed after diacritic-free normalization (lowercase + diacritic removal) to handle Romanian spelling variation.
+
+
+\section{Results}
+
+\subsection{Overall Results}
+
+\begin{table}[t]
+    \centering
+    \small
+    \begin{tabular}{llrrrr}
+        \toprule
+        Model & Type & Acc@1 & Acc@3 & Acc@5 & MRR \\
+        \midrule
+        ro-bert & MLM & \textbf{35.6} & \textbf{54.0} & \textbf{61.1} & \textbf{.469} \\
+        mT5-large & Gen & 27.9 & 34.6 & 34.6 & .311 \\
+        RoBERT-base & MLM & 23.4 & 32.7 & 36.0 & .287 \\
+        Qwen3.5-9B & Gen & 22.0 & 33.4 & 34.5 & .275 \\
+        RoGemma2-9b & Gen & 19.4 & 28.9 & 29.8 & .239 \\
+        XLM-R-large & MLM & 17.2 & 20.5 & 21.9 & .193 \\
+        RoLlama3.1-8b & Gen & 7.7 & 14.3 & 15.6 & .110 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Zero-shot results on the Romanian test set (n=2,658). All values are percentages except MRR. Best results in bold.}
+    \label{tab:main-results}
+\end{table}
+
+Table~\ref{tab:main-results} presents the main zero-shot results. The Romanian monolingual MLM (ro-bert, 124M parameters) dominates all models, including LLMs with 72$\times$ more parameters, achieving 35.6\% Acc@1 and 61.1\% Acc@5. Among generative models, mT5-large performs best (27.9\% Acc@1), consistent with MASIVE's finding that smaller encoder-decoder models outperform larger LLMs on this task. Notably, the Romanian instruction-tuned models (RoGemma2-9b and RoLlama3.1-8b) underperform the multilingual Qwen3.5-9B despite being specifically adapted for Romanian.
+
+\subsection{Translate-Test Results}
+
+\begin{table}[t]
+    \centering
+    \small
+    \begin{tabular}{llrrr}
+        \toprule
+        Model & Type & RO & EN & $\Delta$ \\
+        \midrule
+        XLM-R-large & MLM & 17.2 & 14.5 & $-$16\% \\
+        Qwen3.5-9B & Gen & 22.0 & 12.9 & $-$41\% \\
+        \bottomrule
+    \end{tabular}
+    \caption{Acc@1 on native Romanian vs.\ machine-translated English test data. Both models degrade on translated data.}
+    \label{tab:translate-test}
+\end{table}
+
+Table~\ref{tab:translate-test} confirms MASIVE's Takeaway~\#6: native speaker-written data is vital for good ASI performance. Both models perform worse on translated English data, with Qwen suffering a larger drop ($-$41\%) than XLM-R ($-$16\%). XLM-R's relative robustness is expected, as its multilingual pre-training provides more stable cross-lingual representations. The high fallback rate (54.9\%) suggests that NLLB-200 often translates the emotion word differently in context than in isolation, adding noise to the translated evaluation.
+
+\subsection{Analysis by Data Source}
+
+\begin{table}[t]
+    \centering
+    \small
+    \begin{tabular}{lrrr}
+        \toprule
+        Model & \multicolumn{1}{c}{Filmot} & \multicolumn{1}{c}{FULG} & \multicolumn{1}{c}{Merged} \\
+        & \multicolumn{1}{c}{(n=579)} & \multicolumn{1}{c}{(n=1986)} & \multicolumn{1}{c}{(n=93)} \\
+        \midrule
+        ro-bert & 31.4 & \textbf{37.6} & 19.4 \\
+        mT5-large & 26.8 & 28.5 & 21.5 \\
+        RoBERT-base & 25.7 & 23.6 & 6.5 \\
+        Qwen3.5-9B & 16.4 & 23.7 & 21.5 \\
+        RoGemma2-9b & 11.9 & 21.3 & \textbf{24.7} \\
+        XLM-R-large & 20.4 & 17.0 & 2.2 \\
+        RoLlama3.1-8b & 5.5 & 7.9 & 16.1 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Acc@1 by data source. FULG (web text) is generally easiest; merged corpus (product reviews) is hardest for MLMs.}
+    \label{tab:by-source}
+\end{table}
+
+Table~\ref{tab:by-source} reveals substantial source effects. FULG (web text) is the easiest source for most models, likely due to longer, more informative contexts. Filmot (YouTube auto-captions) is challenging for generative models, possibly because caption text lacks punctuation and coherent sentence structure. The merged corpus (product reviews) is notably difficult for MLMs---XLM-R achieves only 2.2\%---but easier for generative models (RoGemma2 achieves its best score of 24.7\% here), suggesting that shorter formulaic text benefits from contextual reasoning over pattern matching.
+
+\subsection{Analysis by Pattern Type}
+
+\begin{table}[t]
+    \centering
+    \small
+    \begin{tabular}{lrr}
+        \toprule
+        Model & \multicolumn{1}{c}{Primary} & \multicolumn{1}{c}{Secondary} \\
+        & \multicolumn{1}{c}{(n=361)} & \multicolumn{1}{c}{(n=2297)} \\
+        \midrule
+        ro-bert & 32.7 & \textbf{36.1} \\
+        mT5-large & 28.3 & 27.8 \\
+        RoBERT-base & 31.0 & 22.2 \\
+        Qwen3.5-9B & 17.5 & 22.7 \\
+        RoGemma2-9b & 7.5 & 21.3 \\
+        XLM-R-large & \textbf{30.2} & 15.2 \\
+        RoLlama3.1-8b & 2.5 & 8.5 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Acc@1 by pattern type. Primary = unambiguous reflexive \textit{``m\u{a} simt [X]''}; secondary = copular/possessive \textit{``sunt [X]''}, \textit{``am [X]''}, etc.}
+    \label{tab:by-pattern}
+\end{table}
+
+Table~\ref{tab:by-pattern} shows a clear methodological split. MLMs (RoBERT-base, XLM-R) perform relatively better on primary patterns (\textit{``m\u{a} simt \texttt{[MASK]}''}) which closely match standard fill-mask pre-training. XLM-R achieves 30.2\% on primary but only 15.2\% on secondary patterns---a 2$\times$ drop. Conversely, generative models (Qwen, RoGemma) perform better on secondary patterns (\textit{``sunt [X]''}, \textit{``am [X]''}), which are more ambiguous and benefit from broader contextual reasoning. This suggests that the two model families bring complementary strengths to the ASI task.
+
+\subsection{Analysis by Gender}
+
+\begin{table}[t]
+    \centering
+    \small
+    \begin{tabular}{lrrr}
+        \toprule
+        Model & \multicolumn{1}{c}{Masc.} & \multicolumn{1}{c}{Fem.} & \multicolumn{1}{c}{Nouns} \\
+        & \multicolumn{1}{c}{(n=1272)} & \multicolumn{1}{c}{(n=1013)} & \multicolumn{1}{c}{(n=373)} \\
+        \midrule
+        ro-bert & 35.4 & 30.3 & \textbf{50.9} \\
+        mT5-large & 30.0 & 22.1 & 36.5 \\
+        RoBERT-base & 19.7 & 19.2 & 48.0 \\
+        Qwen3.5-9B & 18.7 & 22.5 & 31.9 \\
+        RoGemma2-9b & 25.6 & 7.5 & 30.6 \\
+        XLM-R-large & 25.8 & \textbf{0.1} & 34.3 \\
+        RoLlama3.1-8b & 10.8 & 4.0 & 6.7 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Acc@1 by seed word gender. XLM-R almost completely fails on feminine adjective forms (0.1\%), revealing severe gender bias in its Romanian predictions.}
+    \label{tab:by-gender}
+\end{table}
+
+Table~\ref{tab:by-gender} reveals a striking gender bias. XLM-R-large achieves 25.8\% on masculine adjectives but only \textbf{0.1\% on feminine forms}---it almost never predicts the feminine inflection (e.g., predicting \textit{``fericit''} instead of \textit{``fericit\u{a}''}). RoGemma2 shows a similar but less extreme bias (25.6\% masculine vs.\ 7.5\% feminine). This likely reflects training data where the masculine form is the default/unmarked form in Romanian. Qwen3.5-9B is the only generative model that shows no gender bias (18.7\% masculine vs.\ 22.5\% feminine), suggesting that its broader multilingual training provides more balanced morphological coverage.
+
+Emotion nouns (gender-invariant) are the easiest category for MLMs: ro-bert achieves 50.9\% on nouns vs.\ 35.4\% on masculine adjectives, since noun prediction requires no gender agreement with the surrounding context.
+
+
+\section{Discussion}
+
+Our results lead to several observations relevant for the next phase of ASI research on Romanian:
+
+\paragraph{Small models can outperform large ones on domain-specific tasks.} The 124M-parameter ro-bert outperforms all 8--9B-parameter LLMs, including models specifically instruction-tuned for Romanian. This is consistent with MASIVE's finding that smaller fine-tuned models outperform zero-shot LLMs, and suggests that task-specific fine-tuning on our training set (50,496 samples) could yield substantial further improvements.
+
+\paragraph{Gender bias is a practical concern for Romanian NLP.} XLM-R's near-complete failure on feminine forms (0.1\%) is not merely a benchmark curiosity---it means the model systematically misrepresents the emotional expressions of speakers using feminine-agreement adjectives. This should be considered when using multilingual models for Romanian emotion analysis.
+
+\paragraph{Translation is insufficient for cross-lingual ASI.} The 16--41\% performance drop on translated data confirms that affective state expressions are language-specific and lose critical information through machine translation. The 54.9\% fallback rate in our translation pipeline further illustrates this: NLLB-200 frequently translates the same emotion word differently depending on context, making consistent mask placement impossible.
+
+\paragraph{MLMs and LLMs are complementary.} MLMs excel at primary ``I feel [MASK]'' patterns where the mask position is syntactically predictable, while LLMs handle ambiguous secondary patterns better through contextual reasoning. An ensemble or multi-stage approach could leverage both strengths.
+
+
+\bibliography{custom}
+
+\end{document}
