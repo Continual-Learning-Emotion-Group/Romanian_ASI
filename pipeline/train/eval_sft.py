@@ -116,16 +116,43 @@ def generate_transformers(records: list[dict], checkpoint: str, top_k: int,
 
 
 def _make_result(r: dict, preds_raw: list[str], generated_text: str) -> dict:
-    gold_norm = normalize_prediction(r["label"])
+    # For multi-mask rows `r["label"]` is a space-joined string of N words.
+    # For scoring under the existing single-word metrics we use the first
+    # word as the primary gold; the full labels list and the per-position
+    # match are recorded separately for downstream positional analysis.
+    first_label = r["labels"][0] if r.get("labels") else r["label"]
+    gold_norm = normalize_prediction(first_label)
+
+    # Per-position positional scoring for multi-mask rows.
+    n_masks = r.get("n_masks", r["input"].count("[MASK]"))
+    positional: dict = {}
+    if n_masks > 1 and r.get("labels") and generated_text:
+        pred_words = generated_text.strip().split()
+        labs = r["labels"]
+        matched = 0
+        for i, lab in enumerate(labs):
+            if i < len(pred_words) and normalize_prediction(pred_words[i]) == normalize_prediction(lab):
+                matched += 1
+        positional = {
+            "n_masks": n_masks,
+            "labels_normalized": [normalize_prediction(x) for x in labs],
+            "pred_words": pred_words[:len(labs)],
+            "matched": matched,
+            "per_position_acc": matched / max(1, len(labs)),
+        }
+
     return {
         "id": r["id"],
         "language": r["language"],
-        "seed_word": r["label"],
+        "seed_word": first_label,
         "gold_normalized": gold_norm,
         "masked_text": r["input"],
         "predictions_raw": preds_raw,
         "predictions_normalized": [normalize_prediction(p) for p in preds_raw],
         "generated_text": generated_text,
+        "labels_full": r.get("labels", [first_label]),
+        "n_masks": n_masks,
+        "positional": positional,
     }
 
 
@@ -147,10 +174,10 @@ def evaluate(checkpoint: str, dataset_dir: Path, backend: str, top_k: int,
 
     if backend == "vllm":
         results = generate_vllm(all_records, checkpoint, top_k,
-                                max_tokens=20, gpu_mem=gpu_mem)
+                                max_tokens=50, gpu_mem=gpu_mem)
     else:
         results = generate_transformers(all_records, checkpoint, top_k,
-                                        max_tokens=20, batch_size=batch_size)
+                                        max_tokens=50, batch_size=batch_size)
 
     by_id = {r["id"]: r for r in results}
 
@@ -168,6 +195,17 @@ def evaluate(checkpoint: str, dataset_dir: Path, backend: str, top_k: int,
         metrics = compute_all_metrics(lang_results, scorer=scorer)
         metrics["language"] = lang
         metrics["n_samples"] = len(lang_results)
+
+        # Positional-accuracy summary for multi-mask rows (EN/ES/FA test).
+        multi = [r for r in lang_results if r.get("n_masks", 1) > 1 and r.get("positional")]
+        if multi:
+            pos_acc = sum(r["positional"]["per_position_acc"] for r in multi) / len(multi)
+            strict = sum(1 for r in multi if r["positional"]["matched"] == len(r["labels_full"])) / len(multi)
+            metrics["multi_mask"] = {
+                "n_rows": len(multi),
+                "per_position_acc": pos_acc,
+                "strict_all_positions_acc": strict,
+            }
 
         per_lang_path = RESULTS_DIR / f"sft_{tag}_test_{lang}_metrics.json"
         with per_lang_path.open("w") as f:
