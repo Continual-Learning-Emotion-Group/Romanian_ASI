@@ -66,10 +66,37 @@ def load_yaml_config(path: Path) -> dict:
         return yaml.safe_load(f)
 
 
+def _split_config_only_overrides(extra_cli: list[str]) -> tuple[list[str], dict]:
+    """Pull `--<config_only_key> <value>` overrides out of extra_cli so they
+    don't reach HfArgumentParser (which only knows TrainingArguments fields)."""
+    overrides: dict = {}
+    remaining: list[str] = []
+    i = 0
+    while i < len(extra_cli):
+        tok = extra_cli[i]
+        matched = False
+        for key in CONFIG_ONLY_KEYS:
+            if tok == f"--{key}" and i + 1 < len(extra_cli):
+                overrides[key] = extra_cli[i + 1]
+                i += 2
+                matched = True
+                break
+        if not matched:
+            remaining.append(tok)
+            i += 1
+    return remaining, overrides
+
+
 def build_training_args(config: dict, extra_cli: list[str]) -> tuple[TrainingArguments, dict]:
     """Same plumbing as pipeline/train/train.py: split config-only keys from
-    HF TrainingArguments keys, then let HfArgumentParser parse the rest."""
+    HF TrainingArguments keys, then let HfArgumentParser parse the rest.
+
+    CLI overrides for config-only keys (e.g. `--runs_root /tmp/...`) are
+    pulled out of extra_cli before the HF parser sees them.
+    """
+    extra_cli, cli_config_overrides = _split_config_only_overrides(extra_cli)
     config_only = {k: config[k] for k in CONFIG_ONLY_KEYS if k in config}
+    config_only.update(cli_config_overrides)
     hf_args = {k: v for k, v in config.items() if k not in CONFIG_ONLY_KEYS}
 
     import json as _json
