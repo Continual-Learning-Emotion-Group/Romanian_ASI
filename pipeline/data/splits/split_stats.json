@@ -1,25 +1,108 @@
 {
-  "total_raw": 70289,
-  "total_deduped": 53154,
-  "train": 50496,
-  "test": 2658,
-  "test_frac": 0.05,
   "seed": 42,
-  "unique_seed_words": {
-    "train": 369,
-    "test": 215,
-    "shared": 212
-  },
-  "source_distribution": {
-    "train": {
-      "fulg": 37732,
-      "filmot": 11007,
-      "merged_corpus": 1757
-    },
-    "test": {
-      "fulg": 1986,
-      "filmot": 579,
-      "merged_corpus": 93
+  "total_deduped": 53154,
+  "train": {
+    "rows": 45181,
+    "frac": 0.8500018813259586,
+    "unique_seed_words": 298,
+    "source_distribution": {
+      "filmot": 10053,
+      "fulg": 33567,
+      "merged_corpus": 1561
     }
-  }
+  },
+  "val": {
+    "rows": 2658,
+    "frac": 0.05000564397787561,
+    "unique_seed_words": 185,
+    "source_distribution": {
+      "filmot": 602,
+      "fulg": 1947,
+      "merged_corpus": 109
+    }
+  },
+  "test": {
+    "rows": 5315,
+    "frac": 0.09999247469616586,
+    "unique_seed_words": 71,
+    "source_distribution": {
+      "filmot": 931,
+      "fulg": 4204,
+      "merged_corpus": 180
+    }
+  },
+  "test_seed_words": [
+    "agasat",
+    "anxioasa",
+    "apreciata",
+    "descumpanita",
+    "descurajat",
+    "dezgust",
+    "dezorientata",
+    "distrus",
+    "dornic",
+    "dragoste",
+    "enervata",
+    "entuziasm",
+    "entuziasmata",
+    "exasperat",
+    "exasperata",
+    "extaz",
+    "fascinata",
+    "fricoasa",
+    "furios",
+    "gelozie",
+    "gol",
+    "groaznic",
+    "impacat",
+    "impacata",
+    "impresionat",
+    "induiosata",
+    "infricosata",
+    "inhibat",
+    "inhibata",
+    "insingurata",
+    "inspaimantat",
+    "intimidat",
+    "intimidata",
+    "intrigat",
+    "invidie",
+    "inviorat",
+    "iritat",
+    "istovita",
+    "jenata",
+    "jignit",
+    "manie",
+    "mirat",
+    "mirata",
+    "miscata",
+    "naucit",
+    "nedumerit",
+    "nemultumit",
+    "nostalgic",
+    "nostalgie",
+    "panicata",
+    "plictisit",
+    "pustiu",
+    "ranchiunoasa",
+    "revoltat",
+    "rusine",
+    "rusinoasa",
+    "satisfacut",
+    "scarba",
+    "scarbit",
+    "sensibil",
+    "socat",
+    "socata",
+    "teribil",
+    "terorizata",
+    "traumatizat",
+    "tulburat",
+    "uimit",
+    "umilit",
+    "umilita",
+    "vesel",
+    "vina"
+  ],
+  "val_seed_words_overlap_train": 182
 }
