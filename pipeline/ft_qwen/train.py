@@ -147,7 +147,7 @@ def main():
 
     model_kwargs = {"attn_implementation": cfg.attn_implementation}
     if cfg.bf16 and torch.cuda.is_available():
-        model_kwargs["torch_dtype"] = torch.bfloat16
+        model_kwargs["dtype"] = torch.bfloat16  # transformers 5.x renamed torch_dtype -> dtype
     model = AutoModelForCausalLM.from_pretrained(cfg.model_name_or_path, **model_kwargs)
 
     if cfg.gradient_checkpointing:
@@ -237,7 +237,7 @@ def main():
         train_dataset=train_ds,
         eval_dataset=val_ds,
         data_collator=collator,
-        tokenizer=tokenizer,
+        processing_class=tokenizer,  # transformers 5.x renamed tokenizer -> processing_class
     )
 
     # ------------------------------------------------------------------
