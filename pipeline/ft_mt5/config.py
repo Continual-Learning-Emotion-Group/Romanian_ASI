@@ -36,8 +36,10 @@ class TrainConfig:
     num_train_epochs: int = 3
     lr_scheduler_type: str = "linear"
     warmup_ratio: float = 0.0                             # MASIVE: no warmup
-    # Flash Attention / SDPA (lab GPU guide) ------------------------------
-    attn_implementation: str = "sdpa"
+    # Attention backend --------------------------------------------------
+    # mT5 in transformers 4.57 does NOT support SDPA / FlashAttention-2
+    # yet (raises ValueError at model init). Keep default eager kernel.
+    attn_implementation: str = "eager"
 
     # Precision (lab GPU guide) -------------------------------------------
     bf16: bool = True                                     # A6000 supports bf16
