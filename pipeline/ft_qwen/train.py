@@ -60,6 +60,9 @@ def parse_cli(defaults: TrainConfig) -> TrainConfig:
     p.add_argument("--max-val-samples",   type=int, default=None)
     p.add_argument("--max-steps", type=int, default=-1,
                    help="Optional cap on training steps (overrides epochs)")
+    p.add_argument("--eval-steps", type=int, default=defaults.eval_steps)
+    p.add_argument("--save-steps", type=int, default=defaults.save_steps)
+    p.add_argument("--logging-steps", type=int, default=defaults.logging_steps)
     p.add_argument("--bf16", type=_str2bool, default=defaults.bf16)
     p.add_argument("--gradient-checkpointing", type=_str2bool,
                    default=defaults.gradient_checkpointing)
