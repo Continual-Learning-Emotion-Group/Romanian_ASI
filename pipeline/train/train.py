@@ -57,14 +57,14 @@ def build_training_args(config: dict, extra_cli: list[str]) -> tuple[TrainingArg
     config_only = {k: config[k] for k in CONFIG_ONLY_KEYS if k in config}
     hf_args = {k: v for k, v in config.items() if k not in CONFIG_ONLY_KEYS}
 
+    import json as _json
     parser = HfArgumentParser(TrainingArguments)
     args_list: list[str] = []
     for k, v in hf_args.items():
         if isinstance(v, bool):
-            if v:
-                args_list.append(f"--{k}")
-        elif isinstance(v, dict):
             args_list += [f"--{k}", str(v)]
+        elif isinstance(v, dict):
+            args_list += [f"--{k}", _json.dumps(v)]
         else:
             args_list += [f"--{k}", str(v)]
     args_list += extra_cli
