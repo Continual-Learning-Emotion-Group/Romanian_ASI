@@ -218,8 +218,14 @@ def run_one_day(
     return final_dir
 
 
-def run_eval(checkpoint: Path, dataset_dir: str, day_tag: str) -> None:
-    """Per-day eval on all 5 language test sets via pipeline.train.eval_sft."""
+def run_eval(checkpoint: Path, dataset_dir: str, day_tag: str) -> bool:
+    """Per-day eval on all 5 language test sets via pipeline.train.eval_sft.
+
+    Returns True on success. Non-fatal on failure: we log the error and let
+    the outer loop continue to the next day's training. The checkpoint is
+    preserved (cleanup is gated on eval success) so we can re-run eval later
+    via `python -m pipeline.train.eval_sft --checkpoint <day>/final ...`.
+    """
     cmd = [
         sys.executable, "-m", "pipeline.train.eval_sft",
         "--checkpoint", str(checkpoint),
@@ -229,7 +235,13 @@ def run_eval(checkpoint: Path, dataset_dir: str, day_tag: str) -> None:
         "--no-similarity",
     ]
     print(f"[{day_tag}] launching eval: {' '.join(cmd)}")
-    subprocess.run(cmd, check=True)
+    try:
+        subprocess.run(cmd, check=True)
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"[{day_tag}] WARNING: eval failed (exit {e.returncode}). "
+              f"Training continues; checkpoint preserved for later re-eval.")
+        return False
 
 
 def main() -> None:
@@ -285,14 +297,17 @@ def main() -> None:
             cfg=cfg, base_training_args=base_training_args, raw=raw,
             max_steps_per_day=args.max_steps_per_day,
         )
+        eval_ok = True
         if not args.skip_eval:
-            run_eval(final_dir, cfg["dataset_dir"], f"day{day_idx}_{lang}")
+            eval_ok = run_eval(final_dir, cfg["dataset_dir"], f"day{day_idx}_{lang}")
 
         # Disk hygiene: drop the previous day's full directory now that the
         # new day's final/ exists, has been used to init this day, AND we've
         # finished eval for this day. The metrics JSONs live under
         # pipeline/data/eval_results/ and are independent of the checkpoint.
-        if args.keep_checkpoints == "last" and prev_ckpt is not None:
+        # Skip cleanup if THIS day's eval failed — we want to keep the prev
+        # day's checkpoint chain intact so eval can be retried later.
+        if args.keep_checkpoints == "last" and prev_ckpt is not None and eval_ok:
             prev_day_dir = Path(prev_ckpt).parent
             if prev_day_dir.exists():
                 shutil.rmtree(prev_day_dir, ignore_errors=True)
