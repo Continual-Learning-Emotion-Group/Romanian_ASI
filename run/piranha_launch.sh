@@ -24,6 +24,7 @@ LOG_DIR="$BASE/runs/logs"
 export HF_HOME="$BASE/cache"
 export TRANSFORMERS_CACHE="$BASE/cache"
 export TORCH_HOME="$BASE/cache/torch"
+export TRITON_CACHE_DIR="$BASE/cache/triton"  # avoid NAS-backed ~/.triton per DeepSpeed warning
 export WANDB_DIR="$LOG_DIR"
 export WANDB_MODE=offline
 export TOKENIZERS_PARALLELISM=false

@@ -14,6 +14,8 @@ Usage (full multi-GPU run via torchrun — see run/piranha_launch.sh):
     torchrun --nproc_per_node=4 -m pipeline.train.train \\
         --config pipeline/train/configs/qwen3_5_4b_full_ft.yaml
 """
+from __future__ import annotations
+
 import argparse
 import os
 import shutil

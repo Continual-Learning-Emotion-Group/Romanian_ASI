@@ -12,6 +12,8 @@ The assistant turn is a single word (the emotion label), so gradients are
 concentrated where they matter. Disabling `enable_thinking` keeps `<think>`
 tokens out of the target entirely.
 """
+from __future__ import annotations
+
 import argparse
 from dataclasses import dataclass
 from typing import Any

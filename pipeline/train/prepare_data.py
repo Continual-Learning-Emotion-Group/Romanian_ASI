@@ -17,6 +17,8 @@ Each row exposes:
 Usage:
     python -m pipeline.train.prepare_data --output /tmp/asi_multilingual
 """
+from __future__ import annotations
+
 import argparse
 import ast
 import csv

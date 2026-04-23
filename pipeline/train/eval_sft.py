@@ -13,6 +13,8 @@ Usage:
 Writes `pipeline/data/eval_results/sft_<tag>_test_<lang>_metrics.json` per
 language and a combined `..._all_metrics.json`.
 """
+from __future__ import annotations
+
 import argparse
 import json
 from pathlib import Path
