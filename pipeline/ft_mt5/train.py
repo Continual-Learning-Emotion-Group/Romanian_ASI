@@ -92,7 +92,10 @@ def main():
     # Tokenizer & model
     # ------------------------------------------------------------------
     tokenizer = AutoTokenizer.from_pretrained(cfg.model_name_or_path)
-    model = AutoModelForSeq2SeqLM.from_pretrained(cfg.model_name_or_path)
+    model = AutoModelForSeq2SeqLM.from_pretrained(
+        cfg.model_name_or_path,
+        attn_implementation=cfg.attn_implementation,
+    )
 
     # ------------------------------------------------------------------
     # Build datasets: read split rows, run build_example (truncation +

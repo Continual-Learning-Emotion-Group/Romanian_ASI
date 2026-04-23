@@ -24,15 +24,20 @@ class TrainConfig:
     max_input_tokens:  int = 512                          # MASIVE
     max_target_tokens: int = 32                           # MASIVE
 
-    # Optimization (MASIVE Appendix D) ------------------------------------
-    learning_rate: float = 1e-4
+    # Optimization (MASIVE Appendix D + linear batch-size scaling) --------
+    # MASIVE used bs=4 on A100; we use bs=16 on A6000 (48 GB lets us fit)
+    # and linearly scale LR 1e-4 -> 4e-4 (standard rule). 4x faster wall
+    # clock, small quality risk.
+    learning_rate: float = 4e-4
     weight_decay: float = 0.01
-    per_device_train_batch_size: int = 4                  # MASIVE = 4
-    per_device_eval_batch_size: int = 16                  # larger for eval (no grads)
+    per_device_train_batch_size: int = 16
+    per_device_eval_batch_size: int = 32
     gradient_accumulation_steps: int = 1
     num_train_epochs: int = 3
     lr_scheduler_type: str = "linear"
-    warmup_ratio: float = 0.0                             # MASIVE: HF defaults, no warmup
+    warmup_ratio: float = 0.0                             # MASIVE: no warmup
+    # Flash Attention / SDPA (lab GPU guide) ------------------------------
+    attn_implementation: str = "sdpa"
 
     # Precision (lab GPU guide) -------------------------------------------
     bf16: bool = True                                     # A6000 supports bf16
