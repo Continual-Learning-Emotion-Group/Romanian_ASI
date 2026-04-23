@@ -1,0 +1,35 @@
+# Pinned versions of the environment that successfully trained mT5-Large on
+# Romanian ASI (Apr 2026, seahorse.cs.columbia.edu, 1x RTX A6000, bf16).
+#
+# Install torch FIRST from the PyTorch wheel index so the CUDA build is used:
+#
+#   pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cu124
+#   pip install -r pipeline/ft_mt5/requirements.txt
+#
+# The top-level requirements.txt is NOT compatible with this module (it pins
+# transformers==5.0.0 and torch==2.2.2 — both break mT5 training). Use this
+# file for anything under pipeline/ft_mt5/.
+
+# Core training stack
+transformers==4.57.6
+tokenizers==0.22.2
+accelerate==1.13.0
+datasets==3.6.0
+safetensors==0.7.0
+huggingface-hub>=0.36,<1
+
+# mT5 tokenizer
+sentencepiece==0.2.1
+protobuf==7.34.1
+
+# Data prep
+nltk==3.9.4
+scikit-learn==1.8.0
+numpy==1.26.4
+pandas==3.0.2
+scipy==1.17.1
+
+# Utility
+tqdm==4.67.3
+regex==2026.4.4
+PyYAML==6.0.3

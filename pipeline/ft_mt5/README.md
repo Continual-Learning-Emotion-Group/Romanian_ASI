@@ -61,18 +61,28 @@ git checkout mt5-finetune
 
 ### 4. Python environment
 
+Use `virtualenv` (not `python3 -m venv` — the `python3.12-venv` apt package
+isn't installed on seahorse). Install torch **first** from the PyTorch wheel
+index so it gets the CUDA build, then install the rest from our pinned
+requirements file:
+
 ```bash
 # on seahorse
-python3 -m venv /local/nlp/$USER/ro_asi_ft/venv
+virtualenv --python=python3.12 /local/nlp/$USER/ro_asi_ft/venv
 source /local/nlp/$USER/ro_asi_ft/venv/bin/activate
 pip install --upgrade pip
 
-# Core deps from the repo, plus fine-tuning extras
-pip install -r requirements.txt
-pip install "transformers>=4.40" accelerate sentencepiece nltk
-# torch: install the build that matches the host CUDA (A6000 = CUDA 12.x)
-pip install torch --index-url https://download.pytorch.org/whl/cu121
+# torch first, from the PyTorch CUDA 12.4 wheel index
+pip install "torch==2.6.0" --index-url https://download.pytorch.org/whl/cu124
+
+# then the rest — these are the EXACT versions that trained the model
+pip install -r pipeline/ft_mt5/requirements.txt
 ```
+
+> Do NOT `pip install -r requirements.txt` from the top of the repo — that
+> file pins `transformers==5.0.0` and `torch==2.2.2`, both incompatible with
+> our training script. `pipeline/ft_mt5/requirements.txt` is the source of
+> truth for this module.
 
 ### 5. Cache on SSD (critical — lab guide)
 
