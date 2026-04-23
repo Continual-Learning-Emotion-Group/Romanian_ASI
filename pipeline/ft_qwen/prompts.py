@@ -159,12 +159,21 @@ def _sanity_check(model_name: str = "Qwen/Qwen3.5-4B") -> None:
 
     assert "[MASK]" in tokenizer.decode(input_ids), \
         "Expected [MASK] preserved verbatim in user turn"
-    assert "<think>" not in tokenizer.decode(input_ids), \
-        "Did not expect <think> tokens (enable_thinking=False)"
+    # `enable_thinking=False` makes Qwen3's chat template insert an EMPTY
+    # `<think></think>` block as part of the assistant-turn prefix (i.e. inside
+    # the prompt scaffolding, masked to -100), not as content the model is
+    # trained to generate. So `<think>` is OK in the full input as long as it
+    # never appears in the supervised portion.
+    assert "<think>" not in supervised_text, \
+        "Supervised portion must not contain <think> tokens — that would teach " \
+        "the model to emit thinking content."
+    assert row["seed_word"] in supervised_text, \
+        "Target seed word must appear in the supervised portion"
     assert n_supervised >= 1, "Expected at least one supervised token (the target word)"
     assert n_supervised < n_total, "Expected at least some prompt tokens to be masked out"
 
-    print("\nOK: prompt is masked out, target word is supervised, no <think> block.")
+    print("\nOK: prompt (incl. empty <think></think>) is masked out, "
+          "target word is the only supervised content.")
 
 
 if __name__ == "__main__":
