@@ -218,7 +218,7 @@ def run_one_day(
     return final_dir
 
 
-def run_eval(checkpoint: Path, dataset_dir: str, day_tag: str) -> bool:
+def run_eval(checkpoint: Path, dataset_dir: str, day_tag: str, tag_prefix: str = "") -> bool:
     """Per-day eval on all 5 language test sets via pipeline.ft_qwen_day_by_day.eval_sft.
 
     Returns True on success. Non-fatal on failure: we log the error and let
@@ -230,7 +230,7 @@ def run_eval(checkpoint: Path, dataset_dir: str, day_tag: str) -> bool:
         sys.executable, "-m", "pipeline.ft_qwen_day_by_day.eval_sft",
         "--checkpoint", str(checkpoint),
         "--dataset-dir", dataset_dir,
-        "--tag", day_tag,
+        "--tag", f"{tag_prefix}{day_tag}",
         "--backend", "transformers",
         "--no-similarity",
     ]
@@ -256,6 +256,9 @@ def main() -> None:
     parser.add_argument("--start-from", type=int, default=1,
                         help="1-indexed day to start from. Resumes from that day's "
                              "predecessor's final/ checkpoint.")
+    parser.add_argument("--tag-prefix", default="",
+                        help="Prefix for eval output filenames (e.g. 'perm2_' so "
+                             "sft_perm2_day1_en_* doesn't collide with a prior run).")
     parser.add_argument("--keep-checkpoints", choices=["last", "all"], default="last",
                         help="last: only keep the most recent day's final/ "
                              "(deletes prev day's after the new day finishes "
@@ -299,7 +302,8 @@ def main() -> None:
         )
         eval_ok = True
         if not args.skip_eval:
-            eval_ok = run_eval(final_dir, cfg["dataset_dir"], f"day{day_idx}_{lang}")
+            eval_ok = run_eval(final_dir, cfg["dataset_dir"], f"day{day_idx}_{lang}",
+                               tag_prefix=args.tag_prefix)
 
         # Disk hygiene: drop the previous day's full directory now that the
         # new day's final/ exists, has been used to init this day, AND we've
