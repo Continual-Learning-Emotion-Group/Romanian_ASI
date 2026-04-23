@@ -31,6 +31,10 @@ lr_scheduler_type: cosine
 warmup_ratio: 0.03
 max_grad_norm: 1.0
 weight_decay: 0.0
+# Single-A100-40GB on transformers 5.x: fp32 AdamW states (32 GB) + model +
+# grads + temporaries overflow. 8-bit AdamW (bitsandbytes) halves the
+# optimizer footprint and leaves ~15 GB headroom for activation peaks.
+optim: adamw_bnb_8bit
 
 # --- Scheduling (per day) ---
 eval_strategy: epoch
