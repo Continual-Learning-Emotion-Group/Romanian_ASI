@@ -44,7 +44,7 @@ pip install -r "$REPO/run/requirements-piranha.txt"
 # 4. Smoke test: Qwen3.5-4B loads and our sanity check passes.
 cd "$REPO"
 export HF_HOME=$ROOT/cache
-python -m pipeline.train.prompts --sanity
+python -m pipeline.ft_qwen_mixed.prompts --sanity
 
 echo
 echo "[setup] done. To train:"

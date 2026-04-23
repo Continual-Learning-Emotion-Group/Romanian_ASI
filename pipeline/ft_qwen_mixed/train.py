@@ -6,13 +6,13 @@ template + loss masking from `prompts.py`, and trains with HF Trainer +
 DeepSpeed ZeRO-3.
 
 Usage (local 1-step dry run):
-    python -m pipeline.train.train \\
-        --config pipeline/train/configs/qwen3_5_4b_full_ft.yaml \\
+    python -m pipeline.ft_qwen_mixed.train \\
+        --config pipeline/ft_qwen_mixed/configs/qwen3_5_4b_full_ft.yaml \\
         --max_steps 2 --per_device_train_batch_size 2
 
 Usage (full multi-GPU run via torchrun — see run/piranha_launch.sh):
-    torchrun --nproc_per_node=4 -m pipeline.train.train \\
-        --config pipeline/train/configs/qwen3_5_4b_full_ft.yaml
+    torchrun --nproc_per_node=4 -m pipeline.ft_qwen_mixed.train \\
+        --config pipeline/ft_qwen_mixed/configs/qwen3_5_4b_full_ft.yaml
 """
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ from transformers import (
     TrainingArguments,
 )
 
-from pipeline.train.prompts import LossMaskingCollator, encode_example
+from pipeline.ft_qwen_mixed.prompts import LossMaskingCollator, encode_example
 
 
 CONFIG_ONLY_KEYS = {

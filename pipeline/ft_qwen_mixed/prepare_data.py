@@ -30,7 +30,7 @@ Supervision semantics — why target = " ".join(labels):
   space-separated." No row is dropped; no row carries contradictory signal.
 
 Usage:
-    python -m pipeline.train.prepare_data --output /tmp/asi_multilingual
+    python -m pipeline.ft_qwen_mixed.prepare_data --output /tmp/asi_multilingual
 """
 from __future__ import annotations
 
