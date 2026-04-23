@@ -26,12 +26,38 @@ SYSTEM_PROMPT = (
     "no punctuation."
 )
 
+MAX_INPUT_CHARS = 2200  # ≈700 Qwen tokens; chat template adds ~50 on top
+
+
+def _truncate_around_mask(text: str, max_chars: int = MAX_INPUT_CHARS) -> str:
+    """Keep a window centered on [MASK] so we never lose the masked token.
+
+    With Qwen3.5's 248k vocab the softmax memory scales linearly with sequence
+    length, so we bound the user content to a predictable length. The long-tail
+    of FULG passages reaches ~10k tokens; without this, batches with one long
+    sample OOM during cross-entropy.
+    """
+    if len(text) <= max_chars:
+        return text
+    pos = text.find("[MASK]")
+    if pos == -1:  # no mask — should not happen in this dataset
+        return text[:max_chars]
+    half = max_chars // 2
+    start = max(0, pos - half)
+    end = min(len(text), pos + half)
+    out = text[start:end]
+    if start > 0:
+        out = "..." + out
+    if end < len(text):
+        out = out + "..."
+    return out
+
 
 def build_messages(input_text: str, label: str | None = None) -> list[dict]:
     """System + user (+ optional assistant) messages."""
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": input_text},
+        {"role": "user", "content": _truncate_around_mask(input_text)},
     ]
     if label is not None:
         messages.append({"role": "assistant", "content": label})
