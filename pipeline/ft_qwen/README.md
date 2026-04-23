@@ -15,7 +15,7 @@ The plan and rationale live in `~/.claude/plans/understand-this-repo-i-lovely-gr
 | Loss | seq2seq CE on full target | causal CE, prompt tokens masked to -100 |
 | Optimizer | Adafactor | AdamW (fused) |
 | LR | 1e-4 (linear, no warmup) | 2e-5 (cosine, 5% warmup) |
-| Attention | default | Flash Attention 2 |
+| Attention | default | SDPA (PyTorch's flash-attn 2 kernel path) |
 | Max input | 512 mT5 tokens | 1024 Qwen tokens |
 | Machine | seahorse (A6000 48GB) | tigerfish (A100-SXM 40GB, GPU 1) |
 
@@ -29,7 +29,7 @@ Identical to `ft_mt5/README.md` steps 1–5 with these substitutions:
 * SSH to `tigerfish.cs.columbia.edu` instead of seahorse.
 * `git checkout qwen-finetune` instead of `mt5-finetune`.
 * `export CUDA_VISIBLE_DEVICES=1` (GPU 0 is taken by another user as of 2026-04-23).
-* Add `flash-attn` to the pip install: `pip install flash-attn --no-build-isolation`.
+* No standalone `flash-attn` package — we use `attn_implementation="sdpa"` which dispatches to the same Flash Attention 2 kernels via PyTorch's SDPA path.
 
 `/local` on tigerfish is at 99% utilization (~85 GB free). Aggressive cache
 cleanup is mandatory — see `launch_tigerfish.sh`, which aborts if <40 GB free.

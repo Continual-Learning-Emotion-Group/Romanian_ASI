@@ -7,7 +7,7 @@ a 5x larger decoder-only causal LM:
   * AdamW (Qwen-family default) instead of Adafactor (mT5 pretraining default).
   * lr 2e-5 (standard 5x drop for larger causal LMs vs mT5's 1e-4).
   * Cosine LR with 5% warmup instead of linear-no-warmup.
-  * Flash Attention 2 (A100 supports it; mT5 didn't need it).
+  * SDPA attention (dispatches to Flash Attention 2 kernels on A100 + bf16).
   * max_input_tokens 1024 because Qwen BPE is denser than mT5 sentencepiece.
   * max_target_tokens 16 because the target is a single Romanian word.
 """
@@ -24,7 +24,10 @@ SPLITS_DIR = DATA_DIR / "splits"
 class TrainConfig:
     # Model ---------------------------------------------------------------
     model_name_or_path: str = "Qwen/Qwen3.5-4B"
-    attn_implementation: str = "flash_attention_2"
+    # `sdpa` dispatches to Flash Attention 2 kernels under the hood on A100
+    # + bf16 + small head dims, and avoids the standalone `flash-attn` package
+    # (which needs nvcc + ninja + a 15-min build from source).
+    attn_implementation: str = "sdpa"
 
     # Data ----------------------------------------------------------------
     train_file: Path = SPLITS_DIR / "train.jsonl"
