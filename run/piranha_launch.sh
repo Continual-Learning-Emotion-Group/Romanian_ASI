@@ -8,7 +8,7 @@
 #   python3 -m venv /local/nlp/aij2115/venv
 #   source /local/nlp/aij2115/venv/bin/activate
 #   pip install -r /local/nlp/aij2115/code/Romanian_ASI/requirements.txt
-#   python -m pipeline.train.prepare_data --output /local/nlp/aij2115/data/asi_multilingual
+#   python -m pipeline.ft_qwen_mixed.prepare_data --output /local/nlp/aij2115/data/asi_multilingual
 #
 # Run:
 #   cd /local/nlp/aij2115/code/Romanian_ASI
@@ -59,8 +59,8 @@ fi
 cd "$REPO"
 source "$BASE/venv/bin/activate"
 
-torchrun --nproc_per_node=4 -m pipeline.train.train \
-  --config pipeline/train/configs/qwen3_5_4b_full_ft.yaml
+torchrun --nproc_per_node=4 -m pipeline.ft_qwen_mixed.train \
+  --config pipeline/ft_qwen_mixed/configs/qwen3_5_4b_full_ft.yaml
 
 echo "[info] disk usage after run:"
 du -sh "$BASE"/{cache,runs,data} 2>/dev/null || true

@@ -50,7 +50,7 @@ seed: 42
 data_seed: 42
 
 # --- DeepSpeed ---
-deepspeed: pipeline/train/configs/deepspeed_zero3.json
+deepspeed: pipeline/ft_qwen_mixed/configs/deepspeed_zero3.json
 
 # --- Misc ---
 dataloader_num_workers: 4

@@ -18,7 +18,7 @@ Metrics per language:
                         comparability with the zero-shot report.
 
 Usage:
-    python -m pipeline.train.eval_sft \\
+    python -m pipeline.ft_qwen_mixed.eval_sft \\
         --checkpoint /local/nlp/aij2115/runs/final \\
         --split test
 
@@ -41,7 +41,7 @@ from pipeline.eval.metrics import (
     compute_all_metrics,
     normalize_prediction,
 )
-from pipeline.train.prompts import build_messages
+from pipeline.ft_qwen_mixed.prompts import build_messages
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 RESULTS_DIR = ROOT / "pipeline" / "data" / "eval_results"

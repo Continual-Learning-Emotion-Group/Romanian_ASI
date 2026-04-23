@@ -21,7 +21,7 @@ Fine-tuning of `Qwen/Qwen3.5-4B` on the 5-language presentation benchmark (RO / 
 | Epochs | 3 (1251 steps) |
 | Seed | 42 |
 | Eval / save | every 25 steps, `save_total_limit=1`, `load_best_model_at_end=true`, `metric_for_best_model=eval_loss` |
-| Data | 5000 train / 1200 val / 5×1000 per-language test, built by `pipeline/train/prepare_data.py` |
+| Data | 5000 train / 1200 val / 5×1000 per-language test, built by `pipeline/ft_qwen_mixed/prepare_data.py` |
 | Supervision | `label = " ".join(labels)` — `labels` is the set of distinct affective expressions in order of first appearance |
 | Loss masking | assistant-only tokens, prompt prefix set to `-100`; `enable_thinking=False` |
 | Checkpoint path (piranha, preserved) | `/local/nlp/aij2115/runs/final/` (~7.9 GB) |
@@ -84,7 +84,7 @@ v1's contradictory supervision (label-as-positional-enumeration) and prompt/data
 
 ## Final eval — full test sets
 
-Generated with `pipeline.train.eval_sft --backend transformers --tag qwen3.5-4b_v2_tf` (greedy, single completion per row; no top-k sampling because vllm wasn't installed in the venv). Scoring via **word-sequence set-match** (each gold label — word or phrase — must appear as a contiguous whitespace-token subsequence of the normalized output).
+Generated with `pipeline.ft_qwen_mixed.eval_sft --backend transformers --tag qwen3.5-4b_v2_tf` (greedy, single completion per row; no top-k sampling because vllm wasn't installed in the venv). Scoring via **word-sequence set-match** (each gold label — word or phrase — must appear as a contiguous whitespace-token subsequence of the normalized output).
 
 | lang | n | set_acc@1 | legacy acc@1 | sim@1 | notes |
 |---|---|---|---|---|---|
@@ -165,13 +165,13 @@ Given the code state at this commit:
 
 1. Rebuild the dataset from `presentation_data/`:
    ```
-   python -m pipeline.train.prepare_data --output /tmp/asi_multilingual
+   python -m pipeline.ft_qwen_mixed.prepare_data --output /tmp/asi_multilingual
    ```
 2. Sanity-check tokenization + loss masking (4 cases including multi-mask + phrase label):
    ```
-   python -m pipeline.train.prompts --sanity
+   python -m pipeline.ft_qwen_mixed.prompts --sanity
    ```
-3. Launch training with the config in `pipeline/train/configs/qwen3_5_4b_full_ft.yaml` via `run/piranha_launch.sh` (3-GPU `torchrun` + DeepSpeed).
-4. Eval with `python -m pipeline.train.eval_sft --checkpoint <path> --backend {vllm|transformers}`.
+3. Launch training with the config in `pipeline/ft_qwen_mixed/configs/qwen3_5_4b_full_ft.yaml` via `run/piranha_launch.sh` (3-GPU `torchrun` + DeepSpeed).
+4. Eval with `python -m pipeline.ft_qwen_mixed.eval_sft --checkpoint <path> --backend {vllm|transformers}`.
 
 Checkpoint binary itself is **not** in the repo (7.9 GB); reference it at `/local/nlp/aij2115/runs/final/` on piranha or re-train with the pinned seed=42 / data_seed=42.

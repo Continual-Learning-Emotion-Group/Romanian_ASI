@@ -35,7 +35,7 @@ Prior decisions in this conversation:
 New files in `Romanian_ASI`:
 
 ```
-pipeline/train/
+pipeline/ft_qwen_mixed/
 ├── __init__.py
 ├── prepare_data.py          # CSV → HF DatasetDict(train, val, test) with language column
 ├── prompts.py               # chat-template builder, enable_thinking=False, loss-masking collator
@@ -50,7 +50,7 @@ run/
 
 ## Critical design points
 
-### Data (`pipeline/train/prepare_data.py`)
+### Data (`pipeline/ft_qwen_mixed/prepare_data.py`)
 - Read `presentation_data/presentation_{ro,en,es,fa,hi}/{train,val,test}.csv` (accepts both the `presentation_<lang>/` and `<lang>/` layouts via an `--input` dir).
 - Add `language` column (`ro|en|es|fa|hi`).
 - Concatenate all train sets; `shuffle(seed=42)` → 5000 rows. This is the "scramble" per user instruction.
@@ -60,7 +60,7 @@ run/
 - Save once via `DatasetDict.save_to_disk("/local/nlp/aij2115/data/asi_multilingual/")`.
 - Hindi prep is handled out-of-band by `scripts/convert_hindi_to_presentation_format.py`; `prepare_data.py` consumes the already-normalized `presentation_hi/` CSVs just like the other 4 languages.
 
-### Prompt format (`pipeline/train/prompts.py`)
+### Prompt format (`pipeline/ft_qwen_mixed/prompts.py`)
 - System: `"You are an affective-state identifier. Given a sentence with one or more [MASK] positions, output the distinct affective expressions that fill them, in order of first appearance, separated by a single space. Expressions may be single words or short idiomatic phrases. No explanation, no punctuation, no repeats."`
 - User: raw `input` column (already contains `[MASK]`).
 - Assistant: ` `.join(labels).
@@ -71,13 +71,13 @@ run/
   3. Set labels for prefix tokens to `-100`, keep real IDs for `{label}<|im_end|>`.
 - Sanity check: print one tokenized sample at startup, verify `<think>` tokens are absent.
 
-### Model loading (inside `pipeline/train/train.py`)
+### Model loading (inside `pipeline/ft_qwen_mixed/train.py`)
 - `AutoModelForCausalLM.from_pretrained("Qwen/Qwen3.5-4B", torch_dtype=torch.bfloat16, attn_implementation="flash_attention_2")`.
 - `AutoTokenizer.from_pretrained(..., padding_side="right")` (left-padding only needed at inference).
 - Enable gradient checkpointing with `use_reentrant=False` so it composes with ZeRO-3.
 - No `device_map` under DeepSpeed — DeepSpeed owns placement.
 
-### Training config (`pipeline/train/configs/qwen3_5_4b_full_ft.yaml`)
+### Training config (`pipeline/ft_qwen_mixed/configs/qwen3_5_4b_full_ft.yaml`)
 Overrides merged into HF `TrainingArguments`:
 - `bf16: true`, `tf32: true`
 - `gradient_checkpointing: true`, `gradient_checkpointing_kwargs: {use_reentrant: false}`
@@ -101,10 +101,10 @@ Estimated training time: 5000 rows × 3 epochs / 32 ≈ 470 steps. At ~2 s/step 
 - `export TRANSFORMERS_CACHE=...`, `WANDB_DIR=...`, `WANDB_MODE=offline`, `TOKENIZERS_PARALLELISM=false`
 - `export CUDA_VISIBLE_DEVICES=0,1,2,3`
 - `source /local/nlp/aij2115/venv/bin/activate`
-- `torchrun --nproc_per_node=4 -m pipeline.train.train --config pipeline/train/configs/qwen3_5_4b_full_ft.yaml`
+- `torchrun --nproc_per_node=4 -m pipeline.ft_qwen_mixed.train --config pipeline/ft_qwen_mixed/configs/qwen3_5_4b_full_ft.yaml`
 - Runs in `tmux` / `nohup` so disconnects don't kill the job.
 
-### Evaluation (`pipeline/train/eval_sft.py`)
+### Evaluation (`pipeline/ft_qwen_mixed/eval_sft.py`)
 - Point at `/local/nlp/aij2115/runs/final/`.
 - Run inference (vLLM if available, else transformers) on each language's test split.
 - **Set-match scoring**: normalize completions (lowercase, diacritics stripped, punctuation stripped), split on whitespace. For each gold label — single word OR multi-word phrase — check whether its token sequence appears contiguously in the completion. Top-k is taken over N sampled completions; best-over-prefix is the per-row score.
@@ -133,20 +133,20 @@ Estimated training time: 5000 rows × 3 epochs / 32 ≈ 470 steps. At ~2 s/step 
 
 1. **Data check (local, fast)**:
    ```bash
-   python -m pipeline.train.prepare_data --output /tmp/asi_multilingual
+   python -m pipeline.ft_qwen_mixed.prepare_data --output /tmp/asi_multilingual
    python -c "from datasets import load_from_disk; d=load_from_disk('/tmp/asi_multilingual'); print(d); print(d['train'][0])"
    ```
    Expect 5000 train / 1250 val / 5000 test rows across 5 languages (language column present, shuffled).
 
 2. **Tokenization smoke test (local)**:
    ```bash
-   python -m pipeline.train.prompts --sanity
+   python -m pipeline.ft_qwen_mixed.prompts --sanity
    ```
    Prints one formatted example, shows which tokens have `-100` labels (prompt) vs real IDs (response + `<|im_end|>`), asserts no `<think>` tokens.
 
 3. **1-step dry-run on piranha** (single GPU, subset of 32 rows):
    ```bash
-   CUDA_VISIBLE_DEVICES=0 python -m pipeline.train.train --config ... --max_steps 2 --per_device_train_batch_size 2
+   CUDA_VISIBLE_DEVICES=0 python -m pipeline.ft_qwen_mixed.train --config ... --max_steps 2 --per_device_train_batch_size 2
    ```
    Confirms model loads, collator works, one gradient step completes.
 
@@ -158,7 +158,7 @@ Estimated training time: 5000 rows × 3 epochs / 32 ≈ 470 steps. At ~2 s/step 
 
 5. **Eval**:
    ```bash
-   python -m pipeline.train.eval_sft --checkpoint /local/nlp/aij2115/runs/final --split test
+   python -m pipeline.ft_qwen_mixed.eval_sft --checkpoint /local/nlp/aij2115/runs/final --split test
    ```
    Produces per-language metric JSONs. Compare to zero-shot numbers in `pipeline/data/eval_results/`.
 

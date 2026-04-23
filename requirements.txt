@@ -55,7 +55,7 @@ scikit-learn>=1.3.0
 python-dotenv>=1.0.0
 filmot>=0.0.4
 
-# --- SFT training (installed on piranha for pipeline/train) ---
+# --- SFT training (installed on piranha for pipeline/ft_qwen_mixed) ---
 # flash-attn wheels must match the torch+CUDA combo on the target box;
 # pin a version there after `pip install flash-attn --no-build-isolation` is done.
 accelerate>=0.30.0
