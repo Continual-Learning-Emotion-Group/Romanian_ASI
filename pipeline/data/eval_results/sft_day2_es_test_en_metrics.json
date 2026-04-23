@@ -1,0 +1,26 @@
+{
+  "language": "en",
+  "n_samples": 1000,
+  "set_acc@1": 0.192,
+  "coverage@1": 0.193,
+  "set_acc@3": 0.192,
+  "coverage@3": 0.193,
+  "set_acc@5": 0.192,
+  "coverage@5": 0.193,
+  "single_mask": {
+    "n": 865,
+    "set_acc@1": 0.1653179190751445
+  },
+  "multi_mask": {
+    "n": 135,
+    "set_acc@1": 0.362962962962963,
+    "coverage@1": 0.37037037037037035
+  },
+  "legacy_first_label": {
+    "n_samples": 1000,
+    "acc@1": 0.187,
+    "acc@3": 0.187,
+    "acc@5": 0.187,
+    "mrr": 0.187
+  }
+}
