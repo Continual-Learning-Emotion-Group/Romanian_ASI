@@ -136,7 +136,7 @@ def main() -> None:
         train_dataset=train_ds,
         eval_dataset=val_ds,
         data_collator=LossMaskingCollator(pad_token_id=tokenizer.pad_token_id),
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
     )
 
     trainer.train()
