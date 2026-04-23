@@ -30,6 +30,8 @@ export NCCL_DEBUG=WARN
 export NVIDIA_TF32_OVERRIDE=1
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
+mkdir -p "$HF_HOME" "$RUNS_ROOT"
+
 cd "$REPO"
 source "$PROJECT/venv/bin/activate"
 

@@ -231,7 +231,7 @@ def run_eval(checkpoint: Path, dataset_dir: str, day_tag: str) -> bool:
         "--checkpoint", str(checkpoint),
         "--dataset-dir", dataset_dir,
         "--tag", day_tag,
-        "--backend", "vllm",
+        "--backend", "transformers",
         "--no-similarity",
     ]
     print(f"[{day_tag}] launching eval: {' '.join(cmd)}")
