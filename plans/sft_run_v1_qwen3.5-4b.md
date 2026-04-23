@@ -7,7 +7,9 @@ Goal: first supervised fine-tuning experiment on the presentation splits. Train 
 Prior decisions in this conversation:
 - Model: `Qwen/Qwen3.5-4B` (post-trained; no `-Instruct` suffix in 3.5 naming).
 - Do **not** modify or patch the `day-in-the-life` repo. `continual_learning_loop` is VLM-only and doesn't orchestrate text-only single-task SFT, and the user wants day-in-the-life left untouched. This run is written directly against HF `Trainer` inside `Romanian_ASI`. We'll revisit integration for the follow-up curriculum-by-language run.
-- Data: presentation CSVs (1000/250/1000 per language). ro/en/es/fa were sampled by Parmida from `pipeline/data/benchmark_ro_asi_clean.jsonl` (verified earlier in conversation). hi was converted from `presentation_data/hindi_samples_final/` by `scripts/convert_hindi_to_presentation_format.py` (whole-token masking, label = inflected form as it appears in text). Hindi label space = 153 inflected forms with some source-data noise (short stems like `डर`/fear substring-matching loanwords like `किंडरगार्टेन`/kindergarten) — known and accepted as training noise.
+- Data: presentation CSVs (1000/{200-250}/1000 per language — hi/val is 200, others 250). ro/en/es/fa were sampled by Parmida from `pipeline/data/benchmark_ro_asi_clean.jsonl` (verified earlier in conversation). hi was converted from `presentation_data/hindi_samples_final/` by `scripts/convert_hindi_to_presentation_format.py` (whole-token masking, label = inflected form as it appears in text). Hindi label space = 153 inflected forms with some source-data noise (short stems like `डर`/fear substring-matching loanwords like `किंडरगार्टेन`/kindergarten) — known and accepted as training noise.
+- Multi-mask rows (en/es/fa only; ro and hi are 100% single-mask): `prepare_data.py` builds the assistant turn as ` `.join(labels) when label count matches mask count (all en/es + a few fa rows), otherwise falls back to `labels[0]` (all fa multi-mask, some mismatched en/es). 92.4% of train rows are single-mask; the 7.6% multi-mask rows (ro=0, en=497, es=320, fa=107, hi=0) contribute multi-word targets or noisy single-word fallbacks.
+- EN/ES/FA test sets contain multi-mask rows too (135, 100, 167 of 1000 respectively). `eval_sft.py` records per-position accuracy separately; zero-shot comparisons remain apples-to-apples on ro and hi (both 100% single-mask).
 - Prompt: chat template with `enable_thinking=False`, assistant turn = single label word + `<|im_end|>`, loss masked on prompt tokens.
 - Evaluation: reuse `pipeline/eval/` (MASIVE-style acc@k, MRR, sim@k) for comparable numbers against the existing zero-shot results.
 
@@ -49,11 +51,12 @@ run/
 ## Critical design points
 
 ### Data (`pipeline/train/prepare_data.py`)
-- Read `presentation_data/presentation_{ro,en,es,fa,hi}/{train,val,test}.csv`.
+- Read `presentation_data/presentation_{ro,en,es,fa,hi}/{train,val,test}.csv` (accepts both the `presentation_<lang>/` and `<lang>/` layouts via an `--input` dir).
 - Add `language` column (`ro|en|es|fa|hi`).
 - Concatenate all train sets; `shuffle(seed=42)` → 5000 rows. This is the "scramble" per user instruction.
-- Keep val/test per-language (Dataset per language) + a combined Dataset for overall metrics.
-- `labels` column contains a JSON list like `['uluita']` — take first element as the target word.
+- Keep val concatenated (~1200 rows; hindi val is 200 rows vs 250 for the others) + per-language `test_<lang>` splits (5×1000).
+- `labels` column contains a JSON list like `['uluita']` or `['loved', 'disgusted']`. For multi-mask rows where label-list length matches mask count, supervision becomes ` `.join(labels) (option C); otherwise fall back to `labels[0]`.
+- Row fields in the DatasetDict: `id, input, label (supervision string), labels (full list), n_masks, language`.
 - Save once via `DatasetDict.save_to_disk("/local/nlp/aij2115/data/asi_multilingual/")`.
 - Hindi prep is handled out-of-band by `scripts/convert_hindi_to_presentation_format.py`; `prepare_data.py` consumes the already-normalized `presentation_hi/` CSVs just like the other 4 languages.
 
