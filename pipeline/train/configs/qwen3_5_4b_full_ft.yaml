@@ -4,6 +4,10 @@
 model_name_or_path: Qwen/Qwen3.5-4B
 dataset_dir: /local/nlp/aij2115/data/asi_multilingual
 max_seq_length: 1024
+# SDPA dispatches to the Flash Attention 2 kernels on A100 + bf16 and
+# avoids a bug in transformers main's qwen3_5 flash_attention integration
+# (s_aux is None under grad checkpointing).
+attn_implementation: sdpa
 
 output_dir: /local/nlp/aij2115/runs/checkpoints
 final_dir: /local/nlp/aij2115/runs/final

@@ -41,6 +41,7 @@ CONFIG_ONLY_KEYS = {
     "dataset_dir",
     "max_seq_length",
     "final_dir",
+    "attn_implementation",
 }
 
 
@@ -108,10 +109,11 @@ def main() -> None:
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
 
+    attn_impl = cfg.get("attn_implementation", "sdpa")
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         torch_dtype=torch.bfloat16,
-        attn_implementation="flash_attention_2",
+        attn_implementation=attn_impl,
         trust_remote_code=True,
     )
     model.config.use_cache = False  # required with gradient checkpointing
