@@ -81,9 +81,18 @@ def _load_csv(path: Path, language: str) -> list[dict]:
     return rows
 
 
-def build(input_dir: Path = DEFAULT_INPUT) -> DatasetDict:
-    per_lang_train: list[dict] = []
-    per_lang_val: list[dict] = []
+def build(input_dir: Path = DEFAULT_INPUT, per_language_splits: bool = False) -> DatasetDict:
+    """Build the SFT DatasetDict.
+
+    Default: concatenate + shuffle all 5 languages into a single `train` /
+    `val` (used by `train.py` for the scrambled-multilingual run on main).
+
+    `per_language_splits=True`: emit `train_{lang}` and `val_{lang}` per
+    language instead — used by `train_day_by_day.py` to train one language
+    per "day" with the next day starting from the previous day's checkpoint.
+    """
+    per_lang_train: dict[str, list[dict]] = {}
+    per_lang_val: dict[str, list[dict]] = {}
     test_splits: dict[str, Dataset] = {}
 
     for lang in LANGUAGES:
@@ -92,13 +101,21 @@ def build(input_dir: Path = DEFAULT_INPUT) -> DatasetDict:
         lang_dir = input_dir / lang
         if not lang_dir.is_dir():
             lang_dir = input_dir / f"presentation_{lang}"
-        per_lang_train.extend(_load_csv(lang_dir / "train.csv", lang))
-        per_lang_val.extend(_load_csv(lang_dir / "val.csv", lang))
+        per_lang_train[lang] = _load_csv(lang_dir / "train.csv", lang)
+        per_lang_val[lang] = _load_csv(lang_dir / "val.csv", lang)
         test_splits[f"test_{lang}"] = Dataset.from_list(_load_csv(lang_dir / "test.csv", lang))
 
-    train = Dataset.from_list(per_lang_train).shuffle(seed=SEED)
-    val = Dataset.from_list(per_lang_val)
+    if per_language_splits:
+        train_splits = {f"train_{lang}": Dataset.from_list(per_lang_train[lang])
+                        for lang in LANGUAGES}
+        val_splits = {f"val_{lang}": Dataset.from_list(per_lang_val[lang])
+                      for lang in LANGUAGES}
+        return DatasetDict({**train_splits, **val_splits, **test_splits})
 
+    combined_train = [r for lang in LANGUAGES for r in per_lang_train[lang]]
+    combined_val = [r for lang in LANGUAGES for r in per_lang_val[lang]]
+    train = Dataset.from_list(combined_train).shuffle(seed=SEED)
+    val = Dataset.from_list(combined_val)
     return DatasetDict({"train": train, "val": val, **test_splits})
 
 
@@ -106,9 +123,12 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--per-language-splits", action="store_true",
+                        help="Emit train_{lang} / val_{lang} splits instead of "
+                             "shuffled concatenation. Required for day-by-day training.")
     args = parser.parse_args()
 
-    dsd = build(args.input)
+    dsd = build(args.input, per_language_splits=args.per_language_splits)
     dsd.save_to_disk(str(args.output))
 
     print(f"Saved DatasetDict → {args.output}")
