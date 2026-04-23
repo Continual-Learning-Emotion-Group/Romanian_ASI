@@ -31,6 +31,11 @@ export TOKENIZERS_PARALLELISM=false
 export CUDA_VISIBLE_DEVICES=1
 export NCCL_DEBUG=WARN
 export NVIDIA_TF32_OVERRIDE=1
+# Avoid the fragmentation OOM observed mid-day-1 (epoch ~1.5): a 1.5 GB
+# allocation failed even though only ~3 GB was reserved-but-unallocated.
+# expandable_segments lets PyTorch grow existing segments instead of needing
+# a contiguous free block — directly recommended by the OOM error message.
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 mkdir -p "$HF_HOME" "$RUNS_ROOT"
 
