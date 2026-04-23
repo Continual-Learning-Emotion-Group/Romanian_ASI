@@ -1,9 +1,21 @@
 """Evaluate an SFT checkpoint on the per-language presentation test splits.
 
 Runs the same chat-template prompt used at training (system + user with
-`[MASK]`, `enable_thinking=False`), parses the single-word prediction, and
-computes MASIVE-style metrics (acc@k, MRR, sim@k) via the existing
-`pipeline/eval/metrics.py`.
+`[MASK]`, `enable_thinking=False`), then scores model output against the
+*set* of gold labels for each row. This matches the supervision contract:
+`labels` is the set of distinct affective expressions that fill the mask
+positions, so we check whether each gold label (single word OR idiomatic
+phrase) appears in the model output.
+
+Metrics per language:
+  - set_acc@k         : fraction of rows where at least one of the top-k
+                        completions contains every gold label (normalized
+                        substring match).
+  - set_coverage@k    : mean fraction of gold labels found in the best of
+                        the top-k completions.
+  - acc@k / mrr / sim@k : classical MASIVE-style single-word metrics
+                        scored against labels[0] only, for direct
+                        comparability with the zero-shot report.
 
 Usage:
     python -m pipeline.train.eval_sft \\
@@ -19,6 +31,7 @@ import argparse
 import json
 from pathlib import Path
 
+import numpy as np
 from datasets import load_from_disk
 from tqdm import tqdm
 
@@ -45,6 +58,40 @@ def render_prompt(tokenizer, input_text: str) -> str:
         return tokenizer.apply_chat_template(build_messages(input_text), **kwargs)
 
 
+def _contains_token_seq(haystack_tokens: list[str], needle: str) -> bool:
+    """Whitespace-token-sequence match: needle's tokens must appear as a
+    contiguous subsequence in haystack_tokens. Avoids `sad` matching inside
+    `saddled` while still allowing multi-word phrase labels.
+    """
+    n_toks = needle.split()
+    if not n_toks:
+        return False
+    m = len(n_toks)
+    for i in range(len(haystack_tokens) - m + 1):
+        if haystack_tokens[i:i + m] == n_toks:
+            return True
+    return False
+
+
+def _score_completion(generated_text: str, labels_norm: list[str]) -> dict:
+    """Score one completion against the gold label set.
+
+    Matching is on normalized (lowercased, diacritics-stripped, punctuation-
+    stripped) whitespace-tokens. Each gold label — single word or multi-word
+    phrase — must appear as a contiguous token subsequence of the completion.
+    """
+    gen_norm = normalize_prediction(generated_text)
+    gen_tokens = gen_norm.split()
+    matched = [L for L in labels_norm if L and _contains_token_seq(gen_tokens, L)]
+    return {
+        "gen_norm": gen_norm,
+        "matched": matched,
+        "n_matched": len(matched),
+        "exact_set": len(matched) == len(labels_norm) and len(labels_norm) > 0,
+        "coverage": len(matched) / max(1, len(labels_norm)),
+    }
+
+
 def generate_vllm(records: list[dict], checkpoint: str, top_k: int,
                   max_tokens: int, gpu_mem: float) -> list[dict]:
     from transformers import AutoTokenizer
@@ -65,18 +112,8 @@ def generate_vllm(records: list[dict], checkpoint: str, top_k: int,
             key=lambda o: o.cumulative_logprob or 0,
             reverse=True,
         )
-        preds_raw: list[str] = []
-        seen: set[str] = set()
-        for comp in sorted_completions:
-            word = parse_single_word(comp.text.strip())
-            norm = normalize_prediction(word) if word else ""
-            if norm and norm not in seen:
-                seen.add(norm)
-                preds_raw.append(word)
-            if len(preds_raw) >= top_k:
-                break
-        out.append(_make_result(r, preds_raw, sorted_completions[0].text.strip()
-                                if sorted_completions else ""))
+        completions_raw = [c.text.strip() for c in sorted_completions[:top_k]]
+        out.append(_make_result(r, completions_raw))
     return out
 
 
@@ -109,51 +146,83 @@ def generate_transformers(records: list[dict], checkpoint: str, top_k: int,
         for i, r in enumerate(batch_rec):
             prompt_len = enc["input_ids"][i].shape[0]
             text = tok.decode(gen[i][prompt_len:], skip_special_tokens=True).strip()
-            word = parse_single_word(text)
-            preds_raw = [word] if word else []
-            out.append(_make_result(r, preds_raw, text))
+            # Greedy transformers path produces a single completion per row;
+            # pad with empty strings so top_k scoring is uniform.
+            completions = [text] + [""] * (top_k - 1)
+            out.append(_make_result(r, completions))
     return out
 
 
-def _make_result(r: dict, preds_raw: list[str], generated_text: str) -> dict:
-    # For multi-mask rows `r["label"]` is a space-joined string of N words.
-    # For scoring under the existing single-word metrics we use the first
-    # word as the primary gold; the full labels list and the per-position
-    # match are recorded separately for downstream positional analysis.
-    first_label = r["labels"][0] if r.get("labels") else r["label"]
-    gold_norm = normalize_prediction(first_label)
+def _make_result(r: dict, completions_raw: list[str]) -> dict:
+    labels = r.get("labels") or [r["label"]]
+    labels_norm = [normalize_prediction(L) for L in labels]
 
-    # Per-position positional scoring for multi-mask rows.
-    n_masks = r.get("n_masks", r["input"].count("[MASK]"))
-    positional: dict = {}
-    if n_masks > 1 and r.get("labels") and generated_text:
-        pred_words = generated_text.strip().split()
-        labs = r["labels"]
-        matched = 0
-        for i, lab in enumerate(labs):
-            if i < len(pred_words) and normalize_prediction(pred_words[i]) == normalize_prediction(lab):
-                matched += 1
-        positional = {
-            "n_masks": n_masks,
-            "labels_normalized": [normalize_prediction(x) for x in labs],
-            "pred_words": pred_words[:len(labs)],
-            "matched": matched,
-            "per_position_acc": matched / max(1, len(labs)),
-        }
+    per_completion = [_score_completion(c, labels_norm) for c in completions_raw]
 
+    # Top-k aggregates: best-over-prefix for set-match and coverage.
+    k_values = (1, 3, 5)
+    set_acc_at_k: dict[str, float] = {}
+    coverage_at_k: dict[str, float] = {}
+    for k in k_values:
+        prefix = per_completion[:k]
+        set_acc_at_k[f"set_acc@{k}"] = float(any(c["exact_set"] for c in prefix))
+        coverage_at_k[f"coverage@{k}"] = float(max((c["coverage"] for c in prefix),
+                                                   default=0.0))
+
+    # Legacy per-result shape for compute_all_metrics: first-word parses of
+    # each completion, compared against labels[0] as the single gold. Keeps
+    # direct comparability with the zero-shot report on RO (and on any row
+    # whose label set is a single word).
+    legacy_preds_raw: list[str] = []
+    seen: set[str] = set()
+    for c in completions_raw:
+        word = parse_single_word(c)
+        norm = normalize_prediction(word) if word else ""
+        if norm and norm not in seen:
+            seen.add(norm)
+            legacy_preds_raw.append(word)
+
+    first_gold = labels[0]
     return {
         "id": r["id"],
         "language": r["language"],
-        "seed_word": first_label,
-        "gold_normalized": gold_norm,
+        # Legacy fields (read by pipeline.eval.metrics.compute_all_metrics).
+        "seed_word": first_gold,
+        "gold_normalized": normalize_prediction(first_gold),
         "masked_text": r["input"],
-        "predictions_raw": preds_raw,
-        "predictions_normalized": [normalize_prediction(p) for p in preds_raw],
-        "generated_text": generated_text,
-        "labels_full": r.get("labels", [first_label]),
-        "n_masks": n_masks,
-        "positional": positional,
+        "predictions_raw": legacy_preds_raw,
+        "predictions_normalized": [normalize_prediction(p) for p in legacy_preds_raw],
+        # New set-level fields.
+        "labels_full": labels,
+        "labels_normalized": labels_norm,
+        "n_masks": r.get("n_masks", r["input"].count("[MASK]")),
+        "completions_raw": completions_raw,
+        "per_completion": per_completion,
+        **set_acc_at_k,
+        **coverage_at_k,
     }
+
+
+def _aggregate_set_metrics(results: list[dict], ks=(1, 3, 5)) -> dict:
+    out: dict = {}
+    for k in ks:
+        out[f"set_acc@{k}"] = float(np.mean([r[f"set_acc@{k}"] for r in results]))
+        out[f"coverage@{k}"] = float(np.mean([r[f"coverage@{k}"] for r in results]))
+    # Breakdowns by mask count (1 vs >1) for readability.
+    single = [r for r in results if r["n_masks"] == 1]
+    multi = [r for r in results if r["n_masks"] > 1]
+    if single:
+        out["single_mask"] = {
+            "n": len(single),
+            "set_acc@1": float(np.mean([r["set_acc@1"] for r in single])),
+        }
+    if multi:
+        out["multi_mask"] = {
+            "n": len(multi),
+            "set_acc@1": float(np.mean([r["set_acc@1"] for r in multi])),
+            "coverage@1": float(np.mean([r["coverage@1"] for r in multi])),
+        }
+    return out
 
 
 def evaluate(checkpoint: str, dataset_dir: Path, backend: str, top_k: int,
@@ -192,20 +261,15 @@ def evaluate(checkpoint: str, dataset_dir: Path, backend: str, top_k: int,
             continue
         lang_results = [by_id[r["id"]] for r in per_lang_records[lang] if r["id"] in by_id]
 
-        metrics = compute_all_metrics(lang_results, scorer=scorer)
-        metrics["language"] = lang
-        metrics["n_samples"] = len(lang_results)
+        legacy = compute_all_metrics(lang_results, scorer=scorer)
+        set_metrics = _aggregate_set_metrics(lang_results)
 
-        # Positional-accuracy summary for multi-mask rows (EN/ES/FA test).
-        multi = [r for r in lang_results if r.get("n_masks", 1) > 1 and r.get("positional")]
-        if multi:
-            pos_acc = sum(r["positional"]["per_position_acc"] for r in multi) / len(multi)
-            strict = sum(1 for r in multi if r["positional"]["matched"] == len(r["labels_full"])) / len(multi)
-            metrics["multi_mask"] = {
-                "n_rows": len(multi),
-                "per_position_acc": pos_acc,
-                "strict_all_positions_acc": strict,
-            }
+        metrics = {
+            "language": lang,
+            "n_samples": len(lang_results),
+            **set_metrics,
+            "legacy_first_label": legacy,  # acc@k, mrr, sim@k on labels[0]
+        }
 
         per_lang_path = RESULTS_DIR / f"sft_{tag}_test_{lang}_metrics.json"
         with per_lang_path.open("w") as f:
@@ -216,8 +280,13 @@ def evaluate(checkpoint: str, dataset_dir: Path, backend: str, top_k: int,
             for r in lang_results:
                 f.write(json.dumps(r, ensure_ascii=False) + "\n")
         summary[lang] = metrics
-        print(f"[{lang}] n={metrics['n_samples']}  acc@1={metrics.get('acc@1', 0):.4f}  "
-              f"mrr={metrics.get('mrr', 0):.4f}")
+        print(
+            f"[{lang}] n={metrics['n_samples']}  "
+            f"set_acc@1={metrics['set_acc@1']:.4f}  "
+            f"coverage@1={metrics['coverage@1']:.4f}  "
+            f"legacy_acc@1={legacy.get('acc@1', 0):.4f}  "
+            f"mrr={legacy.get('mrr', 0):.4f}"
+        )
 
     combined_path = RESULTS_DIR / f"sft_{tag}_all_metrics.json"
     with combined_path.open("w") as f:

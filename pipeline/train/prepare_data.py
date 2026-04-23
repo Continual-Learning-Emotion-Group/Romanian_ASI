@@ -10,20 +10,24 @@ its `language`, then:
 
 Each row exposes:
     input:    str, sentence containing one or more "[MASK]" tokens
-    label:    str, supervision target — joined list of labels when the number
-              of labels equals the number of masks; otherwise `labels[0]` as
-              a fallback for rows with mismatched label/mask counts
-    labels:   list[str], the full label list (for eval positional matching)
+    label:    str, supervision target — the `labels` list space-joined verbatim
+    labels:   list[str], the full label list (set of distinct affective
+              expressions that fill the mask positions)
     n_masks:  int, number of [MASK] tokens in the input (useful for analysis)
     language: str, one of ro|en|es|fa|hi
     id:       str, stable sample id
 
-Multi-mask rows:
-- EN and ES multi-mask rows mostly have matching-length label lists: the
-  assistant turn becomes "word1 word2 word3" so the model emits one word per
-  [MASK] in order.
-- FA multi-mask rows always have a single label; we supervise with labels[0]
-  and accept the ambiguity for this run.
+Supervision semantics — why target = " ".join(labels):
+- The `labels` column is the *set of distinct affective expressions* that fill
+  the [MASK] positions, in order of first appearance. When len(labels) ==
+  n_masks each mask is a distinct expression (EN/ES matched rows). When
+  len(labels) < n_masks the same expression covers multiple masks
+  (e.g. EN "feel [MASK]. Or rather I am [MASK]" with labels=['unfit']).
+  FA multi-word labels like "دلم تنگ شده" are single idiomatic expressions
+  that occupy one [MASK] span.
+- Joining all labels with a space gives a uniform contract the prompt can
+  describe: "output the distinct expressions in order of first appearance,
+  space-separated." No row is dropped; no row carries contradictory signal.
 
 Usage:
     python -m pipeline.train.prepare_data --output /tmp/asi_multilingual
@@ -54,13 +58,13 @@ def _parse_labels(raw: str) -> list[str]:
 def _supervision_target(labels: list[str], n_masks: int) -> str:
     """Build the assistant turn text.
 
-    If labels list length matches the number of masks, join them in order
-    (one word per mask). Otherwise fall back to labels[0] — the mismatched
-    rows get ambiguous supervision, which we accept for this run.
+    `labels` is the set of distinct affective expressions that fill the mask
+    positions, in order of first appearance. We always space-join the full
+    list, whether or not len(labels) matches n_masks — the model learns to
+    emit the set, not enumerate per-position.
     """
-    if n_masks >= 1 and len(labels) == n_masks:
-        return " ".join(labels)
-    return labels[0]
+    del n_masks  # kept in dataset rows for analysis, not used for supervision
+    return " ".join(labels)
 
 
 def _load_csv(path: Path, language: str) -> list[dict]:

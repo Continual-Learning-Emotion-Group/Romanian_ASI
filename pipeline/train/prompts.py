@@ -21,9 +21,11 @@ from typing import Any
 import torch
 
 SYSTEM_PROMPT = (
-    "You are an affective-state identifier. Given a sentence with [MASK], "
-    "respond with only the single word that fills the mask — no explanation, "
-    "no punctuation."
+    "You are an affective-state identifier. Given a sentence with one or more "
+    "[MASK] positions, output the distinct affective expressions that fill "
+    "them, in order of first appearance, separated by a single space. "
+    "Expressions may be single words or short idiomatic phrases. "
+    "No explanation, no punctuation, no repeats."
 )
 
 MAX_INPUT_CHARS = 2200  # ≈700 Qwen tokens; chat template adds ~50 on top
@@ -144,45 +146,56 @@ def _sanity(model_name: str) -> None:
     if tok.pad_token_id is None:
         tok.pad_token = tok.eos_token
 
-    example_input = "Eram [MASK] de vedenia ei."
-    example_label = "uluita"
-    encoded = encode_example(tok, example_input, example_label)
+    cases = [
+        ("RO single-mask single-word",
+         "Eram [MASK] de vedenia ei.",
+         "uluita"),
+        ("EN multi-mask distinct labels (matched)",
+         "He didn't make me feel [MASK] nor [MASK].",
+         "loved disgusted"),
+        ("EN multi-mask repeated label (unique-set)",
+         "I feel [MASK]. Or rather, I am [MASK].",
+         "unfit"),
+        ("FA single-mask phrase label",
+         "این روزها آنقدر [MASK] که دیگر نمی‌دانم.",
+         "بغضم سنگین شده"),
+    ]
 
-    print("=== Full rendered prompt ===")
-    print(_apply_chat_template(tok, build_messages(example_input, example_label),
-                               add_generation_prompt=False))
-    print()
-
-    decoded_tokens = [tok.decode([t]) for t in encoded["input_ids"]]
-    print("=== Per-token label mask (IDs with loss on them) ===")
-    for i, (tok_str, lab) in enumerate(zip(decoded_tokens, encoded["labels"])):
-        mark = "LOSS" if lab != -100 else "    "
-        print(f"  {i:4d} {mark} {tok_str!r}")
-
-    n_loss = sum(1 for lab in encoded["labels"] if lab != -100)
-    n_total = len(encoded["labels"])
-    print(f"\nTokens with loss: {n_loss}/{n_total}")
-
-    # Qwen3's non-thinking mode still emits an empty `<think>\n\n</think>\n\n`
-    # stub in the assistant prefix; that is by design. What we must verify is
-    # that (a) no loss is taken on any thinking-related token and (b) the loss
-    # spans only the label + `<|im_end|>` (+ trailing newline).
     think_ids = {
         tok.convert_tokens_to_ids(t) for t in ("<think>", "</think>")
         if tok.convert_tokens_to_ids(t) != tok.unk_token_id
     }
-    for i, (input_id, lab) in enumerate(zip(encoded["input_ids"], encoded["labels"])):
-        if lab != -100 and input_id in think_ids:
-            raise AssertionError(f"loss taken on thinking token at position {i}")
 
-    loss_ids = [i for i, lab in zip(encoded["input_ids"], encoded["labels"]) if lab != -100]
-    loss_text = tok.decode(loss_ids)
-    print(f"Loss span decoded: {loss_text!r}")
-    assert example_label in loss_text, \
-        f"expected {example_label!r} inside loss span, got {loss_text!r}"
-    assert "<|im_end|>" in [tok.decode([i]) for i in loss_ids], \
-        f"expected <|im_end|> token in loss span, got ids {loss_ids}"
-    print("Loss spans only the assistant turn ✓")
+    for name, example_input, example_label in cases:
+        print(f"\n=== {name} ===")
+        print(f"input: {example_input!r}")
+        print(f"target: {example_label!r}")
+
+        encoded = encode_example(tok, example_input, example_label)
+        loss_ids = [i for i, lab in zip(encoded["input_ids"], encoded["labels"]) if lab != -100]
+        loss_text = tok.decode(loss_ids)
+
+        n_loss = sum(1 for lab in encoded["labels"] if lab != -100)
+        print(f"tokens with loss: {n_loss}/{len(encoded['labels'])}")
+        print(f"loss span decoded: {loss_text!r}")
+
+        for i, (input_id, lab) in enumerate(zip(encoded["input_ids"], encoded["labels"])):
+            if lab != -100 and input_id in think_ids:
+                raise AssertionError(f"{name}: loss taken on thinking token at position {i}")
+
+        # The label text must appear (with whitespace tolerance) inside the
+        # loss span. We compare on collapsed whitespace since tokenizers may
+        # emit the label as "loved disgusted" or " loved disgusted".
+        lab_norm = " ".join(example_label.split())
+        span_norm = " ".join(loss_text.split())
+        assert lab_norm in span_norm, \
+            f"{name}: expected {lab_norm!r} inside {span_norm!r}"
+        decoded_tokens = [tok.decode([i]) for i in loss_ids]
+        assert "<|im_end|>" in decoded_tokens, \
+            f"{name}: expected <|im_end|> in loss span, got {decoded_tokens!r}"
+        print(f"✓ loss spans only the assistant turn")
+
+    print("\nAll sanity cases passed ✓")
 
 
 def main() -> None:
