@@ -53,3 +53,7 @@ class TrainConfig:
 
     # Reproducibility -----------------------------------------------------
     seed: int = 42
+
+    # CLI-only (not hyperparameters) --------------------------------------
+    max_train_samples: int | None = None
+    max_val_samples: int | None = None
