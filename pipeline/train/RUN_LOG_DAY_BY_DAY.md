@@ -140,31 +140,78 @@ python -m pipeline.train.prompts --sanity   # confirm chat template + loss maski
 
 ## Environment
 
-Inherited from the previous Qwen3.5 session, see `pipeline/ft_qwen/RUN_LOG.md`
-for the full install order. Critical pieces:
+### Important: `requirements.txt` at the repo root is wrong for this run
 
-- Python 3.12 venv at `/local/nlp/aij2115/ro_asi_ft/venv/`
-- `torch == 2.11.0+cu128` (must use `pip install --index-url https://download.pytorch.org/whl/cu128 torch`)
-- `transformers >= 5.6.0` (5.0.0 doesn't recognize `qwen3_5` model_type)
-- `flash-linear-attention == 0.5.0` + `causal-conv1d == 1.6.1` (built from
-  source with system CUDA 12.9; needed for the Qwen3.5 hybrid attention
-  fast path)
-- HF cache at `/local/nlp/aij2115/ro_asi_ft/hf_cache/`
-- **vllm not installed** — eval falls back to the slower `transformers`
-  backend (~5× slower but works). Installing vllm on this torch+CUDA combo
-  has been finicky.
+The root `requirements.txt` pins `torch==2.2.2` and `transformers==5.0.0`.
+Both are incompatible with Qwen3.5 — transformers 5.0.0 raises
+`Unrecognized model_type: qwen3_5`, and torch 2.2.2 is too old for the
+`cu128` wheels we need.
 
-Required env vars per launch (set in the launch scripts):
+The authoritative pin list from the actual tigerfish venv is committed at
+`requirements-tigerfish-day-by-day.txt` (208 lines, captured from the
+wandb offline-run requirements snapshot). Use that, not root
+`requirements.txt`.
+
+### Install order that works (Python 3.12, CUDA 12.x)
 
 ```bash
-export HF_HOME=/local/nlp/aij2115/ro_asi_ft/hf_cache
+# 1. Fresh venv
+python3.12 -m venv venv && source venv/bin/activate
+pip install --upgrade pip wheel packaging setuptools
+
+# 2. torch FIRST (cu128 wheel; other libs need it present for their builds)
+pip install --index-url https://download.pytorch.org/whl/cu128 torch==2.11.0
+
+# 3. Main stack (transformers must be 5.6.0+ for qwen3_5; not 5.0.0)
+pip install 'transformers>=5.6.0' accelerate==1.13.0 datasets==4.5.0 \
+            wandb==0.26.0 pyyaml
+
+# 4. Qwen3.5 fast-path libs (hybrid attention: every 4th layer full_attn,
+#    rest linear_attn via fla + conv1d). Needs system CUDA for the
+#    source build of causal-conv1d — SDPA fallback works without these
+#    but is ~3–5× slower.
+pip install flash-linear-attention==0.5.0 fla-core==0.5.0 einops==0.8.2
+
+export CUDA_HOME=/usr/local/cuda-12
+export PATH=$CUDA_HOME/bin:$PATH
+pip install causal-conv1d==1.6.1 --no-build-isolation   # ~3-5 min build
+
+# 5. (Optional) vllm for fast eval. We did NOT install it for this run
+#    because it's finicky on torch 2.11+cu128; we fell back to the
+#    transformers backend (~5× slower, self-contained).
+```
+
+### Critical env vars per launch
+
+Set in `run/tigerfish_day_by_day_launch.sh` — keep them if you write a
+different launcher:
+
+```bash
+export HF_HOME=/path/to/hf_cache
 export TRANSFORMERS_CACHE=$HF_HOME
-export CUDA_VISIBLE_DEVICES=1
-export WANDB_MODE=offline
-export TOKENIZERS_PARALLELISM=false
-export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True   # critical, see below
+export CUDA_VISIBLE_DEVICES=1                         # pin to one GPU
+export WANDB_MODE=offline                             # or set WANDB_API_KEY
+export TOKENIZERS_PARALLELISM=false                   # silence forked-proc warning
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True   # prevents the day-1 OOM
 export NVIDIA_TF32_OVERRIDE=1
 ```
+
+### On-disk layout during a run
+
+```
+$BASE/
+├── repo/                                   # git clone, checkout day-by-day
+├── venv/                                   # the Python 3.12 env built above
+├── hf_cache/                               # HF_HOME — ~16 GB after first Qwen3.5-4B download
+├── data/asi_day_by_day/                    # prepare_data.py --per-language-splits output, ~40 MB
+└── runs/day_by_day/                        # outputs: per-day dirs, train.log, wandb/
+    ├── day5_ro/final/                      # ~8 GB per day, only last survives cleanup
+    └── ...
+```
+
+Peak `/local` usage during a run: ~45 GB (base model cache + one day's
+trainer state + two days' final/ dirs during the chain handoff). Leave
+≥60 GB headroom.
 
 ## Lessons learned (the painful ones)
 
