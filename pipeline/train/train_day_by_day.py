@@ -30,6 +30,7 @@ from __future__ import annotations
 import argparse
 import gc
 import os
+import shutil
 import subprocess
 import sys
 from dataclasses import replace
@@ -201,6 +202,14 @@ def run_one_day(
     tokenizer.save_pretrained(str(final_dir))
     print(f"[{day_tag}] saved end-of-day model → {final_dir}")
 
+    # Free disk: drop the Trainer's mid-training checkpoint dir now that we
+    # have the clean `final/` snapshot. Each Qwen3.5-4B checkpoint is ~14 GB,
+    # so leaving Trainer's dir around doubles per-day disk pressure.
+    trainer_dir = day_dir / "trainer"
+    if trainer_dir.exists():
+        shutil.rmtree(trainer_dir, ignore_errors=True)
+        print(f"[{day_tag}] removed mid-training trainer dir")
+
     # Release training-side GPU memory before vLLM eval.
     del trainer
     del model
@@ -235,11 +244,17 @@ def main() -> None:
     parser.add_argument("--start-from", type=int, default=1,
                         help="1-indexed day to start from. Resumes from that day's "
                              "predecessor's final/ checkpoint.")
+    parser.add_argument("--keep-checkpoints", choices=["last", "all"], default="last",
+                        help="last: only keep the most recent day's final/ "
+                             "(deletes prev day's after the new day finishes "
+                             "training+eval). all: keep every day's final/ (~14 GB each).")
     args, extra_cli = parser.parse_known_args()
 
     config = load_yaml_config(args.config)
     base_training_args, cfg = build_training_args(config, extra_cli)
-    cfg["runs_root"] = config.get("runs_root", base_training_args.output_dir)
+    # cfg already has CLI overrides for CONFIG_ONLY_KEYS merged in; only fall
+    # back to output_dir if neither YAML nor CLI provided runs_root.
+    cfg.setdefault("runs_root", base_training_args.output_dir)
 
     order = parse_language_order(args.language_order)
     print(f"Language order: {' → '.join(order)}")
@@ -272,6 +287,17 @@ def main() -> None:
         )
         if not args.skip_eval:
             run_eval(final_dir, cfg["dataset_dir"], f"day{day_idx}_{lang}")
+
+        # Disk hygiene: drop the previous day's full directory now that the
+        # new day's final/ exists, has been used to init this day, AND we've
+        # finished eval for this day. The metrics JSONs live under
+        # pipeline/data/eval_results/ and are independent of the checkpoint.
+        if args.keep_checkpoints == "last" and prev_ckpt is not None:
+            prev_day_dir = Path(prev_ckpt).parent
+            if prev_day_dir.exists():
+                shutil.rmtree(prev_day_dir, ignore_errors=True)
+                print(f"[day{day_idx}_{lang}] removed previous day's dir: {prev_day_dir}")
+
         prev_ckpt = str(final_dir)
 
     print(f"\nAll {len(order)} days complete. Final ckpt: {prev_ckpt}")
