@@ -20,9 +20,9 @@ gradient_checkpointing: true
 gradient_checkpointing_kwargs:
   use_reentrant: false
 
-per_device_train_batch_size: 4
-gradient_accumulation_steps: 2
-per_device_eval_batch_size: 8
+per_device_train_batch_size: 8
+gradient_accumulation_steps: 1
+per_device_eval_batch_size: 16
 num_train_epochs: 3
 learning_rate: 2.0e-5
 lr_scheduler_type: cosine
@@ -53,5 +53,5 @@ data_seed: 42
 deepspeed: pipeline/train/configs/deepspeed_zero3.json
 
 # --- Misc ---
-dataloader_num_workers: 2
+dataloader_num_workers: 4
 remove_unused_columns: false
