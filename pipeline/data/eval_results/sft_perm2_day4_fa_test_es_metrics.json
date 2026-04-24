@@ -1,0 +1,26 @@
+{
+  "language": "es",
+  "n_samples": 1000,
+  "set_acc@1": 0.179,
+  "coverage@1": 0.1805,
+  "set_acc@3": 0.179,
+  "coverage@3": 0.1805,
+  "set_acc@5": 0.179,
+  "coverage@5": 0.1805,
+  "single_mask": {
+    "n": 900,
+    "set_acc@1": 0.17222222222222222
+  },
+  "multi_mask": {
+    "n": 100,
+    "set_acc@1": 0.24,
+    "coverage@1": 0.255
+  },
+  "legacy_first_label": {
+    "n_samples": 1000,
+    "acc@1": 0.181,
+    "acc@3": 0.181,
+    "acc@5": 0.181,
+    "mrr": 0.181
+  }
+}
