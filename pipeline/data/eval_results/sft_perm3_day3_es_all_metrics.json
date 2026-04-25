@@ -1,0 +1,125 @@
+{
+  "checkpoint": "/local/nlp/aij2115/runs/day_by_day_perm3/day3_es/final",
+  "per_language": {
+    "ro": {
+      "language": "ro",
+      "n_samples": 1000,
+      "set_acc@1": 0.093,
+      "coverage@1": 0.093,
+      "set_acc@3": 0.093,
+      "coverage@3": 0.093,
+      "set_acc@5": 0.093,
+      "coverage@5": 0.093,
+      "single_mask": {
+        "n": 1000,
+        "set_acc@1": 0.093
+      },
+      "legacy_first_label": {
+        "n_samples": 1000,
+        "acc@1": 0.091,
+        "acc@3": 0.091,
+        "acc@5": 0.091,
+        "mrr": 0.091
+      }
+    },
+    "en": {
+      "language": "en",
+      "n_samples": 1000,
+      "set_acc@1": 0.177,
+      "coverage@1": 0.178,
+      "set_acc@3": 0.177,
+      "coverage@3": 0.178,
+      "set_acc@5": 0.177,
+      "coverage@5": 0.178,
+      "single_mask": {
+        "n": 865,
+        "set_acc@1": 0.15144508670520232
+      },
+      "multi_mask": {
+        "n": 135,
+        "set_acc@1": 0.34074074074074073,
+        "coverage@1": 0.34814814814814815
+      },
+      "legacy_first_label": {
+        "n_samples": 1000,
+        "acc@1": 0.174,
+        "acc@3": 0.174,
+        "acc@5": 0.174,
+        "mrr": 0.174
+      }
+    },
+    "es": {
+      "language": "es",
+      "n_samples": 1000,
+      "set_acc@1": 0.266,
+      "coverage@1": 0.266,
+      "set_acc@3": 0.266,
+      "coverage@3": 0.266,
+      "set_acc@5": 0.266,
+      "coverage@5": 0.266,
+      "single_mask": {
+        "n": 900,
+        "set_acc@1": 0.25333333333333335
+      },
+      "multi_mask": {
+        "n": 100,
+        "set_acc@1": 0.38,
+        "coverage@1": 0.38
+      },
+      "legacy_first_label": {
+        "n_samples": 1000,
+        "acc@1": 0.262,
+        "acc@3": 0.262,
+        "acc@5": 0.262,
+        "mrr": 0.262
+      }
+    },
+    "fa": {
+      "language": "fa",
+      "n_samples": 1000,
+      "set_acc@1": 0.395,
+      "coverage@1": 0.395,
+      "set_acc@3": 0.395,
+      "coverage@3": 0.395,
+      "set_acc@5": 0.395,
+      "coverage@5": 0.395,
+      "single_mask": {
+        "n": 833,
+        "set_acc@1": 0.37334933973589435
+      },
+      "multi_mask": {
+        "n": 167,
+        "set_acc@1": 0.5029940119760479,
+        "coverage@1": 0.5029940119760479
+      },
+      "legacy_first_label": {
+        "n_samples": 1000,
+        "acc@1": 0.188,
+        "acc@3": 0.188,
+        "acc@5": 0.188,
+        "mrr": 0.188
+      }
+    },
+    "hi": {
+      "language": "hi",
+      "n_samples": 1000,
+      "set_acc@1": 0.081,
+      "coverage@1": 0.081,
+      "set_acc@3": 0.081,
+      "coverage@3": 0.081,
+      "set_acc@5": 0.081,
+      "coverage@5": 0.081,
+      "single_mask": {
+        "n": 1000,
+        "set_acc@1": 0.081
+      },
+      "legacy_first_label": {
+        "n_samples": 1000,
+        "acc@1": 0.081,
+        "acc@3": 0.081,
+        "acc@5": 0.081,
+        "mrr": 0.081
+      }
+    }
+  }
+}
