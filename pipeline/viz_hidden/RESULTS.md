@@ -36,6 +36,11 @@ Russell's circumplex (a valence×arousal ring)?
 - `fig_ro_canon_headline_layer16.png` — cloud + centroids + clean valence gradient
 - `fig_ro_canon_centroids_layer16.png` — per-word + per-emotion centroids
 - `fig_ro_canon_layer_sweep.png` — silhouette/valence by layer
+- `fig_ro_canon_scree_L8.png` — variance explained across the 8 emotion centroids
+  (same analysis as the Step-2 scree, for direct comparison): even the basic 8
+  spread over **~5-6 effective dims** (PC1 27%, **5 PCs for 80%**, all 7 axes
+  split-half reliable) — the valence×arousal plane is the largest, but a
+  *partial*, slice. Contrast Step-2's ~89-state scree (PC1 12%, 16 PCs for 80%).
 
 ## Caveats (state these)
 - Arousal axis is *identified* by picking the PC best correlated with canonical
@@ -86,10 +91,27 @@ higher-dimensional shape?
    (excited-appetitive positive). An approach/appraisal-like axis (loosely PAD
    "dominance").
 
+## Projection onto the 8 basic-emotion centroids (`fillin_project8.py`)
+Instead of a 2-axis plane, express each broader state in the basis of the 8
+centroids directly (a 7-dim emotion space) and split it into a blend + a residual:
+- **Blends are interpretable:** `suparat` = anger .76 + sadness .41; `frustrat` =
+  anger .70 + sadness .40; `ingrozitor` = fear .59 + disgust .53; `necajit` =
+  sadness .63 + disgust .51. Nearest-anchor matches RoEmoLex family 45% (top-2 70%).
+- **But most content is off the basic 8:** the 8-centroid span (rank 7) captures
+  only **31.5%** (L16) / 22.3% (L8) of broader-state variance — **~68% residual**,
+  and that residual is split-half reliable (**0.98**), i.e. genuine affective signal
+  the basic 8 cannot express.
+- **The residual is theoretically meaningful:** the most off-basic-8 states are
+  `vinovat` (guilt), `rusinat`/`jenat` (shame/embarrassment), `calm`/`relaxat`
+  (low-arousal positive), `extraordinar`/`excelent` (evaluation) — exactly the
+  self-conscious / evaluative states Plutchik's 8 omit. (Caveat: residual also
+  absorbs any non-affective lexical structure the adjective frame left in.)
+
 ## Key figures (`out/figs/`)
 - `fig_fillin_plane_L8.png` — 8 anchors (○) + 60 broader states (□) in the plane
 - `fig_fillin_scree_L8.png` — flat centroid spectrum (intrinsic dimensionality)
-- `metrics_fillin_L8.json` — generalization r, reliable dim, plane fraction
+- `fig_project8_heatmap_L16.png` — broader states' 8-emotion blend + residual bars
+- `metrics_fillin_L8.json`, `metrics_project8_L16.json` — all numbers
 
 ## Caveats
 - RoEmoLex family argmax is noisy for some words (`disperat`→fear vs bench sadness,

@@ -17,7 +17,11 @@ Old experiments and scripts are archived in `deprecated/`.
 8. [Human Evaluation (`human_eval/`)](#human-evaluation-human_eval)
    - [Benchmark Construction](#benchmark-construction-build_benchmarkpy)
 9. [Zero-Shot Evaluation (`eval/`)](#zero-shot-evaluation-eval)
-10. [External Data (`seed/`)](#external-data-seed)
+10. [Fine-Tuning](#fine-tuning)
+    - [mT5-Large SFT (`ft_mt5/`)](#mt5-large-sft-ft_mt5)
+    - [Qwen3.5-4B Multilingual SFT (`ft_qwen_mixed/`)](#qwen35-4b-multilingual-sft-ft_qwen_mixed)
+    - [Qwen3.5-4B Day-by-Day Sequential SFT (`ft_qwen_day_by_day/`)](#qwen35-4b-day-by-day-sequential-sft-ft_qwen_day_by_day)
+11. [External Data (`seed/`)](#external-data-seed)
 
 ```
 pipeline/
@@ -99,6 +103,31 @@ pipeline/
 │   ├── eval_generative.py             # Generative evaluation (mT5, vLLM)
 │   ├── translate.py                   # NLLB-200 RO→EN translation
 │   └── report.py                      # Comparison tables (markdown/LaTeX)
+├── ft_mt5/                            # mT5-large SFT (MASIVE-style)
+│   ├── README.md                      # Full setup + run instructions (seahorse)
+│   ├── RESULTS.md                     # Training results
+│   ├── resplit.py                     # 85/5/10 train/val/test resplit
+│   ├── truncate.py                    # Sentence-level truncation to 512 mT5 tokens
+│   ├── build_training_data.py         # [MASK] → <extra_id_0> format
+│   ├── config.py                      # TrainConfig (hyperparameters)
+│   └── train.py                       # HF Seq2SeqTrainer loop
+├── ft_qwen_mixed/                     # Qwen3.5-4B multilingual SFT (scrambled)
+│   ├── prepare_data.py                # Build 5-language DatasetDict from CSVs
+│   ├── prompts.py                     # Chat template + loss masking
+│   ├── train.py                       # HF Trainer + DeepSpeed ZeRO-3
+│   ├── eval_sft.py                    # Per-language test evaluation
+│   └── configs/
+│       ├── qwen3_5_4b_full_ft.yaml    # Training config (multi-GPU)
+│       └── deepspeed_zero3.json       # DeepSpeed ZeRO-3 config
+├── ft_qwen_day_by_day/                # Qwen3.5-4B sequential per-language SFT
+│   ├── RUN_LOG.md                     # 5×5 results matrix + lessons learned
+│   ├── prepare_data.py                # Per-language DatasetDict splits
+│   ├── prompts.py                     # Chat template + loss masking
+│   ├── train.py                       # Outer per-day training loop
+│   ├── eval_sft.py                    # Per-day eval on all 5 languages
+│   ├── requirements-tigerfish.txt     # Authoritative pin list (not root reqs)
+│   └── configs/
+│       └── qwen3_5_4b_day_by_day.yaml # Single-GPU config (no DeepSpeed)
 └── seed_enrichment/                   # Seed enrichment
     ├── run.py                         # CLI: runs both methods on any source
     ├── bootstrapping.py               # MASIVE-style "I feel X and Y"
@@ -962,6 +991,190 @@ gender agreement needed). Qwen is the only generative model with no gender bias
 | `eval/eval_generative.py` | Zero-shot generative evaluation (mT5, vLLM decoder-only) |
 | `eval/translate.py` | NLLB-200 RO→EN translation with two-pass mask handling |
 | `eval/report.py` | Aggregate comparison tables (markdown/LaTeX) |
+
+## Fine-Tuning
+
+Three fine-tuning pipelines live alongside the zero-shot baselines. All three
+train on the benchmark (or a multilingual extension of it) and are evaluated
+with the same metrics used in zero-shot evaluation (`eval_sft.py` scripts for
+Qwen runs; `pipeline.eval.eval_generative` for mT5).
+
+| Directory | Model | Recipe | Hardware |
+|-----------|-------|--------|----------|
+| `ft_mt5/` | `google/mt5-large` (1.2B) | MASIVE-style generative SFT on RO only | 1× A6000 48GB (seahorse) |
+| `ft_qwen_mixed/` | `Qwen/Qwen3.5-4B` | Multilingual SFT, 5 languages scrambled | 4× A100 (piranha) + DeepSpeed ZeRO-3 |
+| `ft_qwen_day_by_day/` | `Qwen/Qwen3.5-4B` | Sequential per-language SFT (continual learning) | 1× A100-40GB (tigerfish) |
+
+> **Warning — requirements.txt at the repo root is wrong for fine-tuning.**
+> Root `requirements.txt` pins `transformers==5.0.0` and `torch==2.2.2`, both
+> incompatible with the training scripts. Each `ft_*/` module has its own
+> source-of-truth pin file (`ft_mt5/requirements.txt`,
+> `ft_qwen_day_by_day/requirements-tigerfish.txt`). Use those.
+
+### mT5-Large SFT (`ft_mt5/`)
+
+Replicates the MASIVE paper's generative SFT recipe on the Romanian ASI
+benchmark. Reuses the benchmark with an 85/5/10 resplit (seed-word-disjoint
+test set — unseen vocabulary evaluation).
+
+**Pipeline:**
+
+```
+benchmark_ro_asi.jsonl
+    ↓  ft_mt5/resplit.py       # 85/5/10 splits, seed-word-disjoint test
+splits/{train,val,test}.jsonl  # 45,181 / 2,658 / 5,315
+    ↓  ft_mt5/truncate.py      # sentence-level truncation to 512 mT5 tokens
+    ↓  ft_mt5/build_training_data.py  # [MASK] → <extra_id_0>; target = <extra_id_0> word <extra_id_1>
+    ↓  ft_mt5/train.py         # HF Seq2SeqTrainer, Adafactor, bf16
+runs/mt5-large-ro-asi/best/
+    ↓  pipeline.eval.eval_generative
+eval_results/gen_mt5-large-ro-asi_*
+```
+
+**Hyperparameters** (`ft_mt5/config.py`, from MASIVE Appendix D):
+
+| | Value |
+|---|---|
+| Optimizer | Adafactor (`scale_parameter=False`, `relative_step=False`) |
+| Learning rate | 1e-4, linear decay |
+| Weight decay | 0.01 |
+| Per-device batch size | 4 |
+| Epochs | 3 |
+| Max input / target tokens | 512 / 32 |
+| Precision | bf16 + TF32 matmul |
+
+**Quick commands** (see `ft_mt5/README.md` for full seahorse setup):
+
+```bash
+# Smoke test (<5 min on any GPU)
+python -m pipeline.ft_mt5.train \
+    --model google/mt5-small --max-train-samples 200 --max-val-samples 40 \
+    --num-train-epochs 1 --per-device-train-batch-size 2 \
+    --output-dir /tmp/mt5-smoke
+
+# Full run (~8–15 h on one A6000)
+python -m pipeline.ft_mt5.train \
+    --output-dir /local/nlp/$USER/ro_asi_ft/runs/mt5-large-ro-asi
+
+# Evaluate
+python -m pipeline.eval.eval_generative \
+    --model /local/nlp/$USER/ro_asi_ft/runs/mt5-large-ro-asi/best \
+    --split test --backend transformers --no-similarity
+```
+
+### Qwen3.5-4B Multilingual SFT (`ft_qwen_mixed/`)
+
+Full-parameter SFT on Qwen3.5-4B using a multilingual dataset that extends the
+Romanian benchmark to five languages (`ro`, `en`, `es`, `fa`, `hi`). Trains on
+all five simultaneously (scrambled batches) and evaluates per-language on
+held-out test sets.
+
+**Data format.** Each row holds a sentence with one or more `[MASK]` tokens and
+a `labels` list — the set of distinct affective expressions filling those
+masks, in order of first appearance. Supervision target is the space-joined
+label list (e.g. `labels=["trist"]` → target `"trist"`; FA multi-word idioms
+like `"دلم تنگ شده"` fill one mask span). The system prompt instructs the model
+to emit exactly this set, space-separated, no punctuation.
+
+**Pipeline:**
+
+```
+presentation_data/{ro,en,es,fa,hi}/{train,val,test}.csv
+    ↓  ft_qwen_mixed/prepare_data.py
+DatasetDict {train (~5K, shuffled), val (~1.2K), test_<lang> × 5}
+    ↓  ft_qwen_mixed/train.py  (chat template + loss masking on assistant turn)
+final/ checkpoint
+    ↓  ft_qwen_mixed/eval_sft.py
+per-language test metrics
+```
+
+**Hyperparameters** (`configs/qwen3_5_4b_full_ft.yaml`):
+
+| | Value |
+|---|---|
+| Precision | bf16 + TF32, gradient checkpointing |
+| Attention | `sdpa` (dispatches to FA2 on A100 + bf16) |
+| Per-device batch / grad accum | 2 / 2 |
+| Epochs | 3 |
+| Learning rate | 1e-5, cosine, warmup 0.03 |
+| Max sequence length | 1024 tokens (user content capped to ~2200 chars around the mask) |
+| Distributed | DeepSpeed ZeRO-3 across 4 GPUs |
+| Eval / save | Every 25 steps, best-checkpoint on `eval_loss` |
+
+**Commands:**
+
+```bash
+# Build DatasetDict (once)
+python -m pipeline.ft_qwen_mixed.prepare_data \
+    --output /local/nlp/$USER/data/asi_multilingual
+
+# Local 1-step dry run
+python -m pipeline.ft_qwen_mixed.train \
+    --config pipeline/ft_qwen_mixed/configs/qwen3_5_4b_full_ft.yaml \
+    --max_steps 2 --per_device_train_batch_size 2
+
+# Full multi-GPU run (see run/piranha_launch.sh)
+torchrun --nproc_per_node=4 -m pipeline.ft_qwen_mixed.train \
+    --config pipeline/ft_qwen_mixed/configs/qwen3_5_4b_full_ft.yaml
+
+# Per-language eval
+python -m pipeline.ft_qwen_mixed.eval_sft --checkpoint <final/> --language ro
+```
+
+### Qwen3.5-4B Day-by-Day Sequential SFT (`ft_qwen_day_by_day/`)
+
+Continual-learning variant of the mixed SFT run. Instead of scrambling all five
+languages into one training set, train one language per "day" with each day
+starting from the previous day's checkpoint. After each day, evaluate on **all
+5** language test sets to measure forgetting and cross-lingual transfer.
+Full details — 5×5 results matrix, environment pin list, lessons learned
+(OOM, vllm eval crash, disk hygiene) — are in `ft_qwen_day_by_day/RUN_LOG.md`.
+
+**Setup** (differs from `ft_qwen_mixed/`):
+
+- 1000 train + 250 val + 1000 test rows per language (200 val for `hi`),
+  produced by `prepare_data.py --per-language-splits`
+- 3 epochs per day, effective batch size 4 (`per_device_train_batch_size=1`,
+  `gradient_accumulation_steps=4`)
+- Single A100-40GB, no DeepSpeed, `load_best_model_at_end: false` (end-of-day
+  weights are the day-N+1 init)
+- Eval backend: `transformers` (vLLM not installed on tigerfish for this run)
+
+**Headline result — `set_acc@1` 5×5 matrix** (en→es→fa→hi→ro order, from `RUN_LOG.md`):
+
+```
+                test_en   test_es   test_fa   test_hi   test_ro
+day1 (en)       0.187*    0.149     0.114     0.117     0.121
+day2 (→es)      0.192     0.267*    0.112     0.088     0.090
+day3 (→fa)      0.166     0.231     0.445*    0.068     0.111
+day4 (→hi)      0.157     0.234     0.315     0.571*    0.174
+day5 (→ro)      0.144     0.167     0.358     0.533     0.443*
+```
+
+`*` = language trained that day. Diagonal jumps measure just-trained boost;
+column drift measures forgetting + cross-lingual transfer.
+
+**Commands:**
+
+```bash
+# Build per-language DatasetDict (once)
+python -m pipeline.ft_qwen_day_by_day.prepare_data \
+    --output /local/nlp/$USER/data/asi_day_by_day --per-language-splits
+
+# Full 5-day run (~2.5–3 h on one A100-40GB)
+bash run/tigerfish_day_by_day_launch.sh
+
+# Override permutation
+LANGUAGE_ORDER=ro,hi,fa,es,en bash run/tigerfish_day_by_day_launch.sh
+
+# Auto-resume from highest day with saved final/ (retries + backoff)
+bash run/tigerfish_day_by_day_resume.sh
+```
+
+Outputs committed under `runs/day_by_day/` (logs, offline wandb) and
+`pipeline/data/eval_results/sft_day{1..5}_{lang}_test_{lang}_metrics.json`.
+Model checkpoints (~8 GB each) are not committed; only the last day's `final/`
+typically survives the disk-hygiene cleanup chain.
 
 ## External Data (`seed/`)
 

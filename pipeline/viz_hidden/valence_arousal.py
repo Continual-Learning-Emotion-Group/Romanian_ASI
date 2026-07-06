@@ -20,6 +20,16 @@ VAL = {"joy": .8, "trust": .5, "anticipation": .3, "surprise": 0., "fear": -.65,
 ARO = {"joy": .5, "trust": -.1, "anticipation": .45, "surprise": .85, "fear": .8, "anger": .7, "disgust": .3, "sadness": -.4}
 
 
+def fit_circle(cents):
+    """Kasa algebraic circle fit through the per-emotion centroids -> (cx, cy, r)."""
+    P = np.array([cents[e] for e in WHEEL])
+    x, y = P[:, 0], P[:, 1]
+    A = np.c_[2 * x, 2 * y, np.ones(len(x))]
+    b = x**2 + y**2
+    cx, cy, c = np.linalg.lstsq(A, b, rcond=None)[0]
+    return float(cx), float(cy), float(np.sqrt(c + cx**2 + cy**2))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--npz", required=True); ap.add_argument("--meta", required=True)
@@ -52,10 +62,15 @@ def main():
     for e in WHEEL:
         m = lab == e
         ax.scatter(xv[m], ya[m], s=9, alpha=0.2, color=COLORS[e], linewidths=0)
+    # best-fit circle through the 8 centroids -> makes the ring apparent
+    cx, cy, r = fit_circle(cents)
+    ax.add_patch(plt.Circle((cx, cy), r, fill=False, ls="--", color="0.4", lw=1.8, zorder=4))
+    ax.scatter([cx], [cy], marker="+", s=90, color="0.4", zorder=4)  # ring center
     for e in WHEEL:
         ax.scatter(*cents[e], s=300, color=COLORS[e], edgecolor="k", linewidths=1.6, zorder=5)
         ax.annotate(e, cents[e], fontsize=12, fontweight="bold", ha="center", va="center", zorder=6)
     ax.axhline(0, color="0.7", lw=.8); ax.axvline(0, color="0.7", lw=.8)
+    ax.set_aspect("equal")  # equal scaling so the fitted circle reads as a circle
     ax.set_xlabel(f"valence axis (PC{vpc}, |r|={vc[vpc]:.2f})")
     ax.set_ylabel(f"arousal axis (PC{apc}, |r|={ac[apc]:.2f})")
     ax.set_title(f"{args.lang.upper()} layer {args.layer}: emotions in valence×arousal PC plane\n"

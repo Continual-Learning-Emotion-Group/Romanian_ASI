@@ -98,15 +98,15 @@ def plot_headline(X, labels, valence, layer, outdir, lang):
         if m.any():
             ax.scatter(z[m, 0], z[m, 1], s=8, alpha=0.18, color=COLORS[e], linewidths=0)
     cents = centroids(z[:, :2], labels)
-    ring = [cents[e] for e in WHEEL if e in cents] + [cents[WHEEL[0]]]
-    ring = np.array(ring)
-    ax.plot(ring[:, 0], ring[:, 1], "-", color="0.4", lw=1.2, zorder=3)
+    resid, (cx, cy, r) = circle_residual(cents)
+    # best-fit circle through the centroids (no wheel-order polygon) so it is
+    # visually apparent whether the centroids themselves lie on a circle
+    ax.add_patch(plt.Circle((cx, cy), r, fill=False, ls="-", color="0.45", lw=1.6, zorder=3))
+    ax.scatter([cx], [cy], marker="+", s=90, color="0.45", zorder=3)  # circle center
     for e, c in cents.items():
         ax.scatter(*c, s=260, color=COLORS[e], edgecolor="black", linewidths=1.5, zorder=4)
         ax.annotate(e, c, fontsize=11, fontweight="bold", ha="center", va="center",
                     xytext=(0, 0), textcoords="offset points", zorder=5)
-    resid, (cx, cy, r) = circle_residual(cents)
-    ax.add_patch(plt.Circle((cx, cy), r, fill=False, ls="--", color="0.6"))
     ax.set_title(f"{lang.upper()} layer {layer}: Plutchik-8 centroids\n"
                  f"circle residual={resid:.2f}  (0=perfect ring)")
     ax.set_xlabel(f"PC1 ({evr[0]*100:.1f}%)"); ax.set_ylabel(f"PC2 ({evr[1]*100:.1f}%)")
