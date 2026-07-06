@@ -78,3 +78,9 @@ logs/
 .pytest_cache/
 .coverage
 htmlcov/
+
+# viz_hidden: large & reproducible artifacts (keep code + out/figs/)
+pipeline/viz_hidden/out/*.npz
+pipeline/viz_hidden/out/*.jsonl
+pipeline/viz_hidden/out/.DS_Store
+.DS_Store
