@@ -44,7 +44,61 @@ Russell's circumplex (a valence×arousal ring)?
   `anger`/`sadness` arousal slightly off theory.
 - One model / one language / mid-layer. Arousal is the largest axis of variation.
 
+# Step 2 — Fill-in: do the broader ASI states fill the circle, or a complex shape?
+
+**Question (original thesis):** project the *full* affective-state vocabulary onto
+the Step-1 circumplex. Do the broader states fill the 2D disk, or live on a
+higher-dimensional shape?
+
+## Method
+- **Data:** full `benchmark_ro_asi_clean.jsonl` → **89 lexemes** (`fillin_select.py`):
+  29 **anchors** (canonical basic-8 synonyms) + **60 broader "fill" states**
+  (e.g. `entuziasmat, coplesit, recunoscator, vinovat, frustrat, disperat, calm`).
+  - **Adjective-frame only** (`pattern_used` ∈ copula/`ma simt` set) → POS held
+    constant, same discipline as Step 1. Noun frames (`mi-e frica`) dropped.
+  - **Gender-merged** to a lexeme key (fericit/fericita → fericit).
+  - **Independent labels** from RoEmoLex V3: family (argmax of 8 columns) + valence
+    (Pozitivitate−Negativitate); benchmark `emotion_category` kept as cross-check.
+  - 9,313 rows (cap 150/lexeme), same Qwen3.5-4B extraction (`run3`).
+- **Train/test framing:** the valence×arousal plane is defined from **anchors
+  only**; the 60 fill lexemes are **held out** and projected in.
+- **Rigor:** intrinsic dimensionality is measured with a **split-half reliability**
+  test (each lexeme's rows split in two) so only axes with reproducible
+  between-lexeme signal are counted — raw effective dim is noise-inflated.
+
+## Findings (layer-robust across layers 5–21)
+1. **Valence generalizes to unseen states.** Held-out fill lexemes land along the
+   anchor-defined valence axis consistent with independent RoEmoLex valence:
+   **r = 0.49 (L8) → 0.59–0.62 (L13–16)**. The circumplex valence axis is real
+   beyond the basic 8.
+2. **They do NOT collapse onto the 2D disk.** The valence×arousal plane holds only
+   **~20–25%** of between-lexeme centroid variance (uniform would be 6.7% → the
+   plane is ~3× denser, but still a minority). The centroid spectrum is flat
+   (PC1≈12%, 16 PCs for 80%).
+3. **The affective geometry is genuinely high-dimensional.** Split-half reliability
+   confirms **~50–60 reliable dimensions** (r>0.5), decaying to noise only past
+   PC~60 — reliable **effective dim ≈ 14–17**. Each state has a stable, distinct
+   position. → **the broader ASI states live on a complex, high-dimensional
+   manifold; the circumplex is a real but small 2D projection of it.**
+4. **A reliable 3rd axis beyond valence/arousal.** High: `furios, iritat, jignit,
+   rusinat, jenat, ofensat` (anger + shame/embarrassment — hostile/self-conscious);
+   low: `extraordinar, excelent, pasionat, entuziasmat, fermecat, curios`
+   (excited-appetitive positive). An approach/appraisal-like axis (loosely PAD
+   "dominance").
+
+## Key figures (`out/figs/`)
+- `fig_fillin_plane_L8.png` — 8 anchors (○) + 60 broader states (□) in the plane
+- `fig_fillin_scree_L8.png` — flat centroid spectrum (intrinsic dimensionality)
+- `metrics_fillin_L8.json` — generalization r, reliable dim, plane fraction
+
+## Caveats
+- RoEmoLex family argmax is noisy for some words (`disperat`→fear vs bench sadness,
+  `iubit`→joy vs bench trust); valence poles are the robust independent signal.
+- Arousal axis is anchor-defined only (RoEmoLex has no arousal) — fill words'
+  arousal position is model-derived, not independently validated.
+- `trust` is thin (3 lexemes). Plane figure is dense (60+ labels).
+
 ## Next
-- **Tier-2/3 fill-in** (original thesis): project broader ASI states onto this
-  circle — do they fill the disk or form a higher-dim manifold?
-- **English + Spanish** (MASIVE) with the same model → cross-lingual alignment.
+- **English + Spanish** (MASIVE) with the same model → cross-lingual alignment:
+  is the same ~15-dim structure shared across languages?
+- De-clutter the plane figure; optionally add a 3-D (valence, arousal, PC3) view.
