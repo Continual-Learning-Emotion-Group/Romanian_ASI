@@ -1,6 +1,11 @@
 import numpy as np
 
-from pipeline.affect_geometry.analyze import align_to_theory, best_pc_pair, geometry
+from pipeline.affect_geometry.analyze import (
+    align_to_theory,
+    best_pc_pair,
+    geometry,
+    procrustes_disparity,
+)
 from pipeline.affect_geometry.common import morphology_map, reconstruct, target_map
 
 
@@ -37,3 +42,9 @@ def test_alignment_and_geometry_are_similarity_invariant():
     assert stats["ring_rmse"] < 1e-7
     assert stats["angular_coverage"] > 0.999
 
+
+def test_procrustes_disparity_is_similarity_invariant():
+    reference = np.array([[1, 2], [-2, 1], [0, -1], [2, 0]], dtype=float)
+    rotation = np.array([[0, -1], [1, 0]], dtype=float)
+    transformed = 3.5 * reference @ rotation + np.array([4, 9])
+    assert procrustes_disparity(reference, transformed) < 1e-12

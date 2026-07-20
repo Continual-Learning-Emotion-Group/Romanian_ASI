@@ -8,18 +8,35 @@ from pathlib import Path
 
 import numpy as np
 from scipy.linalg import orthogonal_procrustes
-from scipy.spatial import procrustes
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
 from pipeline.affect_geometry.common import WHEEL, load_json
 
 
+def normalized_shape(points: np.ndarray):
+    centered = points - points.mean(0)
+    norm = np.linalg.norm(centered)
+    if norm == 0:
+        return None
+    return centered / norm
+
+
+def procrustes_disparity(reference: np.ndarray, model: np.ndarray):
+    """SciPy-compatible Procrustes disparity for two-dimensional shapes."""
+    reference_shape, model_shape = normalized_shape(reference), normalized_shape(model)
+    if reference_shape is None or model_shape is None:
+        return float("inf")
+    cross = model_shape.T @ reference_shape
+    nuclear_norm = np.linalg.svd(cross, compute_uv=False).sum()
+    return float(np.clip(1.0 - nuclear_norm * nuclear_norm, 0.0, 1.0))
+
+
 def best_pc_pair(category_scores: np.ndarray, theory: np.ndarray):
     best = None
     for first, second in itertools.combinations(range(category_scores.shape[1]), 2):
         model = category_scores[:, [first, second]]
-        disparity = float(procrustes(theory, model)[2])
+        disparity = procrustes_disparity(theory, model)
         candidate = (disparity, first, second)
         if best is None or candidate < best:
             best = candidate
@@ -78,7 +95,7 @@ def analyze_layer(centroids, emotions, theory, candidate_pcs):
     category_scores = np.asarray([
         projected[emotions == emotion].mean(0) for emotion in WHEEL
     ])
-    pc12_disparity = float(procrustes(theory, category_scores[:, :2])[2])
+    pc12_disparity = procrustes_disparity(theory, category_scores[:, :2])
     searched_disparity, first, second = best_pc_pair(category_scores, theory)
     total_variance = float(np.var(standardized[broader], axis=0, ddof=1).sum())
 
@@ -109,13 +126,26 @@ def analyze_layer(centroids, emotions, theory, candidate_pcs):
 
 def global_permutation_p(category_by_layer, theory, observed, candidate_pcs, permutations, seed):
     rng = np.random.default_rng(seed)
+    model_shapes = []
+    for scores in category_by_layer:
+        for first, second in itertools.combinations(range(candidate_pcs), 2):
+            shape = normalized_shape(scores[:, [first, second]])
+            if shape is not None:
+                model_shapes.append(shape)
+    model_shapes = np.asarray(model_shapes)
+    theory_shape = normalized_shape(theory)
+    permutations_array = np.asarray([rng.permutation(len(theory)) for _ in range(permutations)])
     null = np.empty(permutations)
-    for permutation in range(permutations):
-        permuted = theory[rng.permutation(len(theory))]
-        null[permutation] = min(
-            best_pc_pair(scores[:, :candidate_pcs], permuted)[0]
-            for scores in category_by_layer
-        )
+    chunk_size = 250
+    for start in range(0, permutations, chunk_size):
+        stop = min(start + chunk_size, permutations)
+        permuted = theory_shape[permutations_array[start:stop]]
+        cross = np.einsum("pki,nkj->npij", model_shapes, permuted, optimize=True)
+        frobenius_sq = np.square(cross).sum(axis=(2, 3))
+        determinant = cross[:, :, 0, 0] * cross[:, :, 1, 1] - cross[:, :, 0, 1] * cross[:, :, 1, 0]
+        nuclear_sq = frobenius_sq + 2.0 * np.abs(determinant)
+        disparities = np.clip(1.0 - nuclear_sq, 0.0, 1.0)
+        null[start:stop] = disparities.min(axis=1)
     return float((1 + np.sum(null <= observed)) / (permutations + 1)), null
 
 
@@ -212,4 +242,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
