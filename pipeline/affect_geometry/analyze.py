@@ -137,14 +137,8 @@ def analyze_layer(centroids, emotions, theory, candidate_pcs):
     return result, planes, category_scores
 
 
-def global_permutation_p(category_by_layer, theory, observed, candidate_pcs, permutations, seed):
+def permutation_p_from_shapes(model_shapes, theory, observed, permutations, seed):
     rng = np.random.default_rng(seed)
-    model_shapes = []
-    for scores in category_by_layer:
-        for first, second in itertools.combinations(range(candidate_pcs), 2):
-            shape = normalized_shape(scores[:, [first, second]])
-            if shape is not None:
-                model_shapes.append(shape)
     model_shapes = np.asarray(model_shapes)
     theory_shape = normalized_shape(theory)
     permutations_array = np.asarray([rng.permutation(len(theory)) for _ in range(permutations)])
@@ -160,6 +154,21 @@ def global_permutation_p(category_by_layer, theory, observed, candidate_pcs, per
         disparities = np.clip(1.0 - nuclear_sq, 0.0, 1.0)
         null[start:stop] = disparities.min(axis=1)
     return float((1 + np.sum(null <= observed)) / (permutations + 1)), null
+
+
+def global_pair_search_permutation_p(category_by_layer, theory, observed, candidate_pcs, permutations, seed):
+    model_shapes = []
+    for scores in category_by_layer:
+        for first, second in itertools.combinations(range(candidate_pcs), 2):
+            shape = normalized_shape(scores[:, [first, second]])
+            if shape is not None:
+                model_shapes.append(shape)
+    return permutation_p_from_shapes(model_shapes, theory, observed, permutations, seed)
+
+
+def global_pc12_permutation_p(category_by_layer, theory, observed, permutations, seed):
+    model_shapes = [normalized_shape(scores[:, :2]) for scores in category_by_layer]
+    return permutation_p_from_shapes(model_shapes, theory, observed, permutations, seed)
 
 
 def main():
@@ -196,8 +205,10 @@ def main():
         category_by_layer.append(category_scores)
     best_index = min(range(len(rows)), key=lambda index: rows[index]["searched_disparity"])
     best = rows[best_index]
+    best_pc12_index = min(range(len(rows)), key=lambda index: rows[index]["pc1_pc2_disparity"])
+    best_pc12 = rows[best_pc12_index]
     permutations = int(config["analysis"]["permutations"])
-    global_p, null = global_permutation_p(
+    global_p, null = global_pair_search_permutation_p(
         category_by_layer,
         theory,
         best["searched_disparity"],
@@ -205,12 +216,22 @@ def main():
         permutations,
         int(config["random_seed"]),
     )
+    global_pc12_p, pc12_null = global_pc12_permutation_p(
+        category_by_layer,
+        theory,
+        best_pc12["pc1_pc2_disparity"],
+        permutations,
+        int(config["random_seed"]),
+    )
     result = {
         "language": args.language,
-        "selection_rule": "minimum basic-slice Procrustes disparity across all layers and top-PC pairs",
+        "selection_rule": "minimum basic-slice Procrustes disparity; PC1+PC2 and searched pairs select layers independently",
         "candidate_pcs": candidate_pcs,
         "permutations": permutations,
         "global_search_corrected_p": global_p,
+        "best_pc1_pc2_layer": int(layers[best_pc12_index]),
+        "global_pc1_pc2_layer_corrected_p": global_pc12_p,
+        "best_pc1_pc2_layer_metrics": best_pc12,
         "best_layer": int(layers[best_index]),
         "best_pc_pair": best["searched_pc_pair"],
         "best_layer_metrics": best,
@@ -220,13 +241,19 @@ def main():
             "q05": float(np.quantile(null, 0.05)),
             "q50": float(np.quantile(null, 0.50)),
         },
+        "pc1_pc2_null_min_disparity_quantiles": {
+            "q01": float(np.quantile(pc12_null, 0.01)),
+            "q05": float(np.quantile(pc12_null, 0.05)),
+            "q50": float(np.quantile(pc12_null, 0.50)),
+        },
     }
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2) + "\n")
 
     projection_rows = []
-    best_planes = planes_by_layer[best_index]
+    best_searched_plane = planes_by_layer[best_index]["searched"]
+    best_pc12_plane = planes_by_layer[best_pc12_index]["pc1_pc2"]
     for index, lemma in enumerate(lemmas):
         projection_rows.append({
             "language": args.language,
@@ -234,15 +261,16 @@ def main():
             "count": int(counts[index]),
             "basic_emotion": emotions[index] or None,
             "is_basic": bool(emotions[index]),
-            "pc1_pc2_x": float(best_planes["pc1_pc2"][0][index, 0]),
-            "pc1_pc2_y": float(best_planes["pc1_pc2"][0][index, 1]),
-            "searched_x": float(best_planes["searched"][0][index, 0]),
-            "searched_y": float(best_planes["searched"][0][index, 1]),
+            "pc1_pc2_x": float(best_pc12_plane[0][index, 0]),
+            "pc1_pc2_y": float(best_pc12_plane[0][index, 1]),
+            "searched_x": float(best_searched_plane[0][index, 0]),
+            "searched_y": float(best_searched_plane[0][index, 1]),
         })
     projection_path = Path(args.projection_output)
     projection_path.parent.mkdir(parents=True, exist_ok=True)
     projection_path.write_text(json.dumps({
         "language": args.language,
+        "best_pc1_pc2_layer": int(layers[best_pc12_index]),
         "best_layer": int(layers[best_index]),
         "best_pc_pair": best["searched_pc_pair"],
         "theory": {emotion: anchor_config["theory_coordinates"][emotion] for emotion in WHEEL},

@@ -5,7 +5,7 @@ from pipeline.affect_geometry.analyze import (
     align_to_theory,
     best_pc_pair,
     geometry,
-    global_permutation_p,
+    global_pair_search_permutation_p,
     procrustes_disparity,
 )
 from pipeline.affect_geometry.common import WHEEL
@@ -67,7 +67,7 @@ def test_layer_analysis_and_search_corrected_permutation_are_finite():
     assert result["searched_disparity"] <= result["pc1_pc2_disparity"]
     assert result["searched_disparity"] < 0.05
     assert 0 <= result["searched_broader_variance_fraction"] <= 1
-    p_value, null = global_permutation_p(
+    p_value, null = global_pair_search_permutation_p(
         [category_scores], theory, result["searched_disparity"], 10, 50, 3)
     assert 0 < p_value <= 1
     assert np.all(np.isfinite(null))
