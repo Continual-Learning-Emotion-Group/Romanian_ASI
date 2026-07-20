@@ -37,3 +37,55 @@ python -m pipeline.affect_geometry.extract --help
 python -m pipeline.affect_geometry.analyze --help
 python -m pipeline.affect_geometry.plot --help
 ```
+
+## Exact rerun
+
+From the repository root, build the Romanian manifest locally:
+
+```bash
+python -m pipeline.affect_geometry.prepare \
+  --language ro \
+  --source pipeline/data/benchmark_ro_asi_clean.jsonl \
+  --output pipeline/affect_geometry/artifacts/manifests/ro.jsonl \
+  --summary pipeline/affect_geometry/results/selection_ro.json
+```
+
+On `tigerfish`, build each MASIVE manifest directly from the original corpus:
+
+```bash
+python -m pipeline.affect_geometry.prepare \
+  --language en \
+  --source /mnt/swordfish-pool2/eturcan-ndeas/MASIVE/masive \
+  --output pipeline/affect_geometry/artifacts/manifests/en.jsonl \
+  --summary pipeline/affect_geometry/results/selection_en.json
+```
+
+Replace `en` with `es` for Spanish. Extract one language on an unoccupied GPU:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python -m pipeline.affect_geometry.extract \
+  --manifest pipeline/affect_geometry/artifacts/manifests/en.jsonl \
+  --output pipeline/affect_geometry/artifacts/hidden/en.npz \
+  --run-metadata pipeline/affect_geometry/artifacts/hidden/en_run.json \
+  --model Qwen/Qwen3.5-4B \
+  --revision 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a \
+  --batch-size 32 \
+  --maximum-tokens 512
+```
+
+After the three centroid archives are available locally, regenerate all numerical
+results and figures:
+
+```bash
+for language in ro en es; do
+  python -m pipeline.affect_geometry.analyze \
+    --hidden pipeline/affect_geometry/artifacts/hidden/$language.npz \
+    --language $language \
+    --output pipeline/affect_geometry/results/metrics_$language.json \
+    --projection-output pipeline/affect_geometry/results/projections_$language.json
+done
+
+python -m pipeline.affect_geometry.plot \
+  --results-dir pipeline/affect_geometry/results \
+  --output-dir pipeline/affect_geometry/figures
+```
