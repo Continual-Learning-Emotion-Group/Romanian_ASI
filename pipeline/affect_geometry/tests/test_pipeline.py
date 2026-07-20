@@ -1,11 +1,14 @@
 import numpy as np
 
 from pipeline.affect_geometry.analyze import (
+    analyze_layer,
     align_to_theory,
     best_pc_pair,
     geometry,
+    global_permutation_p,
     procrustes_disparity,
 )
+from pipeline.affect_geometry.common import WHEEL
 from pipeline.affect_geometry.common import morphology_map, reconstruct, target_map
 
 
@@ -48,3 +51,23 @@ def test_procrustes_disparity_is_similarity_invariant():
     rotation = np.array([[0, -1], [1, 0]], dtype=float)
     transformed = 3.5 * reference @ rotation + np.array([4, 9])
     assert procrustes_disparity(reference, transformed) < 1e-12
+
+
+def test_layer_analysis_and_search_corrected_permutation_are_finite():
+    rng = np.random.default_rng(9)
+    theory = np.column_stack((np.cos(np.arange(8) * np.pi / 4),
+                              np.sin(np.arange(8) * np.pi / 4)))
+    basis = rng.normal(size=(2, 24))
+    basic = np.vstack([theory[index] @ basis + rng.normal(scale=0.05, size=(2, 24))
+                       for index in range(8)])
+    broader = rng.normal(size=(20, 24))
+    centroids = np.vstack((basic, broader))
+    emotions = np.array([emotion for emotion in WHEEL for _ in range(2)] + [""] * 20)
+    result, _, category_scores = analyze_layer(centroids, emotions, theory, candidate_pcs=10)
+    assert result["searched_disparity"] <= result["pc1_pc2_disparity"]
+    assert result["searched_disparity"] < 0.05
+    assert 0 <= result["searched_broader_variance_fraction"] <= 1
+    p_value, null = global_permutation_p(
+        [category_scores], theory, result["searched_disparity"], 10, 50, 3)
+    assert 0 < p_value <= 1
+    assert np.all(np.isfinite(null))
