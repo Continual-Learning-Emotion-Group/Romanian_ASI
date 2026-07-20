@@ -98,6 +98,12 @@ def analyze_layer(centroids, emotions, theory, candidate_pcs):
     pc12_disparity = procrustes_disparity(theory, category_scores[:, :2])
     searched_disparity, first, second = best_pc_pair(category_scores, theory)
     total_variance = float(np.var(standardized[broader], axis=0, ddof=1).sum())
+    component_variances = np.var(projected[broader], axis=0, ddof=1) / total_variance
+    pair_fractions = np.asarray([
+        component_variances[left] + component_variances[right]
+        for left, right in itertools.combinations(range(n_components), 2)
+    ])
+    random_expected = 2.0 / standardized.shape[1]
 
     result = {
         "basic_lemma_count": int(basic.sum()),
@@ -110,6 +116,13 @@ def analyze_layer(centroids, emotions, theory, candidate_pcs):
         "searched_disparity": searched_disparity,
         "searched_broader_variance_fraction": float(
             np.var(projected[broader][:, [first, second]], axis=0, ddof=1).sum() / total_variance),
+        "isotropic_random_2d_expected_fraction": random_expected,
+        "pc1_pc2_enrichment_over_isotropic_random": float(
+            component_variances[:2].sum() / random_expected),
+        "searched_enrichment_over_isotropic_random": float(
+            component_variances[[first, second]].sum() / random_expected),
+        "candidate_pair_broader_fraction_mean": float(pair_fractions.mean()),
+        "candidate_pair_broader_fraction_range": [float(pair_fractions.min()), float(pair_fractions.max())],
         "broader_effective_dimension": participation_ratio(standardized[broader]),
         "pca_explained_variance_ratio": pca.explained_variance_ratio_.tolist(),
     }
