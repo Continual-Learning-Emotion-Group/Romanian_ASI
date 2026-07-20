@@ -50,7 +50,10 @@ select a layer or plane.
 
 - `figures/figure_pc1_pc2_projection.{png,pdf}`: primary unsupervised result.
 - `figures/figure_searched_circumplex_projection.{png,pdf}`: exploratory searched-pair result.
-- `figures/figure_layer_sweep.{png,pdf}`: circumplex fit and broader variance at every layer.
+- `figures/figure_layer_sweep.{png,pdf}`: basic-slice theory fit, non-basic variance
+  captured, and non-basic radial deviation from the basic-emotion ring at every layer.
+  Procrustes disparity is only defined for the basic slice because the non-basic
+  states have no fixed theoretical valence/arousal targets.
 - `figures/table_geometry_summary.csv`: machine-readable headline values.
 
 ## Limitations

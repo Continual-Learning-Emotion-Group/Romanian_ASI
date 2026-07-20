@@ -9,6 +9,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 import numpy as np
 
 from pipeline.affect_geometry.common import WHEEL
@@ -104,30 +105,76 @@ def main():
     pc12_path = output_dir / "figure_pc1_pc2_projection"
     projection_figure(metrics, projections, "pc1_pc2", pc12_path)
 
-    fig, axes = plt.subplots(2, 3, figsize=(14.4, 6.8), sharex="col", constrained_layout=True)
+    fig, axes = plt.subplots(3, 3, figsize=(14.4, 9.2), sharex="col")
+    fig.subplots_adjust(left=0.095, right=0.985, bottom=0.075, top=0.835,
+                        wspace=0.16, hspace=0.27)
+    fig.suptitle("Layer sweep: axes learned and selected on the basic-emotion slice",
+                 y=0.975, fontsize=13, fontweight="bold")
+    fig.text(
+        0.5, 0.943,
+        "Top: fit to fixed eight-emotion theory. Middle and bottom: evaluation on non-basic "
+        "affective-state lemma centroids.",
+        ha="center", va="center", fontsize=9,
+    )
+    fixed_color = "#666666"
+    searched_color = "#0072B2"
+    selected_color = "#D55E00"
+    legend_handles = [
+        Line2D([0], [0], color=fixed_color, marker="o", markersize=3, linewidth=1.4,
+               label="Fixed PC1+PC2"),
+        Line2D([0], [0], color=searched_color, marker="o", markersize=3, linewidth=1.8,
+               label="Best PC pair at each layer (selected on basic slice)"),
+        Line2D([0], [0], color=fixed_color, linestyle=":", linewidth=1.3,
+               label="Selected PC1+PC2 layer"),
+        Line2D([0], [0], color=selected_color, linestyle="--", linewidth=1.3,
+               label="Selected searched-pair layer"),
+    ]
+    fig.legend(handles=legend_handles, loc="upper center", bbox_to_anchor=(0.5, 0.912),
+               ncol=4, frameon=False, handlelength=2.8, columnspacing=1.8)
+
     for column, language in enumerate(LANGUAGES):
         rows = metrics[language]["layers"]
         layers = [row["layer"] for row in rows]
+        pc12_layer = metrics[language]["best_pc1_pc2_layer"]
+        searched_layer = metrics[language]["best_layer"]
+
+        def mark_selected_layers(axis):
+            axis.axvline(pc12_layer, color=fixed_color, linestyle=":", linewidth=1.3,
+                         zorder=0)
+            axis.axvline(searched_layer, color=selected_color, linestyle="--", linewidth=1.3,
+                         zorder=0)
+
         top = axes[0, column]
-        top.plot(layers, [row["pc1_pc2_disparity"] for row in rows], color="#777777",
-                 marker="o", markersize=3, linewidth=1.4, label="PC1+PC2")
-        top.plot(layers, [row["searched_disparity"] for row in rows], color="#0072B2",
-                 marker="o", markersize=3, linewidth=1.8, label="best pair")
-        top.axvline(metrics[language]["best_layer"], color="#D55E00", linestyle="--", linewidth=1)
+        top.plot(layers, [row["pc1_pc2_disparity"] for row in rows], color=fixed_color,
+                 marker="o", markersize=3, linewidth=1.4)
+        top.plot(layers, [row["searched_disparity"] for row in rows], color=searched_color,
+                 marker="o", markersize=3, linewidth=1.8)
+        mark_selected_layers(top)
         top.set_title(LANGUAGE_NAMES[language])
-        top.set_ylabel("Circumplex disparity" if column == 0 else "")
+        top.set_ylabel("Basic slice\nTheory disparity\n(lower is better)" if column == 0 else "")
         top.set_ylim(bottom=0)
         top.grid(alpha=0.18)
-        if column == 2:
-            top.legend(frameon=False)
-        bottom = axes[1, column]
-        bottom.plot(layers, [row["pc1_pc2_broader_variance_fraction"] for row in rows],
-                    color="#777777", marker="o", markersize=3, linewidth=1.4)
-        bottom.plot(layers, [row["searched_broader_variance_fraction"] for row in rows],
-                    color="#009E73", marker="o", markersize=3, linewidth=1.8)
-        bottom.axvline(metrics[language]["best_layer"], color="#D55E00", linestyle="--", linewidth=1)
-        bottom.set_ylabel("Broader variance captured" if column == 0 else "")
-        bottom.set_xlabel("Model layer")
+
+        middle = axes[1, column]
+        middle.plot(layers, [row["pc1_pc2_broader_variance_fraction"] for row in rows],
+                    color=fixed_color, marker="o", markersize=3, linewidth=1.4)
+        middle.plot(layers, [row["searched_broader_variance_fraction"] for row in rows],
+                    color=searched_color, marker="o", markersize=3, linewidth=1.8)
+        mark_selected_layers(middle)
+        middle.set_ylabel("Non-basic states\nVariance captured\n(higher is better)"
+                          if column == 0 else "")
+        middle.set_ylim(bottom=0)
+        middle.grid(alpha=0.18)
+
+        bottom = axes[2, column]
+        bottom.plot(layers, [row["pc1_pc2_geometry"]["ring_rmse"] for row in rows],
+                    color=fixed_color, marker="o", markersize=3, linewidth=1.4)
+        bottom.plot(layers, [row["searched_geometry"]["ring_rmse"] for row in rows],
+                    color=searched_color, marker="o", markersize=3, linewidth=1.8)
+        mark_selected_layers(bottom)
+        bottom.set_ylabel("Non-basic states\nRing deviation (RMSE)\n(lower is better)"
+                          if column == 0 else "")
+        bottom.set_xlabel("Model layer (0 = embedding output)")
         bottom.set_ylim(bottom=0)
         bottom.grid(alpha=0.18)
     sweep_path = output_dir / "figure_layer_sweep"
