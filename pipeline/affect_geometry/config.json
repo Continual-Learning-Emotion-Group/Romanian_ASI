@@ -1,0 +1,34 @@
+{
+  "experiment_name": "affect_geometry_v1",
+  "random_seed": 20260720,
+  "sampling": {
+    "minimum_occurrences_per_lemma": 30,
+    "maximum_contexts_per_lemma": 80,
+    "context_characters_each_side": 350
+  },
+  "extraction": {
+    "model": "Qwen/Qwen3.5-4B",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "maximum_tokens": 512,
+    "batch_size": 16,
+    "dtype": "bfloat16",
+    "layers": "all"
+  },
+  "analysis": {
+    "candidate_pcs": 10,
+    "permutations": 5000
+  },
+  "romanian_adjective_frames": [
+    "sunt_adj_present",
+    "ma_simt_present",
+    "am_fost_adj_perfect",
+    "eram_adj_imperfect",
+    "ma_simteam_imperfect",
+    "mam_simtit_perfect",
+    "o_sa_fiu_future",
+    "ma_voi_simti_future",
+    "mas_simti_conditional",
+    "ma_fac_reflexive"
+  ]
+}
+
