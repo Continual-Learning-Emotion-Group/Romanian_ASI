@@ -1,0 +1,167 @@
+lang	label	lemma	tier	gloss	nrc_angle	delta	verdict	note
+en	happy	happy	A	happy	25.5	+0.0	KEEP	
+en	happy	cheerful	B	cheerful	13.0	+5.2	KEEP	
+en	happy	joyful	B	joyful	13.6	+5.8	KEEP	
+en	happy	merry	B	merry	25.7	+0.2	KEEP	
+en	delighted	thrilled	B	thrilled	38.6	-6.6	KEEP	
+en	delighted	ecstatic	B	ecstatic	35.7	-9.5	KEEP	
+en	delighted	elated	B	elated	56.9	+11.8	KEEP	
+en	excited	excited	A	excited	46.6	+0.0	KEEP	
+en	excited	hyped	B	hyped	21.5	-25.1	KEEP	
+en	excited	exhilarated	B	exhilarated	51.0	+2.4	KEEP	
+en	astonished	surprised	B	surprised	51.3	-18.5	KEEP	astonished absent; surprised nearest
+en	astonished	flabbergasted	B	flabbergasted	121.9	+34.0	REVIEW-DROP (NRC off +34 both gates)	
+en	astonished	shocked	B	shocked	127.3	+39.4	REVIEW-DROP (NRC off +39 both gates)	negative-valence shock, expect fail
+en	aroused	horny	B	horny	91.4	+17.6	EXCLUDE (strict synonymy rule: forces sexual reading of Russell's general 'aroused')	
+en	aroused	lustful	B	lustful	100.4	+26.6	EXCLUDE (strict synonymy rule: forces sexual reading of Russell's general 'aroused')	
+en	tense	tense	A	tense	210.4	+0.0	KEEP	
+en	tense	uptight	B	uptight	145.6	+52.8	REVIEW-DROP (NRC off +53 both gates)	
+en	tense	anxious	B	anxious	120.3	+27.5	EXCLUDE (strict synonymy rule: worry blend (tense+afraid), not a Russell word)	not a Russell word; tense-region
+en	tense	nervous	B	nervous	132.3	+39.5	REVIEW-DROP (NRC off +40 both gates)	not a Russell word; tense-region
+en	alarmed	panicked	B	panicked	131.7	-2.4	KEEP	alarmed absent
+en	alarmed	panicky	B	panicky	114.3	+17.8	KEEP	alarmed absent
+en	angry	angry	A	angry	138.9	+0.0	KEEP	
+en	angry	furious	B	furious	134.0	-4.8	KEEP	
+en	angry	livid	B	livid	96.1	-3.3	KEEP	
+en	angry	outraged	B	outraged	150.3	+11.4	KEEP	
+en	angry	pissed	B	pissed	135.7	-3.1	EXCLUDE (strict synonymy rule: angry/drunk polysemy)	register: vulgar
+en	afraid	afraid	A	afraid	160.2	+0.0	KEEP	
+en	afraid	scared	B	scared	137.2	+18.6	KEEP	
+en	afraid	frightened	B	frightened	137.6	+19.0	KEEP	
+en	afraid	terrified	B	terrified	135.6	+17.0	KEEP	
+en	afraid	fearful	B	fearful	182.5	+22.3	KEEP	
+en	annoyed	annoyed	A	annoyed	144.4	+0.0	KEEP	
+en	annoyed	irritated	B	irritated	132.5	+3.7	KEEP	
+en	annoyed	bothered	B	bothered	-	-	REVIEW (no NRC entry)	
+en	distressed	distressed	A	distressed	142.8	+0.0	KEEP	
+en	distressed	upset	B	upset	157.2	+14.4	EXCLUDE (strict synonymy rule: distressed/sad/angry blend)	
+en	distressed	anguished	B	anguished	148.9	+6.1	NOT_IN_POOL	check presence
+en	frustrated	frustrated	A	frustrated	160.2	+0.0	KEEP	
+en	miserable	miserable	A	miserable	185.1	+0.0	KEEP	
+en	sad	sad	A	sad	211.3	+0.0	KEEP	
+en	sad	unhappy	B	unhappy	180.0	-27.5	EXCLUDE (strict synonymy rule: intermediate between sad and miserable)	
+en	gloomy	dejected	B	dejected	158.7	-34.1	REVIEW-DROP (NRC off -34 both gates)	gloomy absent
+en	gloomy	blue	B	blue	291.9	+83.5	REVIEW-DROP (NRC off +84 both gates)	color polysemy, expect fail
+en	depressed	depressed	A	depressed	186.6	+0.0	KEEP	
+en	depressed	discouraged	B	discouraged	215.0	+5.4	EXCLUDE (strict synonymy rule: motivational state, not depressed mood)	
+en	bored	bored	A	bored	223.8	+0.0	KEEP	
+en	droopy	lethargic	B	lethargic	221.7	-25.8	EXCLUDE (strict synonymy rule: droopy match uncertain)	droopy absent; NRC advisory arc
+en	tired	tired	A	tired	206.0	+0.0	KEEP	NRC known to disagree; kept (Russell word)
+en	tired	exhausted	B	exhausted	191.5	-14.5	KEEP	NRC advisory arc
+en	sleepy	sleepy	A	sleepy	285.5	+0.0	KEEP	
+en	sleepy	groggy	B	groggy	221.6	-50.3	REVIEW (NRC off -50 but advisory arc)	NRC advisory arc
+en	calm	calm	A	calm	309.8	+0.0	KEEP	
+en	relaxed	relaxed	A	relaxed	308.7	+0.0	KEEP	
+en	relaxed	rested	B	rested	317.8	+0.4	KEEP	
+en	relaxed	relieved	B	relieved	334.8	+17.4	EXCLUDE (strict synonymy rule: post-stress release, distinct concept)	
+en	at ease	comfortable	B	comfortable	321.7	+1.8	KEEP	at-ease as lemma absent
+en	satisfied	satiated	B	satiated	-	-	REVIEW (no NRC entry)	food polysemy; satisfied absent
+en	glad	glad	A	glad	30.7	+0.0	KEEP	
+ro	happy	fericit	A	happy	25.5	+0.0	KEEP	
+ro	delighted	incantat	A	delighted	45.2	+0.0	KEEP	
+ro	delighted	fermecat	B	charmed	9.1	-15.8	KEEP	
+ro	excited	entuziasmat	A	enthusiastic	43.7	-2.9	KEEP	
+ro	excited	emotionat	B	excited	46.6	+0.0	EXCLUDE (strict synonymy rule: excited/moved-touched blend)	also 'moved/touched' - REVIEW
+ro	astonished	uimit	A	astonished	87.9	+0.0	KEEP	
+ro	astonished	uluit	A	astounded	-	-	KEEP	
+ro	astonished	stupefiat	B	stupefied	236.3	+148.4	REVIEW-DROP (NRC off +148 both gates)	
+ro	astonished	mirat	B	surprised	51.3	-18.5	KEEP	
+ro	astonished	surprins	B	surprised	51.3	-18.5	KEEP	
+ro	astonished	socat	B	shocked	127.3	+39.4	REVIEW-DROP (NRC off +39 both gates)	negative shock, expect fail
+ro	tense	tensionat	A	tense	210.4	+0.0	KEEP	
+ro	tense	stresat	B	stressed	144.2	+51.4	REVIEW-DROP (NRC off +51 both gates)	
+ro	tense	agitat	B	agitated	98.3	+5.5	EXCLUDE (strict synonymy rule: tense/distressed blend)	tense vs distressed - REVIEW
+ro	tense	nelinistit	B	uneasy	165.7	-44.7	REVIEW-DROP (NRC off -45 both gates)	REVIEW
+ro	tense	anxios	B	anxious	120.3	+27.5	EXCLUDE (strict synonymy rule: worry blend, not a Russell word)	not a Russell word
+ro	alarmed	panicat	B	panicked	131.7	-2.4	KEEP	kept: single sense (panic), NRC at alarmed
+ro	angry	furios	A	furious	134.0	-4.8	KEEP	
+ro	angry	nervos	B	angry	138.9	+0.0	EXCLUDE (strict synonymy rule: angry/on-edge blend)	RO sense = angry, not EN 'nervous' - REVIEW
+ro	angry	indignat	B	indignant	157.4	+18.5	KEEP	
+ro	angry	revoltat	B	outraged	150.3	+11.4	KEEP	
+ro	angry	suparat	B	upset	157.2	+18.4	EXCLUDE (strict synonymy rule: angry/sad polysemy)	angry/sad polysemy - REVIEW, likely exclude
+ro	afraid	frica	A	fear	141.5	-18.7	KEEP	noun mi-e frica
+ro	afraid	teama	A	fear	141.5	-18.7	KEEP	noun mi-e teama
+ro	afraid	speriat	A	scared	137.2	+18.6	KEEP	
+ro	afraid	ingrozit	B	terrified	135.6	+17.0	KEEP	
+ro	afraid	terorizat	B	terrified	135.6	+17.0	EXCLUDE (strict synonymy rule: below occurrence floor in manifest)	
+ro	afraid	groaza	B	dread	139.9	-20.3	KEEP	noun mi-e groaza
+ro	annoyed	iritat	A	irritated	132.5	+3.7	KEEP	
+ro	annoyed	deranjat	B	bothered	-	-	REVIEW (no NRC entry)	
+ro	annoyed	contrariat	B	annoyed	144.4	+0.0	EXCLUDE (strict synonymy rule: annoyed/puzzled blend)	also 'puzzled' - REVIEW
+ro	distressed	tulburat	B	troubled	159.1	+16.3	KEEP	
+ro	distressed	necajit	B	distressed	142.8	+0.0	EXCLUDE (strict synonymy rule: distressed/sad blend)	shades to sad - REVIEW
+ro	distressed	coplesit	B	overwhelmed	131.5	-8.4	EXCLUDE (strict synonymy rule: overwhelmed, distinct concept)	
+ro	distressed	ingrijorat	B	worried	141.4	-1.4	EXCLUDE (strict synonymy rule: worried, distinct concept)	
+ro	distressed	disperat	B	desperate	140.6	+0.7	EXCLUDE (strict synonymy rule: desperate, distinct concept)	
+ro	frustrated	frustrat	A	frustrated	160.2	+0.0	KEEP	
+ro	miserable	amarat	A	miserable	185.1	+0.0	KEEP	
+ro	miserable	nefericit	B	unhappy	180.0	-5.1	EXCLUDE (strict synonymy rule: intermediate between sad and miserable)	
+ro	miserable	distrus	B	devastated	173.4	-11.7	EXCLUDE (strict synonymy rule: devastated metaphor, intensity/blend risk)	REVIEW
+ro	miserable	devastat	B	devastated	173.4	-11.7	EXCLUDE (strict synonymy rule: devastated, intensity/blend risk)	REVIEW
+ro	sad	trist	A	sad	211.3	+0.0	KEEP	
+ro	sad	mahnit	B	sorrowful	189.8	-17.7	KEEP	
+ro	sad	intristat	B	saddened	-	-	NOT_IN_POOL	
+ro	sad	indurerat	B	grieving	157.0	-50.5	NOT_IN_POOL	REVIEW
+ro	depressed	deprimat	A	depressed	186.6	+0.0	KEEP	
+ro	depressed	descurajat	B	discouraged	215.0	+5.4	EXCLUDE (strict synonymy rule: motivational state, not depressed mood)	
+ro	depressed	demoralizat	B	demoralized	167.8	-18.7	EXCLUDE (strict synonymy rule: below occurrence floor in manifest)	
+ro	bored	plictisit	A	bored	223.8	+0.0	KEEP	
+ro	tired	obosit	A	tired	206.0	+0.0	KEEP	NRC advisory arc
+ro	tired	epuizat	B	exhausted	191.5	-14.5	KEEP	NRC advisory arc
+ro	calm	calm	A	calm	309.8	+0.0	KEEP	
+ro	calm	linistit	A	tranquil	314.4	-1.8	KEEP	
+ro	calm	liniste	B	tranquility	313.0	+3.2	KEEP	noun state, tight (calmness)
+ro	at ease	impacat	B	at peace	310.5	-9.4	KEEP	kept: at peace
+ro	satisfied	satisfacut	A	satisfied	1.2	+0.0	KEEP	
+ro	satisfied	implinit	B	fulfilled	357.1	-4.1	KEEP	
+ro	content	multumit	A	content	322.3	+0.0	KEEP	
+ro	glad	bucuros	A	glad	30.7	+0.0	KEEP	
+ro	glad	bucurie	B	joy	34.0	+3.3	KEEP	noun state, tight (joy)
+es	happy	feliz	A	happy	25.5	+0.0	KEEP	
+es	excited	entusiasmado	A	enthusiastic	43.7	-2.9	KEEP	
+es	excited	emocionado	B	excited	46.6	+0.0	EXCLUDE (strict synonymy rule: excited/moved blend)	also 'moved' - REVIEW
+es	astonished	sorprendido	B	surprised	51.3	-18.5	KEEP	asombrado absent
+es	aroused	excitado	A	aroused	66.4	+0.0	EXCLUDE (strict synonymy rule: excited/aroused blend)	also 'excited' - REVIEW
+es	aroused	cachondo	B	horny	91.4	+17.6	EXCLUDE (strict synonymy rule: forces sexual reading of 'aroused'; vulgar register)	register: vulgar - REVIEW
+es	tense	nervioso	B	nervous	132.3	+39.5	REVIEW-DROP (NRC off +40 both gates)	tenso absent
+es	tense	estresado	B	stressed	144.2	+51.4	REVIEW-DROP (NRC off +51 both gates)	
+es	tense	inquieto	B	restless	132.2	+39.4	REVIEW-DROP (NRC off +39 both gates)	REVIEW
+es	angry	enojado	A	angry	138.9	+0.0	KEEP	
+es	angry	enfadado	A	angry	138.9	+0.0	KEEP	
+es	angry	furioso	B	furious	134.0	-4.8	KEEP	
+es	angry	cabreado	B	pissed	135.7	-3.1	KEEP	register: colloquial
+es	angry	indignado	B	indignant	157.4	+18.5	KEEP	
+es	afraid	asustado	A	scared	137.2	+18.6	KEEP	
+es	afraid	aterrado	B	terrified	135.6	+17.0	KEEP	
+es	afraid	aterrorizado	B	terrified	135.6	+17.0	KEEP	
+es	annoyed	molesto	A	annoyed	144.4	+0.0	KEEP	
+es	annoyed	harto	B	fed up	169.1	+24.7	EXCLUDE (strict synonymy rule: fed-up: annoyed/bored blend)	annoyed/bored polysemy - REVIEW
+es	distressed	angustiado	A	anguished	148.9	+6.1	KEEP	
+es	distressed	agobiado	B	overwhelmed	131.5	-8.4	EXCLUDE (strict synonymy rule: overwhelmed, distinct concept)	
+es	distressed	desesperado	B	desperate	140.6	+0.7	EXCLUDE (strict synonymy rule: desperate, distinct concept)	
+es	distressed	preocupado	B	worried	141.4	-1.4	EXCLUDE (strict synonymy rule: worried, distinct concept)	
+es	distressed	ansioso	B	anxious	120.3	-19.6	EXCLUDE (strict synonymy rule: worry blend, not a Russell word)	not a Russell word
+es	frustrated	frustrado	A	frustrated	160.2	+0.0	KEEP	
+es	miserable	miserable	A	miserable	185.1	+0.0	KEEP	
+es	miserable	infeliz	B	unhappy	180.0	-5.1	EXCLUDE (strict synonymy rule: intermediate between sad and miserable)	
+es	miserable	destrozado	B	devastated	173.4	-11.7	EXCLUDE (strict synonymy rule: devastated, intensity/blend risk)	REVIEW
+es	miserable	hundido	B	devastated	173.4	-11.7	EXCLUDE (strict synonymy rule: devastated metaphor, blend risk)	REVIEW
+es	sad	triste	A	sad	211.3	+0.0	KEEP	
+es	sad	dolido	B	hurt	148.1	-59.4	REVIEW-DROP (NRC off -59 both gates)	REVIEW
+es	gloomy	desanimado	B	dispirited	216.6	+8.2	EXCLUDE (strict synonymy rule: dispirited/motivational, gloomy match uncertain)	
+es	gloomy	bajoneado	B	down	210.2	+1.8	EXCLUDE (strict synonymy rule: slang, gloomy/depressed blend)	slang - REVIEW
+es	depressed	deprimido	A	depressed	186.6	+0.0	KEEP	
+es	depressed	depresivo	B	depressive	190.5	+3.9	EXCLUDE (strict synonymy rule: trait-like, not state)	trait-like - REVIEW
+es	bored	aburrido	A	bored	223.8	+0.0	KEEP	
+es	tired	cansado	A	tired	206.0	+0.0	KEEP	NRC advisory arc
+es	tired	agotado	B	exhausted	191.5	-14.5	KEEP	NRC advisory arc
+es	tired	exhausto	B	exhausted	191.5	-14.5	KEEP	NRC advisory arc
+es	tired	quemado	B	burned out	161.2	-44.8	REVIEW (NRC off -45 but advisory arc)	polysemy - REVIEW
+es	sleepy	dormido	B	sleepy	285.5	+0.0	EXCLUDE (strict synonymy rule: sleepy/asleep/numb polysemy)	also 'asleep/numb' - REVIEW
+es	calm	tranquilo	A	calm	309.8	+0.0	KEEP	
+es	relaxed	relajado	A	relaxed	308.7	+0.0	KEEP	
+es	at ease	aliviado	B	relieved	334.8	+14.9	EXCLUDE (strict synonymy rule: relieved, distinct concept)	REVIEW
+es	satisfied	satisfecho	A	satisfied	1.2	+0.0	KEEP	
+es	content	pleno	B	fulfilled	357.1	+33.1	REVIEW-DROP (NRC off +33 both gates)	REVIEW
+es	glad	alegre	A	cheerful	13.0	-17.7	KEEP	
+es	pleased	contento	A	pleased	6.2	+0.0	KEEP	ES sense closer to glad/pleased than EN 'content'
