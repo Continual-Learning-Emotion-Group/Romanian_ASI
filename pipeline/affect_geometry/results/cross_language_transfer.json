@@ -1,0 +1,3104 @@
+{
+  "en->ro": {
+    "source": "en",
+    "target": "ro",
+    "best_transfer_layer": 11,
+    "source_pair_at_best": [
+      1,
+      3
+    ],
+    "transfer_disparity": 0.36827945660003303,
+    "layer_corrected_p": 0.0001999600079984003,
+    "null_min_disparity_q50": 0.8346817179005108,
+    "target_native_disparity_same_layer": 0.5652213714515975,
+    "transfer_broader_frac": 0.050147342373700735,
+    "target_own_broader_frac_same_layer": 0.12356271154425985,
+    "transfer_ratio": 0.4058452727928205,
+    "plane_principal_angles_deg_at_best": [
+      56.240069323120494,
+      89.7639272691604
+    ],
+    "layers": [
+      {
+        "layer": 0,
+        "source_pair": [
+          1,
+          4
+        ],
+        "transfer_disparity": 0.9515306094411449,
+        "target_native_disparity": 0.7901583664570733,
+        "transfer_broader_frac": 0.0028951383340326173,
+        "target_own_broader_frac": 0.07243022453756587,
+        "plane_principal_angles_deg": [
+          80.30211724478445,
+          87.41021063495867
+        ]
+      },
+      {
+        "layer": 1,
+        "source_pair": [
+          2,
+          6
+        ],
+        "transfer_disparity": 0.8570146518217066,
+        "target_native_disparity": 0.7344709028490171,
+        "transfer_broader_frac": 0.0020743656883997486,
+        "target_own_broader_frac": 0.04950558411877204,
+        "plane_principal_angles_deg": [
+          85.64979762683873,
+          89.69533472591559
+        ]
+      },
+      {
+        "layer": 2,
+        "source_pair": [
+          2,
+          8
+        ],
+        "transfer_disparity": 0.7698837279799957,
+        "target_native_disparity": 0.6559917804248688,
+        "transfer_broader_frac": 0.0029129214979100354,
+        "target_own_broader_frac": 0.055348788887015464,
+        "plane_principal_angles_deg": [
+          86.30249114211357,
+          88.09710386227297
+        ]
+      },
+      {
+        "layer": 3,
+        "source_pair": [
+          1,
+          7
+        ],
+        "transfer_disparity": 0.6245927660768424,
+        "target_native_disparity": 0.5957598142446618,
+        "transfer_broader_frac": 0.008768564340204869,
+        "target_own_broader_frac": 0.04464444975301503,
+        "plane_principal_angles_deg": [
+          80.49907450852342,
+          83.62967729672583
+        ]
+      },
+      {
+        "layer": 4,
+        "source_pair": [
+          2,
+          8
+        ],
+        "transfer_disparity": 0.6440148483387815,
+        "target_native_disparity": 0.6010762896242637,
+        "transfer_broader_frac": 0.014634163842354775,
+        "target_own_broader_frac": 0.08113198988579716,
+        "plane_principal_angles_deg": [
+          74.71655535238541,
+          83.1421837179292
+        ]
+      },
+      {
+        "layer": 5,
+        "source_pair": [
+          5,
+          8
+        ],
+        "transfer_disparity": 0.712306483445148,
+        "target_native_disparity": 0.4931335619434235,
+        "transfer_broader_frac": 0.01677369603928802,
+        "target_own_broader_frac": 0.07481533152841932,
+        "plane_principal_angles_deg": [
+          78.60510172340472,
+          84.65670251966228
+        ]
+      },
+      {
+        "layer": 6,
+        "source_pair": [
+          1,
+          8
+        ],
+        "transfer_disparity": 0.6229783159533371,
+        "target_native_disparity": 0.4743015204304539,
+        "transfer_broader_frac": 0.02818753845792743,
+        "target_own_broader_frac": 0.06340023216164423,
+        "plane_principal_angles_deg": [
+          63.01136677754213,
+          84.53577215795143
+        ]
+      },
+      {
+        "layer": 7,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.5659654991711924,
+        "target_native_disparity": 0.5001769023225415,
+        "transfer_broader_frac": 0.03901382350852314,
+        "target_own_broader_frac": 0.1297893281074388,
+        "plane_principal_angles_deg": [
+          66.13205559015547,
+          88.693849019062
+        ]
+      },
+      {
+        "layer": 8,
+        "source_pair": [
+          1,
+          3
+        ],
+        "transfer_disparity": 0.5086493823293676,
+        "target_native_disparity": 0.5349063704914908,
+        "transfer_broader_frac": 0.04252013449716233,
+        "target_own_broader_frac": 0.11622137578979218,
+        "plane_principal_angles_deg": [
+          71.58952125144098,
+          81.16498816075094
+        ]
+      },
+      {
+        "layer": 9,
+        "source_pair": [
+          1,
+          3
+        ],
+        "transfer_disparity": 0.6057292219614643,
+        "target_native_disparity": 0.5549900735061172,
+        "transfer_broader_frac": 0.04891064936711875,
+        "target_own_broader_frac": 0.09844423951306838,
+        "plane_principal_angles_deg": [
+          72.48506524097833,
+          75.37527739897237
+        ]
+      },
+      {
+        "layer": 10,
+        "source_pair": [
+          1,
+          3
+        ],
+        "transfer_disparity": 0.5445419629955831,
+        "target_native_disparity": 0.5767968173019189,
+        "transfer_broader_frac": 0.0484353495809942,
+        "target_own_broader_frac": 0.09935148607319477,
+        "plane_principal_angles_deg": [
+          74.19840727769382,
+          75.1872942140368
+        ]
+      },
+      {
+        "layer": 11,
+        "source_pair": [
+          1,
+          3
+        ],
+        "transfer_disparity": 0.36827945660003303,
+        "target_native_disparity": 0.5652213714515975,
+        "transfer_broader_frac": 0.050147342373700735,
+        "target_own_broader_frac": 0.12356271154425985,
+        "plane_principal_angles_deg": [
+          56.240069323120494,
+          89.7639272691604
+        ]
+      },
+      {
+        "layer": 12,
+        "source_pair": [
+          1,
+          8
+        ],
+        "transfer_disparity": 0.5059748956957694,
+        "target_native_disparity": 0.4895521680140681,
+        "transfer_broader_frac": 0.04190234263466485,
+        "target_own_broader_frac": 0.13030712764172497,
+        "plane_principal_angles_deg": [
+          58.47554724685855,
+          89.41837922051117
+        ]
+      },
+      {
+        "layer": 13,
+        "source_pair": [
+          1,
+          8
+        ],
+        "transfer_disparity": 0.49383671134518137,
+        "target_native_disparity": 0.4900131464835965,
+        "transfer_broader_frac": 0.04394823013872694,
+        "target_own_broader_frac": 0.12717114187880446,
+        "plane_principal_angles_deg": [
+          61.59973912528687,
+          87.25492423216242
+        ]
+      },
+      {
+        "layer": 14,
+        "source_pair": [
+          1,
+          4
+        ],
+        "transfer_disparity": 0.6091541753780652,
+        "target_native_disparity": 0.5386245396356326,
+        "transfer_broader_frac": 0.03947602475200658,
+        "target_own_broader_frac": 0.13141353675698797,
+        "plane_principal_angles_deg": [
+          61.368369321598266,
+          73.4584874103693
+        ]
+      },
+      {
+        "layer": 15,
+        "source_pair": [
+          1,
+          7
+        ],
+        "transfer_disparity": 0.4454163235342333,
+        "target_native_disparity": 0.5198889327100692,
+        "transfer_broader_frac": 0.04075275450538757,
+        "target_own_broader_frac": 0.13524418264428054,
+        "plane_principal_angles_deg": [
+          59.14975103564541,
+          84.25966398279371
+        ]
+      },
+      {
+        "layer": 16,
+        "source_pair": [
+          1,
+          7
+        ],
+        "transfer_disparity": 0.411149236831742,
+        "target_native_disparity": 0.5593712482080043,
+        "transfer_broader_frac": 0.044104848957687307,
+        "target_own_broader_frac": 0.139936570403357,
+        "plane_principal_angles_deg": [
+          62.865276220265564,
+          79.42225764968164
+        ]
+      },
+      {
+        "layer": 17,
+        "source_pair": [
+          1,
+          7
+        ],
+        "transfer_disparity": 0.4236830146236811,
+        "target_native_disparity": 0.5983974334268995,
+        "transfer_broader_frac": 0.043923943949230104,
+        "target_own_broader_frac": 0.12552340014120986,
+        "plane_principal_angles_deg": [
+          64.78651681237838,
+          77.85978540720107
+        ]
+      },
+      {
+        "layer": 18,
+        "source_pair": [
+          1,
+          7
+        ],
+        "transfer_disparity": 0.49980393166872095,
+        "target_native_disparity": 0.42497676213977276,
+        "transfer_broader_frac": 0.03923212368868647,
+        "target_own_broader_frac": 0.10096868058633808,
+        "plane_principal_angles_deg": [
+          67.40852127567538,
+          83.0319823811235
+        ]
+      },
+      {
+        "layer": 19,
+        "source_pair": [
+          1,
+          7
+        ],
+        "transfer_disparity": 0.5468527332323787,
+        "target_native_disparity": 0.5126671413501399,
+        "transfer_broader_frac": 0.040685637628667275,
+        "target_own_broader_frac": 0.0911680893858384,
+        "plane_principal_angles_deg": [
+          68.89255880379221,
+          83.63868807228431
+        ]
+      },
+      {
+        "layer": 20,
+        "source_pair": [
+          0,
+          7
+        ],
+        "transfer_disparity": 0.6727966923709038,
+        "target_native_disparity": 0.49363678227524277,
+        "transfer_broader_frac": 0.0655333595130302,
+        "target_own_broader_frac": 0.1474439035638785,
+        "plane_principal_angles_deg": [
+          49.91416544337938,
+          84.03689243165435
+        ]
+      },
+      {
+        "layer": 21,
+        "source_pair": [
+          2,
+          6
+        ],
+        "transfer_disparity": 0.5572594195587643,
+        "target_native_disparity": 0.5220770238483894,
+        "transfer_broader_frac": 0.04716399895710894,
+        "target_own_broader_frac": 0.09462474963066304,
+        "plane_principal_angles_deg": [
+          71.13655779085883,
+          85.56840374764336
+        ]
+      },
+      {
+        "layer": 22,
+        "source_pair": [
+          6,
+          9
+        ],
+        "transfer_disparity": 0.612756355455002,
+        "target_native_disparity": 0.5485901998229432,
+        "transfer_broader_frac": 0.03663514847246152,
+        "target_own_broader_frac": 0.09461227289037352,
+        "plane_principal_angles_deg": [
+          76.11692193982854,
+          77.40376209991021
+        ]
+      },
+      {
+        "layer": 23,
+        "source_pair": [
+          6,
+          7
+        ],
+        "transfer_disparity": 0.7499311299699836,
+        "target_native_disparity": 0.48080607533742403,
+        "transfer_broader_frac": 0.02433039722629564,
+        "target_own_broader_frac": 0.08796216058853526,
+        "plane_principal_angles_deg": [
+          82.34550529672795,
+          85.97858277097477
+        ]
+      },
+      {
+        "layer": 24,
+        "source_pair": [
+          0,
+          7
+        ],
+        "transfer_disparity": 0.6819359737351571,
+        "target_native_disparity": 0.4228338336397778,
+        "transfer_broader_frac": 0.023963501885736118,
+        "target_own_broader_frac": 0.06598880218499531,
+        "plane_principal_angles_deg": [
+          80.66630861969477,
+          82.78021150581239
+        ]
+      },
+      {
+        "layer": 25,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.4442370823910703,
+        "target_native_disparity": 0.3302849310755921,
+        "transfer_broader_frac": 0.033185558441616365,
+        "target_own_broader_frac": 0.0661822699465886,
+        "plane_principal_angles_deg": [
+          79.4267975248306,
+          87.77181403264764
+        ]
+      },
+      {
+        "layer": 26,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.49610888676131626,
+        "target_native_disparity": 0.41682336373733475,
+        "transfer_broader_frac": 0.026330403144795553,
+        "target_own_broader_frac": 0.08435013521264184,
+        "plane_principal_angles_deg": [
+          75.1938531299805,
+          77.53878261866099
+        ]
+      },
+      {
+        "layer": 27,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5399021960261248,
+        "target_native_disparity": 0.48478713405102825,
+        "transfer_broader_frac": 0.026106620582504715,
+        "target_own_broader_frac": 0.12573809772458477,
+        "plane_principal_angles_deg": [
+          67.9665541196574,
+          76.18562258547962
+        ]
+      },
+      {
+        "layer": 28,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5898580289333243,
+        "target_native_disparity": 0.4492246589782164,
+        "transfer_broader_frac": 0.025653580948435003,
+        "target_own_broader_frac": 0.12438502107254659,
+        "plane_principal_angles_deg": [
+          67.5270022488183,
+          77.15756420130506
+        ]
+      },
+      {
+        "layer": 29,
+        "source_pair": [
+          2,
+          6
+        ],
+        "transfer_disparity": 0.5243694916451129,
+        "target_native_disparity": 0.5020763736923644,
+        "transfer_broader_frac": 0.009434076222945805,
+        "target_own_broader_frac": 0.13281017666645833,
+        "plane_principal_angles_deg": [
+          80.77200452199448,
+          88.48251354116522
+        ]
+      },
+      {
+        "layer": 30,
+        "source_pair": [
+          2,
+          6
+        ],
+        "transfer_disparity": 0.5674732406308607,
+        "target_native_disparity": 0.5145199067971169,
+        "transfer_broader_frac": 0.006765472494744751,
+        "target_own_broader_frac": 0.12820305471354446,
+        "plane_principal_angles_deg": [
+          80.13190855906414,
+          88.58639339881117
+        ]
+      },
+      {
+        "layer": 31,
+        "source_pair": [
+          0,
+          6
+        ],
+        "transfer_disparity": 0.8082298502222061,
+        "target_native_disparity": 0.47180087111928515,
+        "transfer_broader_frac": 0.007245629571258151,
+        "target_own_broader_frac": 0.123841902413598,
+        "plane_principal_angles_deg": [
+          83.09797699238439,
+          89.86058293018968
+        ]
+      },
+      {
+        "layer": 32,
+        "source_pair": [
+          2,
+          6
+        ],
+        "transfer_disparity": 0.5175971731334138,
+        "target_native_disparity": 0.5147750120202387,
+        "transfer_broader_frac": 0.004785032024932469,
+        "target_own_broader_frac": 0.07829969209605042,
+        "plane_principal_angles_deg": [
+          82.71178142982704,
+          88.90038343291393
+        ]
+      }
+    ]
+  },
+  "en->es": {
+    "source": "en",
+    "target": "es",
+    "best_transfer_layer": 11,
+    "source_pair_at_best": [
+      1,
+      3
+    ],
+    "transfer_disparity": 0.2690606655556914,
+    "layer_corrected_p": 0.0001999600079984003,
+    "null_min_disparity_q50": 0.8135984504000753,
+    "target_native_disparity_same_layer": 0.40081822681929735,
+    "transfer_broader_frac": 0.0509090960764365,
+    "target_own_broader_frac_same_layer": 0.06317580969229623,
+    "transfer_ratio": 0.8058321108094074,
+    "plane_principal_angles_deg_at_best": [
+      63.354686883779124,
+      71.2960941737599
+    ],
+    "layers": [
+      {
+        "layer": 0,
+        "source_pair": [
+          1,
+          4
+        ],
+        "transfer_disparity": 0.8562444354909752,
+        "target_native_disparity": 0.7142276065330525,
+        "transfer_broader_frac": 0.007688689485920059,
+        "target_own_broader_frac": 0.02318109525713311,
+        "plane_principal_angles_deg": [
+          81.37385777560456,
+          85.40493034870055
+        ]
+      },
+      {
+        "layer": 1,
+        "source_pair": [
+          2,
+          6
+        ],
+        "transfer_disparity": 0.6600494658215019,
+        "target_native_disparity": 0.751864547648285,
+        "transfer_broader_frac": 0.00810709196897769,
+        "target_own_broader_frac": 0.0295758051070964,
+        "plane_principal_angles_deg": [
+          74.19113701125852,
+          85.42522519088446
+        ]
+      },
+      {
+        "layer": 2,
+        "source_pair": [
+          2,
+          8
+        ],
+        "transfer_disparity": 0.6227117804908062,
+        "target_native_disparity": 0.6823132359793096,
+        "transfer_broader_frac": 0.007501316392098275,
+        "target_own_broader_frac": 0.03600861041811339,
+        "plane_principal_angles_deg": [
+          69.67529762598849,
+          85.34727474204313
+        ]
+      },
+      {
+        "layer": 3,
+        "source_pair": [
+          1,
+          7
+        ],
+        "transfer_disparity": 0.6495574726230438,
+        "target_native_disparity": 0.6039489146089474,
+        "transfer_broader_frac": 0.010660113684944267,
+        "target_own_broader_frac": 0.029237558879848084,
+        "plane_principal_angles_deg": [
+          82.93984303657834,
+          84.40598900933784
+        ]
+      },
+      {
+        "layer": 4,
+        "source_pair": [
+          2,
+          8
+        ],
+        "transfer_disparity": 0.3925971058475797,
+        "target_native_disparity": 0.47916591369170947,
+        "transfer_broader_frac": 0.017532914793810257,
+        "target_own_broader_frac": 0.03608184803016295,
+        "plane_principal_angles_deg": [
+          59.72100879614336,
+          69.4390257650164
+        ]
+      },
+      {
+        "layer": 5,
+        "source_pair": [
+          5,
+          8
+        ],
+        "transfer_disparity": 0.37715094863911824,
+        "target_native_disparity": 0.4779464874290341,
+        "transfer_broader_frac": 0.014282602428187316,
+        "target_own_broader_frac": 0.036795638339227575,
+        "plane_principal_angles_deg": [
+          75.67876939353552,
+          82.26452859517178
+        ]
+      },
+      {
+        "layer": 6,
+        "source_pair": [
+          1,
+          8
+        ],
+        "transfer_disparity": 0.38769894767389346,
+        "target_native_disparity": 0.35716756784717607,
+        "transfer_broader_frac": 0.03160178074802309,
+        "target_own_broader_frac": 0.04339717731846746,
+        "plane_principal_angles_deg": [
+          70.39185311821679,
+          87.49298228665701
+        ]
+      },
+      {
+        "layer": 7,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.4935531999073285,
+        "target_native_disparity": 0.4898604622063929,
+        "transfer_broader_frac": 0.03455569045554066,
+        "target_own_broader_frac": 0.06213434058520757,
+        "plane_principal_angles_deg": [
+          47.36016684554034,
+          89.0967515081149
+        ]
+      },
+      {
+        "layer": 8,
+        "source_pair": [
+          1,
+          3
+        ],
+        "transfer_disparity": 0.399782645660254,
+        "target_native_disparity": 0.4946645734295544,
+        "transfer_broader_frac": 0.04030687878501872,
+        "target_own_broader_frac": 0.0611508057565337,
+        "plane_principal_angles_deg": [
+          47.25865687919028,
+          60.2816616418552
+        ]
+      },
+      {
+        "layer": 9,
+        "source_pair": [
+          1,
+          3
+        ],
+        "transfer_disparity": 0.4191417729849547,
+        "target_native_disparity": 0.47183363533636813,
+        "transfer_broader_frac": 0.04397132867875858,
+        "target_own_broader_frac": 0.07532001733169713,
+        "plane_principal_angles_deg": [
+          56.004893833219846,
+          57.824547772795
+        ]
+      },
+      {
+        "layer": 10,
+        "source_pair": [
+          1,
+          3
+        ],
+        "transfer_disparity": 0.3954775995932681,
+        "target_native_disparity": 0.4506288054885348,
+        "transfer_broader_frac": 0.046568030322032446,
+        "target_own_broader_frac": 0.10045456978775617,
+        "plane_principal_angles_deg": [
+          53.136921162001634,
+          85.12747382516088
+        ]
+      },
+      {
+        "layer": 11,
+        "source_pair": [
+          1,
+          3
+        ],
+        "transfer_disparity": 0.2690606655556914,
+        "target_native_disparity": 0.40081822681929735,
+        "transfer_broader_frac": 0.0509090960764365,
+        "target_own_broader_frac": 0.06317580969229623,
+        "plane_principal_angles_deg": [
+          63.354686883779124,
+          71.2960941737599
+        ]
+      },
+      {
+        "layer": 12,
+        "source_pair": [
+          1,
+          8
+        ],
+        "transfer_disparity": 0.5249491285152865,
+        "target_native_disparity": 0.38972160704555947,
+        "transfer_broader_frac": 0.04011606902909992,
+        "target_own_broader_frac": 0.08986595041765358,
+        "plane_principal_angles_deg": [
+          74.4374440900006,
+          89.82765032315204
+        ]
+      },
+      {
+        "layer": 13,
+        "source_pair": [
+          1,
+          8
+        ],
+        "transfer_disparity": 0.5771815813192172,
+        "target_native_disparity": 0.3688160047634512,
+        "transfer_broader_frac": 0.04248424919529647,
+        "target_own_broader_frac": 0.07872983483023772,
+        "plane_principal_angles_deg": [
+          49.75974478321917,
+          85.49114828371951
+        ]
+      },
+      {
+        "layer": 14,
+        "source_pair": [
+          1,
+          4
+        ],
+        "transfer_disparity": 0.4130063045363912,
+        "target_native_disparity": 0.3836158195850128,
+        "transfer_broader_frac": 0.05247035038066117,
+        "target_own_broader_frac": 0.08206091036663929,
+        "plane_principal_angles_deg": [
+          42.022673230154105,
+          62.19203411477413
+        ]
+      },
+      {
+        "layer": 15,
+        "source_pair": [
+          1,
+          7
+        ],
+        "transfer_disparity": 0.4826266266079403,
+        "target_native_disparity": 0.365960004822371,
+        "transfer_broader_frac": 0.04823963924911295,
+        "target_own_broader_frac": 0.13095849015769903,
+        "plane_principal_angles_deg": [
+          45.511892639062594,
+          88.74803462079117
+        ]
+      },
+      {
+        "layer": 16,
+        "source_pair": [
+          1,
+          7
+        ],
+        "transfer_disparity": 0.4789479460811622,
+        "target_native_disparity": 0.35400768454104203,
+        "transfer_broader_frac": 0.04944919786577263,
+        "target_own_broader_frac": 0.13108091141807324,
+        "plane_principal_angles_deg": [
+          49.45430628033187,
+          82.81828803154879
+        ]
+      },
+      {
+        "layer": 17,
+        "source_pair": [
+          1,
+          7
+        ],
+        "transfer_disparity": 0.4878011889257896,
+        "target_native_disparity": 0.3491110608276454,
+        "transfer_broader_frac": 0.05072566061252938,
+        "target_own_broader_frac": 0.13517162603233984,
+        "plane_principal_angles_deg": [
+          46.47377082980725,
+          80.76979724848533
+        ]
+      },
+      {
+        "layer": 18,
+        "source_pair": [
+          1,
+          7
+        ],
+        "transfer_disparity": 0.6302575249950633,
+        "target_native_disparity": 0.4081460932540373,
+        "transfer_broader_frac": 0.0554641681695171,
+        "target_own_broader_frac": 0.1376878269895821,
+        "plane_principal_angles_deg": [
+          43.272631476161905,
+          82.27494021557898
+        ]
+      },
+      {
+        "layer": 19,
+        "source_pair": [
+          1,
+          7
+        ],
+        "transfer_disparity": 0.668304544601519,
+        "target_native_disparity": 0.4064367779712743,
+        "transfer_broader_frac": 0.04908814878171087,
+        "target_own_broader_frac": 0.08243164627762124,
+        "plane_principal_angles_deg": [
+          55.771345189630416,
+          79.17649675785557
+        ]
+      },
+      {
+        "layer": 20,
+        "source_pair": [
+          0,
+          7
+        ],
+        "transfer_disparity": 0.7438209282726473,
+        "target_native_disparity": 0.541754736292684,
+        "transfer_broader_frac": 0.05206448746354666,
+        "target_own_broader_frac": 0.10513742246166635,
+        "plane_principal_angles_deg": [
+          38.83512303826713,
+          88.23145428692744
+        ]
+      },
+      {
+        "layer": 21,
+        "source_pair": [
+          2,
+          6
+        ],
+        "transfer_disparity": 0.45348428622670345,
+        "target_native_disparity": 0.49060191580976475,
+        "transfer_broader_frac": 0.047002512146100996,
+        "target_own_broader_frac": 0.10901786558461633,
+        "plane_principal_angles_deg": [
+          47.41422071158405,
+          85.68216022253307
+        ]
+      },
+      {
+        "layer": 22,
+        "source_pair": [
+          6,
+          9
+        ],
+        "transfer_disparity": 0.6179855792570872,
+        "target_native_disparity": 0.4929350602265222,
+        "transfer_broader_frac": 0.026240745961032718,
+        "target_own_broader_frac": 0.06595157182452249,
+        "plane_principal_angles_deg": [
+          74.4874412378123,
+          89.10585795018449
+        ]
+      },
+      {
+        "layer": 23,
+        "source_pair": [
+          6,
+          7
+        ],
+        "transfer_disparity": 0.5616250495342201,
+        "target_native_disparity": 0.48060873966016215,
+        "transfer_broader_frac": 0.02152077343143033,
+        "target_own_broader_frac": 0.04164639121512168,
+        "plane_principal_angles_deg": [
+          82.08691232417605,
+          83.61233747081374
+        ]
+      },
+      {
+        "layer": 24,
+        "source_pair": [
+          0,
+          7
+        ],
+        "transfer_disparity": 0.910287883825035,
+        "target_native_disparity": 0.4448580941657454,
+        "transfer_broader_frac": 0.025255711033241233,
+        "target_own_broader_frac": 0.08957272850733436,
+        "plane_principal_angles_deg": [
+          59.28460418809738,
+          80.3919342366942
+        ]
+      },
+      {
+        "layer": 25,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5996368749381291,
+        "target_native_disparity": 0.33809154255983487,
+        "transfer_broader_frac": 0.0384357221429952,
+        "target_own_broader_frac": 0.09067348189716001,
+        "plane_principal_angles_deg": [
+          50.39015114851504,
+          61.78134912366492
+        ]
+      },
+      {
+        "layer": 26,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5111876040273582,
+        "target_native_disparity": 0.33513240824494717,
+        "transfer_broader_frac": 0.03487254033988973,
+        "target_own_broader_frac": 0.08953921283303001,
+        "plane_principal_angles_deg": [
+          54.41171613354723,
+          59.81608573940307
+        ]
+      },
+      {
+        "layer": 27,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.6279851154921076,
+        "target_native_disparity": 0.4052495850259946,
+        "transfer_broader_frac": 0.03190449652566605,
+        "target_own_broader_frac": 0.08996346879852817,
+        "plane_principal_angles_deg": [
+          55.100408723128105,
+          69.37188885453396
+        ]
+      },
+      {
+        "layer": 28,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.7229296719480809,
+        "target_native_disparity": 0.4424124997711474,
+        "transfer_broader_frac": 0.030769326048054612,
+        "target_own_broader_frac": 0.036627822601209024,
+        "plane_principal_angles_deg": [
+          76.87284067955372,
+          83.31144495380678
+        ]
+      },
+      {
+        "layer": 29,
+        "source_pair": [
+          2,
+          6
+        ],
+        "transfer_disparity": 0.5215808542938777,
+        "target_native_disparity": 0.39294967255518387,
+        "transfer_broader_frac": 0.022442546748439773,
+        "target_own_broader_frac": 0.06652627806275457,
+        "plane_principal_angles_deg": [
+          76.53445175910552,
+          84.63730143507928
+        ]
+      },
+      {
+        "layer": 30,
+        "source_pair": [
+          2,
+          6
+        ],
+        "transfer_disparity": 0.4807647453022996,
+        "target_native_disparity": 0.37902996443338544,
+        "transfer_broader_frac": 0.02005946754428486,
+        "target_own_broader_frac": 0.06891732584451776,
+        "plane_principal_angles_deg": [
+          75.51887193397515,
+          88.26175642305597
+        ]
+      },
+      {
+        "layer": 31,
+        "source_pair": [
+          0,
+          6
+        ],
+        "transfer_disparity": 0.9630632619488328,
+        "target_native_disparity": 0.3889885298741974,
+        "transfer_broader_frac": 0.013389214220163058,
+        "target_own_broader_frac": 0.07406372117069655,
+        "plane_principal_angles_deg": [
+          80.18440152157685,
+          88.12996507065925
+        ]
+      },
+      {
+        "layer": 32,
+        "source_pair": [
+          2,
+          6
+        ],
+        "transfer_disparity": 0.40266249955383226,
+        "target_native_disparity": 0.37628005609023285,
+        "transfer_broader_frac": 0.013777679100714674,
+        "target_own_broader_frac": 0.06862589579879547,
+        "plane_principal_angles_deg": [
+          70.77974860636813,
+          89.1289812552316
+        ]
+      }
+    ]
+  },
+  "ro->en": {
+    "source": "ro",
+    "target": "en",
+    "best_transfer_layer": 25,
+    "source_pair_at_best": [
+      3,
+      9
+    ],
+    "transfer_disparity": 0.33193391999103716,
+    "layer_corrected_p": 0.0001999600079984003,
+    "null_min_disparity_q50": 0.8404930625516835,
+    "target_native_disparity_same_layer": 0.3633843045265426,
+    "transfer_broader_frac": 0.012792298602495701,
+    "target_own_broader_frac_same_layer": 0.06430529964063161,
+    "transfer_ratio": 0.19893070515159883,
+    "plane_principal_angles_deg_at_best": [
+      79.4267975248306,
+      87.77181403264764
+    ],
+    "layers": [
+      {
+        "layer": 0,
+        "source_pair": [
+          0,
+          4
+        ],
+        "transfer_disparity": 0.8175020273159641,
+        "target_native_disparity": 0.5624790294619977,
+        "transfer_broader_frac": 0.004172713761472304,
+        "target_own_broader_frac": 0.025923217191293695,
+        "plane_principal_angles_deg": [
+          80.30211724478445,
+          87.41021063495867
+        ]
+      },
+      {
+        "layer": 1,
+        "source_pair": [
+          4,
+          8
+        ],
+        "transfer_disparity": 0.7977673872778925,
+        "target_native_disparity": 0.6170842139857895,
+        "transfer_broader_frac": 0.0015942043729988507,
+        "target_own_broader_frac": 0.028707428615694454,
+        "plane_principal_angles_deg": [
+          85.64979762683873,
+          89.69533472591559
+        ]
+      },
+      {
+        "layer": 2,
+        "source_pair": [
+          2,
+          8
+        ],
+        "transfer_disparity": 0.8687539820497766,
+        "target_native_disparity": 0.5187969031169726,
+        "transfer_broader_frac": 0.002586771821837785,
+        "target_own_broader_frac": 0.03077821208531119,
+        "plane_principal_angles_deg": [
+          86.30249114211357,
+          88.09710386227297
+        ]
+      },
+      {
+        "layer": 3,
+        "source_pair": [
+          4,
+          8
+        ],
+        "transfer_disparity": 0.599661375129281,
+        "target_native_disparity": 0.4841560417036709,
+        "transfer_broader_frac": 0.004220922789086494,
+        "target_own_broader_frac": 0.032012113286303115,
+        "plane_principal_angles_deg": [
+          80.49907450852342,
+          83.62967729672583
+        ]
+      },
+      {
+        "layer": 4,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5491534347298188,
+        "target_native_disparity": 0.38219823273243647,
+        "transfer_broader_frac": 0.016280965350468992,
+        "target_own_broader_frac": 0.0334339115124265,
+        "plane_principal_angles_deg": [
+          74.71655535238541,
+          83.1421837179292
+        ]
+      },
+      {
+        "layer": 5,
+        "source_pair": [
+          2,
+          4
+        ],
+        "transfer_disparity": 0.49327623417463873,
+        "target_native_disparity": 0.4662089065522286,
+        "transfer_broader_frac": 0.017740839525143427,
+        "target_own_broader_frac": 0.032667065524246454,
+        "plane_principal_angles_deg": [
+          78.60510172340472,
+          84.65670251966228
+        ]
+      },
+      {
+        "layer": 6,
+        "source_pair": [
+          2,
+          9
+        ],
+        "transfer_disparity": 0.4595210123666438,
+        "target_native_disparity": 0.45564211013749223,
+        "transfer_broader_frac": 0.018856314511373304,
+        "target_own_broader_frac": 0.05165148286788562,
+        "plane_principal_angles_deg": [
+          63.01136677754213,
+          84.53577215795143
+        ]
+      },
+      {
+        "layer": 7,
+        "source_pair": [
+          0,
+          2
+        ],
+        "transfer_disparity": 0.5656851812645858,
+        "target_native_disparity": 0.5292410376931023,
+        "transfer_broader_frac": 0.025669913396778207,
+        "target_own_broader_frac": 0.059179942109268004,
+        "plane_principal_angles_deg": [
+          66.13205559015547,
+          88.693849019062
+        ]
+      },
+      {
+        "layer": 8,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5320749977335282,
+        "target_native_disparity": 0.4826497251247899,
+        "transfer_broader_frac": 0.021859371462655146,
+        "target_own_broader_frac": 0.06520464557051452,
+        "plane_principal_angles_deg": [
+          71.58952125144098,
+          81.16498816075094
+        ]
+      },
+      {
+        "layer": 9,
+        "source_pair": [
+          2,
+          5
+        ],
+        "transfer_disparity": 0.6305167855726903,
+        "target_native_disparity": 0.5194201417601979,
+        "transfer_broader_frac": 0.025972683703440146,
+        "target_own_broader_frac": 0.07262090731313664,
+        "plane_principal_angles_deg": [
+          72.48506524097833,
+          75.37527739897237
+        ]
+      },
+      {
+        "layer": 10,
+        "source_pair": [
+          2,
+          5
+        ],
+        "transfer_disparity": 0.5485168471043813,
+        "target_native_disparity": 0.5171867417750997,
+        "transfer_broader_frac": 0.025131796654436576,
+        "target_own_broader_frac": 0.07540039947758284,
+        "plane_principal_angles_deg": [
+          74.19840727769382,
+          75.1872942140368
+        ]
+      },
+      {
+        "layer": 11,
+        "source_pair": [
+          1,
+          2
+        ],
+        "transfer_disparity": 0.6067423566087888,
+        "target_native_disparity": 0.368997783933142,
+        "transfer_broader_frac": 0.035633336255947216,
+        "target_own_broader_frac": 0.07692272920601279,
+        "plane_principal_angles_deg": [
+          56.24006932312049,
+          89.7639272691604
+        ]
+      },
+      {
+        "layer": 12,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.487653082471352,
+        "target_native_disparity": 0.3898630237199666,
+        "transfer_broader_frac": 0.029882230463744643,
+        "target_own_broader_frac": 0.06615345014273652,
+        "plane_principal_angles_deg": [
+          58.47554724685855,
+          89.41837922051117
+        ]
+      },
+      {
+        "layer": 13,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.4407401178484168,
+        "target_native_disparity": 0.4131247004594676,
+        "transfer_broader_frac": 0.028398049413404947,
+        "target_own_broader_frac": 0.07050126184499175,
+        "plane_principal_angles_deg": [
+          61.59973912528685,
+          87.25492423216242
+        ]
+      },
+      {
+        "layer": 14,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.4887571079375257,
+        "target_native_disparity": 0.4266537893051592,
+        "transfer_broader_frac": 0.027700476665715314,
+        "target_own_broader_frac": 0.08395542973495157,
+        "plane_principal_angles_deg": [
+          61.368369321598266,
+          73.4584874103693
+        ]
+      },
+      {
+        "layer": 15,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.44694700108450736,
+        "target_native_disparity": 0.26742485163768226,
+        "transfer_broader_frac": 0.03101441990409708,
+        "target_own_broader_frac": 0.081389140499486,
+        "plane_principal_angles_deg": [
+          59.14975103564541,
+          84.25966398279371
+        ]
+      },
+      {
+        "layer": 16,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.47480539837844127,
+        "target_native_disparity": 0.31940832806334674,
+        "transfer_broader_frac": 0.029767020528133938,
+        "target_own_broader_frac": 0.08192590964539062,
+        "plane_principal_angles_deg": [
+          62.865276220265564,
+          79.42225764968164
+        ]
+      },
+      {
+        "layer": 17,
+        "source_pair": [
+          1,
+          2
+        ],
+        "transfer_disparity": 0.5555676088502752,
+        "target_native_disparity": 0.3166452584714474,
+        "transfer_broader_frac": 0.029638359103528602,
+        "target_own_broader_frac": 0.08140539002147755,
+        "plane_principal_angles_deg": [
+          64.7865168123784,
+          77.85978540720107
+        ]
+      },
+      {
+        "layer": 18,
+        "source_pair": [
+          3,
+          4
+        ],
+        "transfer_disparity": 0.6802994229899271,
+        "target_native_disparity": 0.29137365361911816,
+        "transfer_broader_frac": 0.034127270248428807,
+        "target_own_broader_frac": 0.08833516043873398,
+        "plane_principal_angles_deg": [
+          67.40852127567538,
+          83.0319823811235
+        ]
+      },
+      {
+        "layer": 19,
+        "source_pair": [
+          3,
+          4
+        ],
+        "transfer_disparity": 0.6147441326633729,
+        "target_native_disparity": 0.33677158146944,
+        "transfer_broader_frac": 0.034858023442666745,
+        "target_own_broader_frac": 0.07643940366016361,
+        "plane_principal_angles_deg": [
+          68.8925588037922,
+          83.63868807228431
+        ]
+      },
+      {
+        "layer": 20,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5238802665748421,
+        "target_native_disparity": 0.47481268141012667,
+        "transfer_broader_frac": 0.03507327345210559,
+        "target_own_broader_frac": 0.08210515624936073,
+        "plane_principal_angles_deg": [
+          49.91416544337939,
+          84.03689243165435
+        ]
+      },
+      {
+        "layer": 21,
+        "source_pair": [
+          2,
+          3
+        ],
+        "transfer_disparity": 0.6768332532673313,
+        "target_native_disparity": 0.47823596295270077,
+        "transfer_broader_frac": 0.025774863328437293,
+        "target_own_broader_frac": 0.06307377897343612,
+        "plane_principal_angles_deg": [
+          71.13655779085883,
+          85.56840374764336
+        ]
+      },
+      {
+        "layer": 22,
+        "source_pair": [
+          2,
+          3
+        ],
+        "transfer_disparity": 0.670870737773213,
+        "target_native_disparity": 0.4973319224476389,
+        "transfer_broader_frac": 0.023920429859159483,
+        "target_own_broader_frac": 0.03488183567803497,
+        "plane_principal_angles_deg": [
+          76.11692193982854,
+          77.40376209991021
+        ]
+      },
+      {
+        "layer": 23,
+        "source_pair": [
+          2,
+          3
+        ],
+        "transfer_disparity": 0.588403656652664,
+        "target_native_disparity": 0.35970406223796114,
+        "transfer_broader_frac": 0.02064286053782321,
+        "target_own_broader_frac": 0.03569283084303551,
+        "plane_principal_angles_deg": [
+          82.34550529672795,
+          85.97858277097477
+        ]
+      },
+      {
+        "layer": 24,
+        "source_pair": [
+          3,
+          9
+        ],
+        "transfer_disparity": 0.39684345407851684,
+        "target_native_disparity": 0.48866051162776536,
+        "transfer_broader_frac": 0.013934101969664199,
+        "target_own_broader_frac": 0.05502678014182274,
+        "plane_principal_angles_deg": [
+          80.66630861969477,
+          82.78021150581239
+        ]
+      },
+      {
+        "layer": 25,
+        "source_pair": [
+          3,
+          9
+        ],
+        "transfer_disparity": 0.33193391999103716,
+        "target_native_disparity": 0.3633843045265426,
+        "transfer_broader_frac": 0.012792298602495701,
+        "target_own_broader_frac": 0.06430529964063161,
+        "plane_principal_angles_deg": [
+          79.4267975248306,
+          87.77181403264764
+        ]
+      },
+      {
+        "layer": 26,
+        "source_pair": [
+          2,
+          3
+        ],
+        "transfer_disparity": 0.4369153897593685,
+        "target_native_disparity": 0.36831846739121166,
+        "transfer_broader_frac": 0.013385856218958152,
+        "target_own_broader_frac": 0.062014312110324016,
+        "plane_principal_angles_deg": [
+          75.19385312998048,
+          77.53878261866099
+        ]
+      },
+      {
+        "layer": 27,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5357364141105088,
+        "target_native_disparity": 0.4309795548548129,
+        "transfer_broader_frac": 0.012475143936401764,
+        "target_own_broader_frac": 0.0612055082499632,
+        "plane_principal_angles_deg": [
+          67.9665541196574,
+          76.18562258547962
+        ]
+      },
+      {
+        "layer": 28,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5412894168217102,
+        "target_native_disparity": 0.4808125597300843,
+        "transfer_broader_frac": 0.012233095906029447,
+        "target_own_broader_frac": 0.06554495207026663,
+        "plane_principal_angles_deg": [
+          67.52700224881832,
+          77.15756420130508
+        ]
+      },
+      {
+        "layer": 29,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5666316986675958,
+        "target_native_disparity": 0.45205305834349385,
+        "transfer_broader_frac": 0.009849298566687517,
+        "target_own_broader_frac": 0.05424238000746347,
+        "plane_principal_angles_deg": [
+          80.77200452199448,
+          88.48251354116522
+        ]
+      },
+      {
+        "layer": 30,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.6189227634404912,
+        "target_native_disparity": 0.4069628047848126,
+        "transfer_broader_frac": 0.006905258884602819,
+        "target_own_broader_frac": 0.054950477232310085,
+        "plane_principal_angles_deg": [
+          80.13190855906414,
+          88.58639339881117
+        ]
+      },
+      {
+        "layer": 31,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.4756970837832136,
+        "target_native_disparity": 0.3813184938749359,
+        "transfer_broader_frac": 0.005398560259788002,
+        "target_own_broader_frac": 0.07382087538087267,
+        "plane_principal_angles_deg": [
+          83.09797699238439,
+          89.86058293018968
+        ]
+      },
+      {
+        "layer": 32,
+        "source_pair": [
+          2,
+          3
+        ],
+        "transfer_disparity": 0.5212239037520583,
+        "target_native_disparity": 0.3284891180395202,
+        "transfer_broader_frac": 0.004381421859915871,
+        "target_own_broader_frac": 0.06171049843454095,
+        "plane_principal_angles_deg": [
+          82.71178142982704,
+          88.90038343291393
+        ]
+      }
+    ]
+  },
+  "ro->es": {
+    "source": "ro",
+    "target": "es",
+    "best_transfer_layer": 25,
+    "source_pair_at_best": [
+      3,
+      9
+    ],
+    "transfer_disparity": 0.28895095360674106,
+    "layer_corrected_p": 0.0001999600079984003,
+    "null_min_disparity_q50": 0.8168864635769099,
+    "target_native_disparity_same_layer": 0.33809154255983487,
+    "transfer_broader_frac": 0.017682560381917112,
+    "target_own_broader_frac_same_layer": 0.09067348189716001,
+    "transfer_ratio": 0.19501358072884314,
+    "plane_principal_angles_deg_at_best": [
+      71.98774122965445,
+      89.81729121105711
+    ],
+    "layers": [
+      {
+        "layer": 0,
+        "source_pair": [
+          0,
+          4
+        ],
+        "transfer_disparity": 0.8533753864290228,
+        "target_native_disparity": 0.7142276065330525,
+        "transfer_broader_frac": 0.010058780919938304,
+        "target_own_broader_frac": 0.02318109525713311,
+        "plane_principal_angles_deg": [
+          77.64492352656322,
+          86.14832172418255
+        ]
+      },
+      {
+        "layer": 1,
+        "source_pair": [
+          4,
+          8
+        ],
+        "transfer_disparity": 0.9177784281130863,
+        "target_native_disparity": 0.751864547648285,
+        "transfer_broader_frac": 0.002318346055587867,
+        "target_own_broader_frac": 0.0295758051070964,
+        "plane_principal_angles_deg": [
+          84.06497498967441,
+          89.40830233510407
+        ]
+      },
+      {
+        "layer": 2,
+        "source_pair": [
+          2,
+          8
+        ],
+        "transfer_disparity": 0.8870108169997614,
+        "target_native_disparity": 0.6823132359793096,
+        "transfer_broader_frac": 0.0042709132765346046,
+        "target_own_broader_frac": 0.03600861041811339,
+        "plane_principal_angles_deg": [
+          83.6620943518813,
+          87.52931245981887
+        ]
+      },
+      {
+        "layer": 3,
+        "source_pair": [
+          4,
+          8
+        ],
+        "transfer_disparity": 0.6845524583101641,
+        "target_native_disparity": 0.6039489146089474,
+        "transfer_broader_frac": 0.005022741749445669,
+        "target_own_broader_frac": 0.029237558879848084,
+        "plane_principal_angles_deg": [
+          87.1393046115156,
+          89.41310705424627
+        ]
+      },
+      {
+        "layer": 4,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5067648811321982,
+        "target_native_disparity": 0.47916591369170947,
+        "transfer_broader_frac": 0.02075984299561533,
+        "target_own_broader_frac": 0.03608184803016295,
+        "plane_principal_angles_deg": [
+          76.839348719372,
+          84.41271116870296
+        ]
+      },
+      {
+        "layer": 5,
+        "source_pair": [
+          2,
+          4
+        ],
+        "transfer_disparity": 0.47868409807756207,
+        "target_native_disparity": 0.4779464874290341,
+        "transfer_broader_frac": 0.01797490655150946,
+        "target_own_broader_frac": 0.036795638339227575,
+        "plane_principal_angles_deg": [
+          71.75412958187967,
+          80.79793340295123
+        ]
+      },
+      {
+        "layer": 6,
+        "source_pair": [
+          2,
+          9
+        ],
+        "transfer_disparity": 0.3979787513151619,
+        "target_native_disparity": 0.35716756784717607,
+        "transfer_broader_frac": 0.017867932832329035,
+        "target_own_broader_frac": 0.04339717731846746,
+        "plane_principal_angles_deg": [
+          78.06025249356134,
+          87.5757859573617
+        ]
+      },
+      {
+        "layer": 7,
+        "source_pair": [
+          0,
+          2
+        ],
+        "transfer_disparity": 0.4270552456800666,
+        "target_native_disparity": 0.4898604622063929,
+        "transfer_broader_frac": 0.03411883963262248,
+        "target_own_broader_frac": 0.06213434058520757,
+        "plane_principal_angles_deg": [
+          71.85647740401944,
+          86.73934295354113
+        ]
+      },
+      {
+        "layer": 8,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.44659235744372217,
+        "target_native_disparity": 0.4946645734295544,
+        "transfer_broader_frac": 0.02795771555569864,
+        "target_own_broader_frac": 0.0611508057565337,
+        "plane_principal_angles_deg": [
+          65.76511915070431,
+          83.44018021059584
+        ]
+      },
+      {
+        "layer": 9,
+        "source_pair": [
+          2,
+          5
+        ],
+        "transfer_disparity": 0.667841863617624,
+        "target_native_disparity": 0.47183363533636813,
+        "transfer_broader_frac": 0.026556910680663834,
+        "target_own_broader_frac": 0.07532001733169713,
+        "plane_principal_angles_deg": [
+          72.69237581853777,
+          76.5039320574414
+        ]
+      },
+      {
+        "layer": 10,
+        "source_pair": [
+          2,
+          5
+        ],
+        "transfer_disparity": 0.6456499273765542,
+        "target_native_disparity": 0.4506288054885348,
+        "transfer_broader_frac": 0.02687579651317973,
+        "target_own_broader_frac": 0.10045456978775617,
+        "plane_principal_angles_deg": [
+          68.47398093963386,
+          79.80326177384948
+        ]
+      },
+      {
+        "layer": 11,
+        "source_pair": [
+          1,
+          2
+        ],
+        "transfer_disparity": 0.5728785589112825,
+        "target_native_disparity": 0.40081822681929735,
+        "transfer_broader_frac": 0.03644570440305041,
+        "target_own_broader_frac": 0.06317580969229623,
+        "plane_principal_angles_deg": [
+          64.96833313759483,
+          83.0763327700342
+        ]
+      },
+      {
+        "layer": 12,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.30624334402604336,
+        "target_native_disparity": 0.38972160704555947,
+        "transfer_broader_frac": 0.032845258165291456,
+        "target_own_broader_frac": 0.08986595041765358,
+        "plane_principal_angles_deg": [
+          63.518688932529635,
+          70.99819201131994
+        ]
+      },
+      {
+        "layer": 13,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.30393046986021777,
+        "target_native_disparity": 0.3688160047634512,
+        "transfer_broader_frac": 0.031453678421783975,
+        "target_own_broader_frac": 0.07872983483023772,
+        "plane_principal_angles_deg": [
+          64.49832670319861,
+          73.6753764548775
+        ]
+      },
+      {
+        "layer": 14,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.32900113749002613,
+        "target_native_disparity": 0.3836158195850128,
+        "transfer_broader_frac": 0.03327679125472216,
+        "target_own_broader_frac": 0.08206091036663929,
+        "plane_principal_angles_deg": [
+          62.467042104768126,
+          73.23855861768865
+        ]
+      },
+      {
+        "layer": 15,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.3091198479529881,
+        "target_native_disparity": 0.365960004822371,
+        "transfer_broader_frac": 0.03851800909196593,
+        "target_own_broader_frac": 0.13095849015769903,
+        "plane_principal_angles_deg": [
+          60.94392171674887,
+          68.67655791846617
+        ]
+      },
+      {
+        "layer": 16,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.32798821721959515,
+        "target_native_disparity": 0.35400768454104203,
+        "transfer_broader_frac": 0.03761877751458932,
+        "target_own_broader_frac": 0.13108091141807324,
+        "plane_principal_angles_deg": [
+          63.05689764205783,
+          66.73858039408366
+        ]
+      },
+      {
+        "layer": 17,
+        "source_pair": [
+          1,
+          2
+        ],
+        "transfer_disparity": 0.5602336165436268,
+        "target_native_disparity": 0.3491110608276454,
+        "transfer_broader_frac": 0.03594053328845125,
+        "target_own_broader_frac": 0.13517162603233984,
+        "plane_principal_angles_deg": [
+          61.844770613238005,
+          78.2163309129826
+        ]
+      },
+      {
+        "layer": 18,
+        "source_pair": [
+          3,
+          4
+        ],
+        "transfer_disparity": 0.686491569490854,
+        "target_native_disparity": 0.4081460932540373,
+        "transfer_broader_frac": 0.03377328698619115,
+        "target_own_broader_frac": 0.1376878269895821,
+        "plane_principal_angles_deg": [
+          73.56655276817531,
+          86.83638129974521
+        ]
+      },
+      {
+        "layer": 19,
+        "source_pair": [
+          3,
+          4
+        ],
+        "transfer_disparity": 0.5890936628358301,
+        "target_native_disparity": 0.4064367779712743,
+        "transfer_broader_frac": 0.03829923043156724,
+        "target_own_broader_frac": 0.08243164627762124,
+        "plane_principal_angles_deg": [
+          73.48385270341376,
+          83.04002229935713
+        ]
+      },
+      {
+        "layer": 20,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.3775902128641202,
+        "target_native_disparity": 0.541754736292684,
+        "transfer_broader_frac": 0.03818264169595293,
+        "target_own_broader_frac": 0.10513742246166635,
+        "plane_principal_angles_deg": [
+          59.48145854960264,
+          73.43472491003658
+        ]
+      },
+      {
+        "layer": 21,
+        "source_pair": [
+          2,
+          3
+        ],
+        "transfer_disparity": 0.5251871353419473,
+        "target_native_disparity": 0.49060191580976475,
+        "transfer_broader_frac": 0.028384539985049105,
+        "target_own_broader_frac": 0.10901786558461633,
+        "plane_principal_angles_deg": [
+          72.80796718328712,
+          74.18750166560878
+        ]
+      },
+      {
+        "layer": 22,
+        "source_pair": [
+          2,
+          3
+        ],
+        "transfer_disparity": 0.6046921834524737,
+        "target_native_disparity": 0.4929350602265222,
+        "transfer_broader_frac": 0.02571751829501667,
+        "target_own_broader_frac": 0.06595157182452249,
+        "plane_principal_angles_deg": [
+          70.98442605968044,
+          80.78064259432738
+        ]
+      },
+      {
+        "layer": 23,
+        "source_pair": [
+          2,
+          3
+        ],
+        "transfer_disparity": 0.5549771538944714,
+        "target_native_disparity": 0.48060873966016215,
+        "transfer_broader_frac": 0.02268047309531916,
+        "target_own_broader_frac": 0.04164639121512168,
+        "plane_principal_angles_deg": [
+          71.80793133731123,
+          86.8448168499076
+        ]
+      },
+      {
+        "layer": 24,
+        "source_pair": [
+          3,
+          9
+        ],
+        "transfer_disparity": 0.40852856947721417,
+        "target_native_disparity": 0.4448580941657454,
+        "transfer_broader_frac": 0.017852163958864582,
+        "target_own_broader_frac": 0.08957272850733436,
+        "plane_principal_angles_deg": [
+          72.91886255576824,
+          88.0496514999179
+        ]
+      },
+      {
+        "layer": 25,
+        "source_pair": [
+          3,
+          9
+        ],
+        "transfer_disparity": 0.28895095360674106,
+        "target_native_disparity": 0.33809154255983487,
+        "transfer_broader_frac": 0.017682560381917112,
+        "target_own_broader_frac": 0.09067348189716001,
+        "plane_principal_angles_deg": [
+          71.98774122965445,
+          89.81729121105711
+        ]
+      },
+      {
+        "layer": 26,
+        "source_pair": [
+          2,
+          3
+        ],
+        "transfer_disparity": 0.479650559961011,
+        "target_native_disparity": 0.33513240824494717,
+        "transfer_broader_frac": 0.018469861195873783,
+        "target_own_broader_frac": 0.08953921283303001,
+        "plane_principal_angles_deg": [
+          70.46357406550716,
+          82.23416738058646
+        ]
+      },
+      {
+        "layer": 27,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5403575890684383,
+        "target_native_disparity": 0.4052495850259946,
+        "transfer_broader_frac": 0.020719867906507396,
+        "target_own_broader_frac": 0.08996346879852817,
+        "plane_principal_angles_deg": [
+          59.53105913305593,
+          79.99503960301338
+        ]
+      },
+      {
+        "layer": 28,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5374137541111542,
+        "target_native_disparity": 0.4424124997711474,
+        "transfer_broader_frac": 0.020515478911418847,
+        "target_own_broader_frac": 0.036627822601209024,
+        "plane_principal_angles_deg": [
+          79.2403444969964,
+          84.46359825168554
+        ]
+      },
+      {
+        "layer": 29,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.6813728414013288,
+        "target_native_disparity": 0.39294967255518387,
+        "transfer_broader_frac": 0.01705513388801781,
+        "target_own_broader_frac": 0.06652627806275457,
+        "plane_principal_angles_deg": [
+          77.68840329608437,
+          88.17218775326297
+        ]
+      },
+      {
+        "layer": 30,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.5882882416478628,
+        "target_native_disparity": 0.37902996443338544,
+        "transfer_broader_frac": 0.013699728346480863,
+        "target_own_broader_frac": 0.06891732584451776,
+        "plane_principal_angles_deg": [
+          79.01120761222192,
+          86.35417109111653
+        ]
+      },
+      {
+        "layer": 31,
+        "source_pair": [
+          0,
+          3
+        ],
+        "transfer_disparity": 0.6384597122545409,
+        "target_native_disparity": 0.3889885298741974,
+        "transfer_broader_frac": 0.010275327879718566,
+        "target_own_broader_frac": 0.07406372117069655,
+        "plane_principal_angles_deg": [
+          77.61906407513827,
+          85.4626105710173
+        ]
+      },
+      {
+        "layer": 32,
+        "source_pair": [
+          2,
+          3
+        ],
+        "transfer_disparity": 0.4118659086924472,
+        "target_native_disparity": 0.37628005609023285,
+        "transfer_broader_frac": 0.0103449990191761,
+        "target_own_broader_frac": 0.06862589579879547,
+        "plane_principal_angles_deg": [
+          76.97834716617214,
+          84.94381706103171
+        ]
+      }
+    ]
+  },
+  "es->en": {
+    "source": "es",
+    "target": "en",
+    "best_transfer_layer": 15,
+    "source_pair_at_best": [
+      0,
+      1
+    ],
+    "transfer_disparity": 0.3562092862232562,
+    "layer_corrected_p": 0.0001999600079984003,
+    "null_min_disparity_q50": 0.8472454248220245,
+    "target_native_disparity_same_layer": 0.26742485163768226,
+    "transfer_broader_frac": 0.06703734730597546,
+    "target_own_broader_frac_same_layer": 0.081389140499486,
+    "transfer_ratio": 0.8236645195485118,
+    "plane_principal_angles_deg_at_best": [
+      45.511892639062594,
+      88.74803462079117
+    ],
+    "layers": [
+      {
+        "layer": 0,
+        "source_pair": [
+          4,
+          7
+        ],
+        "transfer_disparity": 0.9032633235461952,
+        "target_native_disparity": 0.5624790294619977,
+        "transfer_broader_frac": 0.005812139478676175,
+        "target_own_broader_frac": 0.025923217191293695,
+        "plane_principal_angles_deg": [
+          81.37385777560456,
+          85.40493034870055
+        ]
+      },
+      {
+        "layer": 1,
+        "source_pair": [
+          4,
+          6
+        ],
+        "transfer_disparity": 0.764297816431277,
+        "target_native_disparity": 0.6170842139857895,
+        "transfer_broader_frac": 0.007279070465856651,
+        "target_own_broader_frac": 0.028707428615694454,
+        "plane_principal_angles_deg": [
+          74.19113701125852,
+          85.42522519088446
+        ]
+      },
+      {
+        "layer": 2,
+        "source_pair": [
+          2,
+          7
+        ],
+        "transfer_disparity": 0.6523359759442398,
+        "target_native_disparity": 0.5187969031169726,
+        "transfer_broader_frac": 0.009704726708051316,
+        "target_own_broader_frac": 0.03077821208531119,
+        "plane_principal_angles_deg": [
+          69.6752976259885,
+          85.34727474204313
+        ]
+      },
+      {
+        "layer": 3,
+        "source_pair": [
+          3,
+          5
+        ],
+        "transfer_disparity": 0.5431454359693015,
+        "target_native_disparity": 0.4841560417036709,
+        "transfer_broader_frac": 0.010597279496880755,
+        "target_own_broader_frac": 0.032012113286303115,
+        "plane_principal_angles_deg": [
+          82.93984303657834,
+          84.40598900933784
+        ]
+      },
+      {
+        "layer": 4,
+        "source_pair": [
+          3,
+          4
+        ],
+        "transfer_disparity": 0.44714738938302623,
+        "target_native_disparity": 0.38219823273243647,
+        "transfer_broader_frac": 0.014900894583279586,
+        "target_own_broader_frac": 0.0334339115124265,
+        "plane_principal_angles_deg": [
+          59.721008796143344,
+          69.4390257650164
+        ]
+      },
+      {
+        "layer": 5,
+        "source_pair": [
+          4,
+          8
+        ],
+        "transfer_disparity": 0.5555301256266172,
+        "target_native_disparity": 0.4662089065522286,
+        "transfer_broader_frac": 0.017874885721454646,
+        "target_own_broader_frac": 0.032667065524246454,
+        "plane_principal_angles_deg": [
+          75.67876939353552,
+          82.26452859517178
+        ]
+      },
+      {
+        "layer": 6,
+        "source_pair": [
+          4,
+          6
+        ],
+        "transfer_disparity": 0.5039297885688715,
+        "target_native_disparity": 0.45564211013749223,
+        "transfer_broader_frac": 0.02556879482064857,
+        "target_own_broader_frac": 0.05165148286788562,
+        "plane_principal_angles_deg": [
+          70.39185311821679,
+          87.49298228665701
+        ]
+      },
+      {
+        "layer": 7,
+        "source_pair": [
+          1,
+          8
+        ],
+        "transfer_disparity": 0.4876989282240086,
+        "target_native_disparity": 0.5292410376931023,
+        "transfer_broader_frac": 0.033026314654018396,
+        "target_own_broader_frac": 0.059179942109268004,
+        "plane_principal_angles_deg": [
+          47.36016684554033,
+          89.0967515081149
+        ]
+      },
+      {
+        "layer": 8,
+        "source_pair": [
+          1,
+          5
+        ],
+        "transfer_disparity": 0.49197213168676546,
+        "target_native_disparity": 0.4826497251247899,
+        "transfer_broader_frac": 0.040963732075688465,
+        "target_own_broader_frac": 0.06520464557051452,
+        "plane_principal_angles_deg": [
+          47.25865687919029,
+          60.2816616418552
+        ]
+      },
+      {
+        "layer": 9,
+        "source_pair": [
+          1,
+          2
+        ],
+        "transfer_disparity": 0.4331158620388569,
+        "target_native_disparity": 0.5194201417601979,
+        "transfer_broader_frac": 0.04280018212945507,
+        "target_own_broader_frac": 0.07262090731313664,
+        "plane_principal_angles_deg": [
+          56.004893833219846,
+          57.824547772794986
+        ]
+      },
+      {
+        "layer": 10,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.38945936142081794,
+        "target_native_disparity": 0.5171867417750997,
+        "transfer_broader_frac": 0.048179179090251156,
+        "target_own_broader_frac": 0.07540039947758284,
+        "plane_principal_angles_deg": [
+          53.136921162001634,
+          85.12747382516088
+        ]
+      },
+      {
+        "layer": 11,
+        "source_pair": [
+          3,
+          4
+        ],
+        "transfer_disparity": 0.5579952167217075,
+        "target_native_disparity": 0.368997783933142,
+        "transfer_broader_frac": 0.04034748508101782,
+        "target_own_broader_frac": 0.07692272920601279,
+        "plane_principal_angles_deg": [
+          63.35468688377911,
+          71.2960941737599
+        ]
+      },
+      {
+        "layer": 12,
+        "source_pair": [
+          0,
+          2
+        ],
+        "transfer_disparity": 0.41172618296781915,
+        "target_native_disparity": 0.3898630237199666,
+        "transfer_broader_frac": 0.05043543777937268,
+        "target_own_broader_frac": 0.06615345014273652,
+        "plane_principal_angles_deg": [
+          74.4374440900006,
+          89.82765032315204
+        ]
+      },
+      {
+        "layer": 13,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.4582260574877812,
+        "target_native_disparity": 0.4131247004594676,
+        "transfer_broader_frac": 0.04661041969527657,
+        "target_own_broader_frac": 0.07050126184499175,
+        "plane_principal_angles_deg": [
+          49.75974478321918,
+          85.49114828371951
+        ]
+      },
+      {
+        "layer": 14,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.43687796940835566,
+        "target_native_disparity": 0.4266537893051592,
+        "transfer_broader_frac": 0.04818780263008721,
+        "target_own_broader_frac": 0.08395542973495157,
+        "plane_principal_angles_deg": [
+          42.0226732301541,
+          62.19203411477413
+        ]
+      },
+      {
+        "layer": 15,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.3562092862232562,
+        "target_native_disparity": 0.26742485163768226,
+        "transfer_broader_frac": 0.06703734730597546,
+        "target_own_broader_frac": 0.081389140499486,
+        "plane_principal_angles_deg": [
+          45.511892639062594,
+          88.74803462079117
+        ]
+      },
+      {
+        "layer": 16,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.38469409173051383,
+        "target_native_disparity": 0.31940832806334674,
+        "transfer_broader_frac": 0.06828907349564936,
+        "target_own_broader_frac": 0.08192590964539062,
+        "plane_principal_angles_deg": [
+          49.45430628033188,
+          82.81828803154879
+        ]
+      },
+      {
+        "layer": 17,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.38409025451818324,
+        "target_native_disparity": 0.3166452584714474,
+        "transfer_broader_frac": 0.07045174852692938,
+        "target_own_broader_frac": 0.08140539002147755,
+        "plane_principal_angles_deg": [
+          46.47377082980725,
+          80.76979724848533
+        ]
+      },
+      {
+        "layer": 18,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.4121953047626562,
+        "target_native_disparity": 0.29137365361911816,
+        "transfer_broader_frac": 0.07030133193423188,
+        "target_own_broader_frac": 0.08833516043873398,
+        "plane_principal_angles_deg": [
+          43.272631476161905,
+          82.27494021557898
+        ]
+      },
+      {
+        "layer": 19,
+        "source_pair": [
+          1,
+          9
+        ],
+        "transfer_disparity": 0.4367917086856702,
+        "target_native_disparity": 0.33677158146944,
+        "transfer_broader_frac": 0.043489440428765735,
+        "target_own_broader_frac": 0.07643940366016361,
+        "plane_principal_angles_deg": [
+          55.771345189630416,
+          79.17649675785557
+        ]
+      },
+      {
+        "layer": 20,
+        "source_pair": [
+          0,
+          2
+        ],
+        "transfer_disparity": 0.4700764576445423,
+        "target_native_disparity": 0.47481268141012667,
+        "transfer_broader_frac": 0.06031628871952309,
+        "target_own_broader_frac": 0.08210515624936073,
+        "plane_principal_angles_deg": [
+          38.83512303826714,
+          88.23145428692744
+        ]
+      },
+      {
+        "layer": 21,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.4537657102990612,
+        "target_native_disparity": 0.47823596295270077,
+        "transfer_broader_frac": 0.05021206299421679,
+        "target_own_broader_frac": 0.06307377897343612,
+        "plane_principal_angles_deg": [
+          47.41422071158405,
+          85.68216022253307
+        ]
+      },
+      {
+        "layer": 22,
+        "source_pair": [
+          0,
+          9
+        ],
+        "transfer_disparity": 0.5677399797223401,
+        "target_native_disparity": 0.4973319224476389,
+        "transfer_broader_frac": 0.03162483538444347,
+        "target_own_broader_frac": 0.03488183567803497,
+        "plane_principal_angles_deg": [
+          74.48744123781229,
+          89.10585795018449
+        ]
+      },
+      {
+        "layer": 23,
+        "source_pair": [
+          4,
+          7
+        ],
+        "transfer_disparity": 0.742886246592812,
+        "target_native_disparity": 0.35970406223796114,
+        "transfer_broader_frac": 0.02395897803097933,
+        "target_own_broader_frac": 0.03569283084303551,
+        "plane_principal_angles_deg": [
+          82.08691232417605,
+          83.61233747081374
+        ]
+      },
+      {
+        "layer": 24,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.43160294400998456,
+        "target_native_disparity": 0.48866051162776536,
+        "transfer_broader_frac": 0.03350456769208897,
+        "target_own_broader_frac": 0.05502678014182274,
+        "plane_principal_angles_deg": [
+          59.28460418809738,
+          80.3919342366942
+        ]
+      },
+      {
+        "layer": 25,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.3568586028130306,
+        "target_native_disparity": 0.3633843045265426,
+        "transfer_broader_frac": 0.031013006409947117,
+        "target_own_broader_frac": 0.06430529964063161,
+        "plane_principal_angles_deg": [
+          50.390151148515024,
+          61.78134912366493
+        ]
+      },
+      {
+        "layer": 26,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.37700477380771724,
+        "target_native_disparity": 0.36831846739121166,
+        "transfer_broader_frac": 0.028667152282843434,
+        "target_own_broader_frac": 0.062014312110324016,
+        "plane_principal_angles_deg": [
+          54.41171613354722,
+          59.81608573940306
+        ]
+      },
+      {
+        "layer": 27,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.4298803671789565,
+        "target_native_disparity": 0.4309795548548129,
+        "transfer_broader_frac": 0.025600626842420784,
+        "target_own_broader_frac": 0.0612055082499632,
+        "plane_principal_angles_deg": [
+          55.100408723128105,
+          69.37188885453395
+        ]
+      },
+      {
+        "layer": 28,
+        "source_pair": [
+          6,
+          9
+        ],
+        "transfer_disparity": 0.5111640745504219,
+        "target_native_disparity": 0.4808125597300843,
+        "transfer_broader_frac": 0.01391557931599993,
+        "target_own_broader_frac": 0.06554495207026663,
+        "plane_principal_angles_deg": [
+          76.87284067955372,
+          83.31144495380678
+        ]
+      },
+      {
+        "layer": 29,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.4473844315120057,
+        "target_native_disparity": 0.45205305834349385,
+        "transfer_broader_frac": 0.01760792319694413,
+        "target_own_broader_frac": 0.05424238000746347,
+        "plane_principal_angles_deg": [
+          76.53445175910552,
+          84.63730143507928
+        ]
+      },
+      {
+        "layer": 30,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.44718836194618916,
+        "target_native_disparity": 0.4069628047848126,
+        "transfer_broader_frac": 0.015704235640595504,
+        "target_own_broader_frac": 0.054950477232310085,
+        "plane_principal_angles_deg": [
+          75.51887193397515,
+          88.26175642305597
+        ]
+      },
+      {
+        "layer": 31,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.43066326372348585,
+        "target_native_disparity": 0.3813184938749359,
+        "transfer_broader_frac": 0.013412500972325322,
+        "target_own_broader_frac": 0.07382087538087267,
+        "plane_principal_angles_deg": [
+          80.18440152157685,
+          88.12996507065925
+        ]
+      },
+      {
+        "layer": 32,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.424594116013308,
+        "target_native_disparity": 0.3284891180395202,
+        "transfer_broader_frac": 0.012762873994806261,
+        "target_own_broader_frac": 0.06171049843454095,
+        "plane_principal_angles_deg": [
+          70.77974860636813,
+          89.1289812552316
+        ]
+      }
+    ]
+  },
+  "es->ro": {
+    "source": "es",
+    "target": "ro",
+    "best_transfer_layer": 16,
+    "source_pair_at_best": [
+      0,
+      1
+    ],
+    "transfer_disparity": 0.380854260357106,
+    "layer_corrected_p": 0.0001999600079984003,
+    "null_min_disparity_q50": 0.8322262089002119,
+    "target_native_disparity_same_layer": 0.5593712482080043,
+    "transfer_broader_frac": 0.05037065995686093,
+    "target_own_broader_frac_same_layer": 0.139936570403357,
+    "transfer_ratio": 0.35995351187806846,
+    "plane_principal_angles_deg_at_best": [
+      63.05689764205783,
+      66.73858039408366
+    ],
+    "layers": [
+      {
+        "layer": 0,
+        "source_pair": [
+          4,
+          7
+        ],
+        "transfer_disparity": 0.942230471756131,
+        "target_native_disparity": 0.7901583664570733,
+        "transfer_broader_frac": 0.008747389301969328,
+        "target_own_broader_frac": 0.07243022453756587,
+        "plane_principal_angles_deg": [
+          77.64492352656322,
+          86.14832172418255
+        ]
+      },
+      {
+        "layer": 1,
+        "source_pair": [
+          4,
+          6
+        ],
+        "transfer_disparity": 0.9704183644472524,
+        "target_native_disparity": 0.7344709028490171,
+        "transfer_broader_frac": 0.004981222226095726,
+        "target_own_broader_frac": 0.04950558411877204,
+        "plane_principal_angles_deg": [
+          84.06497498967441,
+          89.40830233510407
+        ]
+      },
+      {
+        "layer": 2,
+        "source_pair": [
+          2,
+          7
+        ],
+        "transfer_disparity": 0.8418300743652523,
+        "target_native_disparity": 0.6559917804248688,
+        "transfer_broader_frac": 0.0060404693897574075,
+        "target_own_broader_frac": 0.055348788887015464,
+        "plane_principal_angles_deg": [
+          83.6620943518813,
+          87.52931245981887
+        ]
+      },
+      {
+        "layer": 3,
+        "source_pair": [
+          3,
+          5
+        ],
+        "transfer_disparity": 0.6656878622437568,
+        "target_native_disparity": 0.5957598142446618,
+        "transfer_broader_frac": 0.006165046134610489,
+        "target_own_broader_frac": 0.04464444975301503,
+        "plane_principal_angles_deg": [
+          87.1393046115156,
+          89.41310705424627
+        ]
+      },
+      {
+        "layer": 4,
+        "source_pair": [
+          3,
+          4
+        ],
+        "transfer_disparity": 0.6552833677866372,
+        "target_native_disparity": 0.6010762896242637,
+        "transfer_broader_frac": 0.013696098669465102,
+        "target_own_broader_frac": 0.08113198988579716,
+        "plane_principal_angles_deg": [
+          76.83934871937201,
+          84.41271116870296
+        ]
+      },
+      {
+        "layer": 5,
+        "source_pair": [
+          4,
+          8
+        ],
+        "transfer_disparity": 0.6309468587953686,
+        "target_native_disparity": 0.4931335619434235,
+        "transfer_broader_frac": 0.02298072235389907,
+        "target_own_broader_frac": 0.07481533152841932,
+        "plane_principal_angles_deg": [
+          71.75412958187967,
+          80.79793340295123
+        ]
+      },
+      {
+        "layer": 6,
+        "source_pair": [
+          4,
+          6
+        ],
+        "transfer_disparity": 0.650430451029353,
+        "target_native_disparity": 0.4743015204304539,
+        "transfer_broader_frac": 0.029561643906035516,
+        "target_own_broader_frac": 0.06340023216164423,
+        "plane_principal_angles_deg": [
+          78.06025249356132,
+          87.5757859573617
+        ]
+      },
+      {
+        "layer": 7,
+        "source_pair": [
+          1,
+          8
+        ],
+        "transfer_disparity": 0.7192511955665086,
+        "target_native_disparity": 0.5001769023225415,
+        "transfer_broader_frac": 0.03735540789179948,
+        "target_own_broader_frac": 0.1297893281074388,
+        "plane_principal_angles_deg": [
+          71.85647740401943,
+          86.73934295354113
+        ]
+      },
+      {
+        "layer": 8,
+        "source_pair": [
+          1,
+          5
+        ],
+        "transfer_disparity": 0.6521415619779558,
+        "target_native_disparity": 0.5349063704914908,
+        "transfer_broader_frac": 0.032929925576364656,
+        "target_own_broader_frac": 0.11622137578979218,
+        "plane_principal_angles_deg": [
+          65.76511915070431,
+          83.44018021059584
+        ]
+      },
+      {
+        "layer": 9,
+        "source_pair": [
+          1,
+          2
+        ],
+        "transfer_disparity": 0.49963790815238696,
+        "target_native_disparity": 0.5549900735061172,
+        "transfer_broader_frac": 0.03360627263480402,
+        "target_own_broader_frac": 0.09844423951306838,
+        "plane_principal_angles_deg": [
+          72.69237581853777,
+          76.5039320574414
+        ]
+      },
+      {
+        "layer": 10,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.4096856581112879,
+        "target_native_disparity": 0.5767968173019189,
+        "transfer_broader_frac": 0.05359017462527613,
+        "target_own_broader_frac": 0.09935148607319477,
+        "plane_principal_angles_deg": [
+          68.47398093963386,
+          79.80326177384948
+        ]
+      },
+      {
+        "layer": 11,
+        "source_pair": [
+          3,
+          4
+        ],
+        "transfer_disparity": 0.4529511671728734,
+        "target_native_disparity": 0.5652213714515975,
+        "transfer_broader_frac": 0.04098536283059933,
+        "target_own_broader_frac": 0.12356271154425985,
+        "plane_principal_angles_deg": [
+          64.96833313759483,
+          83.0763327700342
+        ]
+      },
+      {
+        "layer": 12,
+        "source_pair": [
+          0,
+          2
+        ],
+        "transfer_disparity": 0.4137554612244587,
+        "target_native_disparity": 0.4895521680140681,
+        "transfer_broader_frac": 0.045234734725239055,
+        "target_own_broader_frac": 0.13030712764172497,
+        "plane_principal_angles_deg": [
+          63.518688932529635,
+          70.99819201131994
+        ]
+      },
+      {
+        "layer": 13,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.6994442477393774,
+        "target_native_disparity": 0.4900131464835965,
+        "transfer_broader_frac": 0.03732810256680889,
+        "target_own_broader_frac": 0.12717114187880446,
+        "plane_principal_angles_deg": [
+          64.4983267031986,
+          73.6753764548775
+        ]
+      },
+      {
+        "layer": 14,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.6826190412223054,
+        "target_native_disparity": 0.5386245396356326,
+        "transfer_broader_frac": 0.036368911828994245,
+        "target_own_broader_frac": 0.13141353675698797,
+        "plane_principal_angles_deg": [
+          62.467042104768126,
+          73.23855861768864
+        ]
+      },
+      {
+        "layer": 15,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.38523779033317695,
+        "target_native_disparity": 0.5198889327100692,
+        "transfer_broader_frac": 0.05125522405109108,
+        "target_own_broader_frac": 0.13524418264428054,
+        "plane_principal_angles_deg": [
+          60.94392171674888,
+          68.67655791846617
+        ]
+      },
+      {
+        "layer": 16,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.380854260357106,
+        "target_native_disparity": 0.5593712482080043,
+        "transfer_broader_frac": 0.05037065995686093,
+        "target_own_broader_frac": 0.139936570403357,
+        "plane_principal_angles_deg": [
+          63.05689764205783,
+          66.73858039408366
+        ]
+      },
+      {
+        "layer": 17,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.39034804464464956,
+        "target_native_disparity": 0.5983974334268995,
+        "transfer_broader_frac": 0.0546893721312079,
+        "target_own_broader_frac": 0.12552340014120986,
+        "plane_principal_angles_deg": [
+          61.844770613238005,
+          78.2163309129826
+        ]
+      },
+      {
+        "layer": 18,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.45268649131839467,
+        "target_native_disparity": 0.42497676213977276,
+        "transfer_broader_frac": 0.06462233254096282,
+        "target_own_broader_frac": 0.10096868058633808,
+        "plane_principal_angles_deg": [
+          73.56655276817531,
+          86.83638129974521
+        ]
+      },
+      {
+        "layer": 19,
+        "source_pair": [
+          1,
+          9
+        ],
+        "transfer_disparity": 0.5364216645789404,
+        "target_native_disparity": 0.5126671413501399,
+        "transfer_broader_frac": 0.04853567217676392,
+        "target_own_broader_frac": 0.0911680893858384,
+        "plane_principal_angles_deg": [
+          73.48385270341376,
+          83.04002229935713
+        ]
+      },
+      {
+        "layer": 20,
+        "source_pair": [
+          0,
+          2
+        ],
+        "transfer_disparity": 0.5456910006743175,
+        "target_native_disparity": 0.49363678227524277,
+        "transfer_broader_frac": 0.05708535408628103,
+        "target_own_broader_frac": 0.1474439035638785,
+        "plane_principal_angles_deg": [
+          59.48145854960265,
+          73.43472491003658
+        ]
+      },
+      {
+        "layer": 21,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.5276056720237272,
+        "target_native_disparity": 0.5220770238483894,
+        "transfer_broader_frac": 0.074370510212325,
+        "target_own_broader_frac": 0.09462474963066304,
+        "plane_principal_angles_deg": [
+          72.80796718328712,
+          74.18750166560878
+        ]
+      },
+      {
+        "layer": 22,
+        "source_pair": [
+          0,
+          9
+        ],
+        "transfer_disparity": 0.6295091823565273,
+        "target_native_disparity": 0.5485901998229432,
+        "transfer_broader_frac": 0.038725063542273216,
+        "target_own_broader_frac": 0.09461227289037352,
+        "plane_principal_angles_deg": [
+          70.98442605968046,
+          80.78064259432738
+        ]
+      },
+      {
+        "layer": 23,
+        "source_pair": [
+          4,
+          7
+        ],
+        "transfer_disparity": 0.8072464622086305,
+        "target_native_disparity": 0.48080607533742403,
+        "transfer_broader_frac": 0.02438968166267169,
+        "target_own_broader_frac": 0.08796216058853526,
+        "plane_principal_angles_deg": [
+          71.80793133731123,
+          86.84481684990762
+        ]
+      },
+      {
+        "layer": 24,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.4742445026545439,
+        "target_native_disparity": 0.4228338336397778,
+        "transfer_broader_frac": 0.0560171432635645,
+        "target_own_broader_frac": 0.06598880218499531,
+        "plane_principal_angles_deg": [
+          72.91886255576824,
+          88.0496514999179
+        ]
+      },
+      {
+        "layer": 25,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.38236972542990877,
+        "target_native_disparity": 0.3302849310755921,
+        "transfer_broader_frac": 0.047365984836401386,
+        "target_own_broader_frac": 0.0661822699465886,
+        "plane_principal_angles_deg": [
+          71.98774122965445,
+          89.81729121105711
+        ]
+      },
+      {
+        "layer": 26,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.41585614104101,
+        "target_native_disparity": 0.41682336373733475,
+        "transfer_broader_frac": 0.04190742834882634,
+        "target_own_broader_frac": 0.08435013521264184,
+        "plane_principal_angles_deg": [
+          70.46357406550716,
+          82.23416738058646
+        ]
+      },
+      {
+        "layer": 27,
+        "source_pair": [
+          0,
+          1
+        ],
+        "transfer_disparity": 0.4428007546641015,
+        "target_native_disparity": 0.48478713405102825,
+        "transfer_broader_frac": 0.04007390254571765,
+        "target_own_broader_frac": 0.12573809772458477,
+        "plane_principal_angles_deg": [
+          59.53105913305593,
+          79.99503960301338
+        ]
+      },
+      {
+        "layer": 28,
+        "source_pair": [
+          6,
+          9
+        ],
+        "transfer_disparity": 0.5065154928772179,
+        "target_native_disparity": 0.4492246589782164,
+        "transfer_broader_frac": 0.0133398549146396,
+        "target_own_broader_frac": 0.12438502107254659,
+        "plane_principal_angles_deg": [
+          79.2403444969964,
+          84.46359825168554
+        ]
+      },
+      {
+        "layer": 29,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.5532403775849174,
+        "target_native_disparity": 0.5020763736923644,
+        "transfer_broader_frac": 0.014168259560479684,
+        "target_own_broader_frac": 0.13281017666645833,
+        "plane_principal_angles_deg": [
+          77.68840329608437,
+          88.17218775326297
+        ]
+      },
+      {
+        "layer": 30,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.492021117825191,
+        "target_native_disparity": 0.5145199067971169,
+        "transfer_broader_frac": 0.011448635353419641,
+        "target_own_broader_frac": 0.12820305471354446,
+        "plane_principal_angles_deg": [
+          79.01120761222192,
+          86.35417109111653
+        ]
+      },
+      {
+        "layer": 31,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.45347348028062584,
+        "target_native_disparity": 0.47180087111928515,
+        "transfer_broader_frac": 0.008125775309037384,
+        "target_own_broader_frac": 0.123841902413598,
+        "plane_principal_angles_deg": [
+          77.61906407513827,
+          85.4626105710173
+        ]
+      },
+      {
+        "layer": 32,
+        "source_pair": [
+          1,
+          6
+        ],
+        "transfer_disparity": 0.76273819455146,
+        "target_native_disparity": 0.5147750120202387,
+        "transfer_broader_frac": 0.010340379609957297,
+        "target_own_broader_frac": 0.07829969209605042,
+        "plane_principal_angles_deg": [
+          76.97834716617214,
+          84.94381706103171
+        ]
+      }
+    ]
+  }
+}
