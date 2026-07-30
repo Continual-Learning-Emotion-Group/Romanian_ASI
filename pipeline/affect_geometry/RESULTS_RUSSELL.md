@@ -19,8 +19,9 @@ adjacent-but-distinct concepts (worried != distressed), and polysemy risks
 audit trail (tier, gloss, NRC-VAD two-gate angle check, exclusion reasons) is
 in `results/russell_mapping_report.tsv`.
 
-Final anchor sets: English 21 labels / 39 lemmas; Romanian 21 / 37;
-Spanish 18 / 26; Mandarin 25 / 49; Persian 20 / 39; Hindi 19 / 39.
+Final anchor sets (after the 2026-07-30 full-archive sweep, below): English
+21 labels / 40 lemmas; Romanian 22 / 38; Spanish 18 / 26; Mandarin 25 / 67;
+Persian 20 / 43; Hindi 19 / 39.
 The "shared" scope (used whenever languages are compared) is the label
 intersection over all six languages — 11 labels: happy, excited, astonished,
 angry, afraid, distressed, sad, depressed, bored, tired, calm. (With the
@@ -69,6 +70,22 @@ are heterogeneous and stay broader-only; excluded blends mirror the earlier
 languages (zh tongku = distressed/miserable blend, fa naarahat = the upset
 case, hi bechain = restless, adjacent to but not distressed).
 
+**Full-archive sweep (2026-07-30).** The initial mapping pass reviewed only
+the frequent lemmas plus targeted per-label searches; a completeness audit
+then swept every remaining archive lemma in all six languages (1,662 audit
+rows added; the mapping TSV now covers 100% of all archives). Findings:
+Romanian was missing the "relaxed" label entirely despite `relaxat` being in
+the archive (ro 21 -> 22 labels); Mandarin gained 18 mostly literary/variant
+synonyms of existing anchors; Persian gained 4 (two clitic variants, two
+literary forms); English gained "spent" (tired); Spanish and Hindi gained
+nothing. Crucially, the sweep confirmed the 11-label shared scope is a
+property of the corpora, not an oversight: Hindi's archive has no strict
+synonym for annoyed, frustrated, glad, or miserable, and Mandarin none for
+miserable or droopy. All headline conclusions below are stable under the
+expanded anchors; the one shift is that English and Mandarin become
+statistically indistinguishable co-leaders in the confirmatory anchor fit
+(previously Mandarin led).
+
 ## 2. Anchor-PCA analysis (analyze_russell.py)
 
 Statistics are identical to v1: at each layer, StandardScaler + PCA fit on
@@ -81,11 +98,11 @@ layers, selection-corrected):
 
 | Language | Labels | PC1+PC2 | Layer | p | Searched | Layer | p |
 |---|---:|---:|---:|---:|---|---:|---:|
-| English | 21 | 0.306 | 16 | 0.0002 | PC1+PC2 0.306 | 16 | 0.0002 |
+| English | 21 | 0.299 | 16 | 0.0002 | PC1+PC2 0.299 | 16 | 0.0002 |
 | Spanish | 18 | 0.303 | 17 | 0.0002 | PC1+PC2 0.303 | 17 | 0.0002 |
-| Mandarin | 25 | 0.253 | 26 | 0.0002 | PC1+PC3 0.228 | 9 | 0.0002 |
-| Romanian | 21 | 0.582 | 15 | 0.0006 | PC3+PC7 0.421 | 10 | 0.0002 |
-| Persian | 20 | 0.647 | 12 | 0.0060 | PC2+PC3 0.429 | 16 | 0.0004 |
+| Mandarin | 25 | 0.310 | 25 | 0.0002 | PC1+PC2 0.310 | 25 | 0.0002 |
+| Romanian | 22 | 0.600 | 15 | 0.0008 | PC3+PC7 0.428 | 18 | 0.0002 |
+| Persian | 20 | 0.592 | 12 | 0.0008 | PC2+PC4 0.376 | 14 | 0.0002 |
 | Hindi | 19 | 0.748 | 11 | 0.0874 | PC3+PC6 0.432 | 15 | 0.0006 |
 
 With 18-25 anchors the null median disparity is ~0.67-0.87, so all
@@ -95,20 +112,20 @@ from non-significant (0.452, p=0.10) to floor; the language ranking flipped
 correction (none did in v1).
 
 The six languages split into two clear profiles. English, Spanish, and
-Mandarin carry the circumplex in the leading two-or-three PCs of their anchor
-space — Mandarin is the tightest fit of any language (0.253 confirmatory,
-0.228 searched, both at floor). Romanian, Persian, and Hindi carry it on
-non-leading PCs: their confirmatory PC1+PC2 planes are weak-to-non-significant,
-but a searched pair fits well and survives full selection correction
-(0.42-0.43, p <= 0.0006).
+Mandarin carry the circumplex directly in PC1+PC2 (their searched pair IS
+PC1+PC2, fits 0.30-0.31, all at floor; English and Mandarin are
+statistically indistinguishable co-leaders). Romanian, Persian, and Hindi
+carry it on non-leading PCs: their confirmatory PC1+PC2 planes are
+weak-to-non-significant, but a searched pair fits well and survives full
+selection correction (0.38-0.43, p <= 0.0006).
 
 Shared-scope (11 labels) results are lower-powered — the null median drops to
 ~0.45-0.48, so only strong fits clear it: English stays at floor
-(0.248 @L31, p=0.0002), Spanish p=0.0154, Mandarin searched p=0.0094
-(confirmatory p=0.063), Romanian searched p=0.0164 (confirmatory ns),
-Hindi searched p=0.0062 (confirmatory ns), Persian ns (p~0.25). Interpret
-shared-scope non-significance as low power, not absence: every full-scope
-searched fit is significant.
+(0.238 @L32, p=0.0002), Spanish p=0.0154, Mandarin searched p=0.0104
+(confirmatory p=0.102), Romanian searched p=0.0164 (confirmatory ns),
+Hindi searched p=0.0062 (confirmatory ns), Persian ns (p~0.15-0.29).
+Interpret shared-scope non-significance as low power, not absence: every
+full-scope searched fit is significant.
 
 Robustness: removing Romanian noun anchors (frica, teama, groaza, liniste,
 bucurie) changes the full-scope disparity from 0.582 to 0.527
@@ -182,19 +199,19 @@ selection-corrected as always.
 
 | Language | best pair | layer | disparity | corrected p | anchor / broader mean plane share |
 |---|---|---:|---:|---:|---|
-| English | PC2+PC8 | 15 | 0.267 | 0.0002 | 7.8% / 8.2% |
-| Romanian | PC4+PC10 | 25 | 0.330 | 0.0002 | 5.7% / 6.3% |
+| English | PC2+PC8 | 15 | 0.284 | 0.0002 | 7.7% / 8.2% |
+| Romanian | PC4+PC10 | 25 | 0.320 | 0.0002 | 5.7% / 6.4% |
 | Spanish | PC1+PC2 | 26 | 0.335 | 0.0002 | 11.8% / 8.9% |
-| Mandarin | PC1+PC4 | 24 | 0.289 | 0.0002 | 12.6% / 7.2% |
-| Persian | PC3+PC9 | 12 | 0.268 | 0.0002 | 8.4% / 6.2% |
+| Mandarin | PC1+PC4 | 24 | 0.278 | 0.0002 | 14.3% / 6.9% |
+| Persian | PC3+PC9 | 12 | 0.262 | 0.0002 | 8.6% / 6.1% |
 | Hindi | PC5+PC9 | 17 | 0.433 | 0.0008 | 6.2% / 6.2% |
 
 Findings: (a) the circumplex is among the leading natural axes of the whole
 affective vocabulary in every language - in Spanish it is literally PC1+PC2
-(and Mandarin's plain PC1+PC2 fits at 0.305, p=0.0002, before any search);
+(and Mandarin's plain PC1+PC2 fits at 0.300, p=0.0002, before any search);
 (b) fits match or beat the anchor-only searched PCA in every language
-(Persian 0.268 vs 0.429 anchor-only is the largest improvement - with 247
-centroids the plane is estimated far better than from 39 anchors);
+(Persian 0.262 vs 0.376 anchor-only is the largest improvement - with 247
+centroids the plane is estimated far better than from 43 anchors);
 (c) on these planes the anchor/broader plane-share gap from section 4
 disappears - the plane is equally "owned" by broader states, rehabilitating
 the shared-affect-subspace reading.
@@ -212,17 +229,18 @@ A's frozen pair; B's anchors are scored against B's Russell targets. Layer
 selection on the transfer curve is permutation-corrected.
 
 With six languages there are 30 ordered directions, and ALL 30 are
-significant (27 at the p=0.0002 floor; the three directions into Hindi at
-p=0.0006-0.0018; null medians ~0.79-0.87). Transfer disparities span
-0.216-0.574; the single best cross-language fit anywhere is Mandarin's plane
-on Spanish anchors (0.216). Best-vs-best against each target's own all-states
-plane (section 5), the best foreign plane now beats the native plane for
-EVERY target: ZH->EN 0.253 vs 0.267, FA->RO 0.247 vs 0.330, ZH->ES 0.216 vs
-0.335, EN->ZH 0.284 vs 0.289, ZH->FA 0.228 vs 0.268, FA->HI 0.350 vs 0.433.
-Mandarin and Persian are the strongest exporters (with three languages this
-was true only for Spanish as a target). Variance transfer ratios: EN<->ES
-remain the most shared pair (~0.81-0.82); most other pairs move 0.06-0.67 of
-the variance. Principal angles between native and foreign planes are 45-90 deg
+significant (27 at the p=0.0002 floor; max p=0.0012; null medians
+~0.79-0.87). Transfer disparities span 0.216-0.551; the single best
+cross-language fit anywhere is Mandarin's plane on Spanish anchors (0.216).
+Best-vs-best against each target's own all-states plane (section 5), the
+best foreign plane beats the native plane for five of six targets:
+ZH->EN 0.252 vs 0.284, FA->RO 0.261 vs 0.320, ZH->ES 0.216 vs 0.335,
+ZH->FA 0.222 vs 0.262, FA->HI 0.350 vs 0.433; only Mandarin narrowly
+retains its own plane (EN->ZH 0.285 vs native 0.278). Mandarin and Persian
+are the strongest exporters (with three languages foreign-beats-native was
+true only for Spanish as a target). Variance transfer ratios: EN->ES is the
+most shared direction (0.81; ES->EN 0.48 after the sweep); other pairs move
+0.05-0.67 of the variance. Principal angles between native and foreign planes are 45-90 deg
 (vs ~90 deg for random planes in 2560 dims): correlated but not identical
 planes drawn from a shared low-dimensional affect bundle.
 
@@ -237,12 +255,11 @@ Tier (c), maximally permissive: for source basis B and target A, search ALL
 permutation null repeats the full search). Two results:
 
 **Full-label scope: every basis contains a circumplex plane for every
-target.** All 36 cells are significant (33 at p <= 0.0008; the weakest is
-ES->HI at p=0.0118). With three languages the free search rarely improved on
-the source's own plane; with six it sometimes does (e.g. FA basis on EN
-anchors: 0.200 searched vs 0.292 frozen-plane transfer), though the searched
-pair is usually the source's own circumplex pair or a layer-shifted variant
-of it.
+target.** All 36 cells are significant (the weakest is ES->HI at p=0.0118).
+With three languages the free search rarely improved on the source's own
+plane; with six it sometimes does (e.g. FA basis on EN anchors: 0.200
+searched vs 0.295 frozen-plane transfer), though the searched pair is
+usually the source's own circumplex pair or a layer-shifted variant of it.
 
 **Shared-11-label 6x6 table** (every cell fits the same 11-point shape;
 null medians ~0.45-0.50, so power is limited - cells marked + are not
@@ -250,23 +267,31 @@ significant at 0.05):
 
 | target \ basis | EN | RO | ES | ZH | FA | HI |
 |---|---:|---:|---:|---:|---:|---:|
-| English | 0.155 | 0.235 | 0.184 | 0.166 | **0.148** | 0.214 |
+| English | 0.156 | 0.250 | 0.197 | 0.171 | **0.147** | 0.225 |
 | Romanian | 0.276 | 0.292 | 0.249 | 0.218 | **0.153** | 0.291 |
 | Spanish | 0.236 | 0.310 | 0.290 | 0.265 | **0.174** | 0.264 |
-| Mandarin | 0.200 | 0.333 | 0.250 | 0.273 | **0.182** | 0.230 |
-| Persian | 0.252 | 0.402+ | 0.323+ | **0.184** | 0.220 | 0.291 |
+| Mandarin | 0.174 | 0.329 | 0.235 | 0.272 | **0.165** | 0.250 |
+| Persian | 0.250 | 0.394+ | 0.283 | **0.186** | 0.219 | 0.288 |
 | Hindi | 0.244 | 0.413+ | 0.399+ | 0.269 | **0.218** | 0.379+ |
 
-With equalized targets, the Persian basis is now the best basis for every
-target except Persian itself (where Mandarin wins) - overturning the
-three-language finding that the English basis was best-for-all. That earlier
-result was explained by estimation quality (EN: 503 centroids, dominant
-pretraining language), but Persian has only 247 centroids, so that
-explanation no longer carries. Native bases win NO target. Consistent
-sub-patterns: RO is the weakest basis for everyone, and HI is the hardest
-target (three of its cells ns). Pending checks before leaning on the
-Persian inversion: anchor bootstrap for cell error bars, and a control for
-the number of centroids the basis is fit on.
+With equalized targets, the Persian basis is the best basis for every target
+except Persian itself (where Mandarin wins) - overturning the three-language
+finding that the English basis was best-for-all, and stable under the
+full-archive anchor sweep (the pre-sweep table had the same six row
+winners). The earlier EN-best result was explained by estimation quality
+(EN: 503 centroids, dominant pretraining language), but Persian has only
+247 centroids, so that explanation no longer carries. A plausible
+alternative: the Persian centroids come exclusively from rigid masked
+frames (conjunction patterns and somatic idioms), so its PCA has less
+register/topic variance to absorb and concentrates affect in the leading
+PCs - testable by rebuilding another language's basis from a single
+register. Note the basis-quality ranking is NOT a resource ranking in
+either direction: Hindi (smallest, unfiltered) is a mediocre basis, and as
+targets the rows follow the expected resource ordering (English easiest,
+Hindi hardest, three ns cells). Native bases win NO target, and RO is the
+weakest basis for every target. Pending checks before leaning on the
+Persian inversion: anchor bootstrap for cell error bars, and a
+frame-uniformity / centroid-count control.
 
 ## Files
 
