@@ -1,0 +1,221 @@
+{
+  "full": {
+    "ro->ro": {
+      "n_labels": 21,
+      "best_disparity": 0.33148426949187837,
+      "best_layer": 25,
+      "best_pair": [
+        3,
+        9
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.7134878763248194
+    },
+    "ro->en": {
+      "n_labels": 21,
+      "best_disparity": 0.333124020812001,
+      "best_layer": 25,
+      "best_pair": [
+        3,
+        9
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.7244696517408459
+    },
+    "ro->es": {
+      "n_labels": 18,
+      "best_disparity": 0.2907569521160357,
+      "best_layer": 25,
+      "best_pair": [
+        3,
+        9
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.6731422493221361
+    },
+    "en->ro": {
+      "n_labels": 21,
+      "best_disparity": 0.3612766533540521,
+      "best_layer": 22,
+      "best_pair": [
+        3,
+        9
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.7161053817906498
+    },
+    "en->en": {
+      "n_labels": 21,
+      "best_disparity": 0.26755548406459084,
+      "best_layer": 15,
+      "best_pair": [
+        1,
+        7
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.7280309935484184
+    },
+    "en->es": {
+      "n_labels": 18,
+      "best_disparity": 0.2690627093376431,
+      "best_layer": 11,
+      "best_pair": [
+        1,
+        3
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.6860986673832897
+    },
+    "es->ro": {
+      "n_labels": 21,
+      "best_disparity": 0.3595111748682315,
+      "best_layer": 13,
+      "best_pair": [
+        0,
+        1
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.7175515358792077
+    },
+    "es->en": {
+      "n_labels": 21,
+      "best_disparity": 0.3562102315781337,
+      "best_layer": 15,
+      "best_pair": [
+        0,
+        1
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.726370116668333
+    },
+    "es->es": {
+      "n_labels": 18,
+      "best_disparity": 0.33513039266479683,
+      "best_layer": 26,
+      "best_pair": [
+        0,
+        1
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.6820345195385717
+    }
+  },
+  "shared": {
+    "ro->ro": {
+      "n_labels": 15,
+      "best_disparity": 0.3458776636606333,
+      "best_layer": 25,
+      "best_pair": [
+        3,
+        9
+      ],
+      "corrected_p": 0.0021995600879824036,
+      "null_min_disparity_q50": 0.6006279500268255
+    },
+    "ro->en": {
+      "n_labels": 15,
+      "best_disparity": 0.30310964236321214,
+      "best_layer": 32,
+      "best_pair": [
+        1,
+        9
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.6171584169458276
+    },
+    "ro->es": {
+      "n_labels": 15,
+      "best_disparity": 0.32479588677567806,
+      "best_layer": 24,
+      "best_pair": [
+        0,
+        3
+      ],
+      "corrected_p": 0.0007998400319936012,
+      "null_min_disparity_q50": 0.6051521364709131
+    },
+    "en->ro": {
+      "n_labels": 15,
+      "best_disparity": 0.29499506576960766,
+      "best_layer": 13,
+      "best_pair": [
+        1,
+        3
+      ],
+      "corrected_p": 0.0003999200159968006,
+      "null_min_disparity_q50": 0.600561420866178
+    },
+    "en->en": {
+      "n_labels": 15,
+      "best_disparity": 0.25667909639882114,
+      "best_layer": 12,
+      "best_pair": [
+        1,
+        3
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.6197425655905395
+    },
+    "en->es": {
+      "n_labels": 15,
+      "best_disparity": 0.268393640109273,
+      "best_layer": 23,
+      "best_pair": [
+        3,
+        6
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.621727097712782
+    },
+    "es->ro": {
+      "n_labels": 15,
+      "best_disparity": 0.3236500857664134,
+      "best_layer": 25,
+      "best_pair": [
+        1,
+        7
+      ],
+      "corrected_p": 0.0007998400319936012,
+      "null_min_disparity_q50": 0.6082397288439447
+    },
+    "es->en": {
+      "n_labels": 15,
+      "best_disparity": 0.2741873948951892,
+      "best_layer": 15,
+      "best_pair": [
+        0,
+        1
+      ],
+      "corrected_p": 0.0001999600079984003,
+      "null_min_disparity_q50": 0.6213581148964069
+    },
+    "es->es": {
+      "n_labels": 15,
+      "best_disparity": 0.3200221315255265,
+      "best_layer": 31,
+      "best_pair": [
+        4,
+        9
+      ],
+      "corrected_p": 0.0003999200159968006,
+      "null_min_disparity_q50": 0.6183584740502486
+    }
+  },
+  "shared_labels": [
+    "happy",
+    "excited",
+    "astonished",
+    "angry",
+    "afraid",
+    "annoyed",
+    "distressed",
+    "frustrated",
+    "miserable",
+    "sad",
+    "depressed",
+    "bored",
+    "tired",
+    "calm",
+    "glad"
+  ]
+}
