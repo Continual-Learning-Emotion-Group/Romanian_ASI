@@ -36,6 +36,9 @@ ARCHIVES = {
     "ro": PACKAGE / "artifacts/hidden/ro_russell.npz",
     "en": PACKAGE / "artifacts/hidden/en.npz",
     "es": PACKAGE / "artifacts/hidden/es.npz",
+    "zh": PACKAGE / "artifacts/hidden/zh.npz",
+    "fa": PACKAGE / "artifacts/hidden/fa.npz",
+    "hi": PACKAGE / "artifacts/hidden/hi.npz",
 }
 WIDTHS = (10, 20)
 N_COMPONENTS = 20
@@ -148,5 +151,5 @@ def run_language(lang, config, anchors):
 if __name__ == "__main__":
     config = json.loads((PACKAGE / "config.json").read_text())
     anchors = json.loads((PACKAGE / "anchors_russell.json").read_text())
-    for lang in (sys.argv[1:] or ["en", "ro", "es"]):
+    for lang in (sys.argv[1:] or ["en", "ro", "es", "zh", "fa", "hi"]):
         run_language(lang, config, anchors)

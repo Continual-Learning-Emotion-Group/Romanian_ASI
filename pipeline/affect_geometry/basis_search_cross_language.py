@@ -34,6 +34,9 @@ ARCHIVES = {
     "ro": PACKAGE / "artifacts/hidden/ro_russell.npz",
     "en": PACKAGE / "artifacts/hidden/en.npz",
     "es": PACKAGE / "artifacts/hidden/es.npz",
+    "zh": PACKAGE / "artifacts/hidden/zh.npz",
+    "fa": PACKAGE / "artifacts/hidden/fa.npz",
+    "hi": PACKAGE / "artifacts/hidden/hi.npz",
 }
 WIDTH = 10
 
