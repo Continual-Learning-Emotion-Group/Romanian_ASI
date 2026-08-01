@@ -1,17 +1,15 @@
-"""All-states PCA experiment: fit StandardScaler + PCA on the centroids of ALL
-affective states (anchors + broader together), then search PC pairs for the
-best Procrustes fit to the Russell anchor-label shape. Anchors only define the
-target shape; they no longer define the axes.
+"""Broader-only PCA experiment: fit StandardScaler + PCA on the centroids of
+broader states ONLY (anchors fully excluded from the fit), then project the
+anchors into that basis and search PC pairs for the best Procrustes fit to the
+Russell anchor-label shape. Unlike analyze_all_states.py, the anchors are
+strictly out-of-sample here: they influence neither the standardization nor
+the axes, so a circumplex found in this basis is expressible purely in the
+broader states' variance directions.
 
-Search widths: top-10 PCs (matches the frozen anchor-PCA analysis) and top-20
-(extended), each with its own selection-corrected permutation test that
-repeats layer + pair selection inside the null (5000 perms, config seed).
+Search widths, permutation correction, and outputs mirror
+analyze_all_states.py. Plane shares: anchors are held-out, broader in-sample.
 
-Also reports, at each width's best layer, the fair variance comparison the
-all-states fit enables: mean plane share on the winning pair for anchor
-lemmas vs broader lemmas (both are in-sample for this PCA).
-
-Run: python -m pipeline.affect_geometry.analyze_all_states
+Run: python -m pipeline.affect_geometry.analyze_broader_only [langs...]
 """
 from __future__ import annotations
 
@@ -83,9 +81,11 @@ def run_language(lang, config, anchors):
     norms_by_layer = []
     for index, layer in enumerate(layers):
         centroids = all_centroids[index]
-        standardized = StandardScaler().fit_transform(centroids)
-        n_comp = min(N_COMPONENTS, standardized.shape[0] - 1)
-        pca = PCA(n_components=n_comp, random_state=0).fit(standardized)
+        scaler = StandardScaler().fit(centroids[~anchor_mask])
+        standardized = scaler.transform(centroids)
+        n_comp = min(N_COMPONENTS, int((~anchor_mask).sum()) - 1)
+        pca = PCA(n_components=n_comp, random_state=0).fit(
+            standardized[~anchor_mask])
         projected = pca.transform(standardized)
         scores = np.asarray([
             projected[labels_arr == label].mean(0) for label in label_list
@@ -102,7 +102,9 @@ def run_language(lang, config, anchors):
         per_layer.append(row)
 
     summary = {"language": lang, "n_labels": len(label_list),
-               "n_lemmas": int(len(lemmas)), "n_anchor_lemmas": int(anchor_mask.sum()),
+               "n_lemmas": int(len(lemmas)),
+               "n_anchor_lemmas": int(anchor_mask.sum()),
+               "n_broader_lemmas": int((~anchor_mask).sum()),
                "layers": per_layer}
 
     for width in WIDTHS:
@@ -131,8 +133,6 @@ def run_language(lang, config, anchors):
             "broader_median_plane_share": float(np.median(share[~anchor_mask])),
         }
 
-    # confirmatory-style PC1+PC2 (top axes of all states are not chosen for
-    # affect, so this can fail) with its own layer-selection-corrected p
     best_pc12_index = min(range(len(per_layer)),
                           key=lambda i: per_layer[i]["pc1_pc2_disparity"])
     shapes = [normalized_shape(s[:, :2]) for s in category_by_layer]
@@ -143,7 +143,7 @@ def run_language(lang, config, anchors):
     summary["pc1_pc2_best_disparity"] = per_layer[best_pc12_index]["pc1_pc2_disparity"]
     summary["pc1_pc2_corrected_p"] = pc12_p
 
-    out = RESULTS_DIR / f"all_states_{lang}.json"
+    out = RESULTS_DIR / f"broader_only_{lang}.json"
     out.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
                    encoding="utf-8")
     printable = {k: v for k, v in summary.items() if k != "layers"}

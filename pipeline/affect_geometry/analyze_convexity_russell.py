@@ -24,14 +24,17 @@ import numpy as np
 from scipy.optimize import nnls
 from sklearn.preprocessing import StandardScaler
 
+from pipeline.affect_geometry.common import model_paths
+
 PACKAGE = Path(__file__).resolve().parent
+HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
 SEED = 20260730
 N_ROTATIONS = 500
 LAMBDA_FACTOR = 100.0  # simplex-sum penalty scale relative to data norm
 ARCHIVES = {
-    "ro": PACKAGE / "artifacts/hidden/ro_russell.npz",
-    "en": PACKAGE / "artifacts/hidden/en.npz",
-    "es": PACKAGE / "artifacts/hidden/es.npz",
+    "ro": HIDDEN_DIR / "ro_russell.npz",
+    "en": HIDDEN_DIR / "en.npz",
+    "es": HIDDEN_DIR / "es.npz",
 }
 
 
@@ -68,10 +71,10 @@ def main():
 
     for lang, npz_path in ARCHIVES.items():
         metrics = json.loads(
-            (PACKAGE / f"results/metrics_russell_{lang}.json").read_text())
+            (RESULTS_DIR / f"metrics_russell_{lang}.json").read_text())
         best_layer = metrics["full"]["best_pc1_pc2_layer"]
         proj = json.loads(
-            (PACKAGE / f"results/projections_russell_{lang}.json").read_text())
+            (RESULTS_DIR / f"projections_russell_{lang}.json").read_text())
         plane_xy = {s["lemma"]: (s["pc1_pc2_x"], s["pc1_pc2_y"])
                     for s in proj["states"]}
 
@@ -217,7 +220,7 @@ def main():
         print(f"=== {lang} (layer {best_layer}) ===")
         print(json.dumps(summary, indent=2))
 
-    output = PACKAGE / "results/convexity_russell.json"
+    output = RESULTS_DIR / "convexity_russell.json"
     output.write_text(json.dumps(all_results, ensure_ascii=False, indent=2) + "\n",
                       encoding="utf-8")
     print("wrote", output)

@@ -24,13 +24,15 @@ from sklearn.preprocessing import StandardScaler  # noqa: E402
 from pipeline.affect_geometry.analyze import align_to_theory  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent
+from pipeline.affect_geometry.common import model_paths
+HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
 ARCHIVES = {
-    "ro": PACKAGE / "artifacts/hidden/ro_russell.npz",
-    "en": PACKAGE / "artifacts/hidden/en.npz",
-    "es": PACKAGE / "artifacts/hidden/es.npz",
-    "zh": PACKAGE / "artifacts/hidden/zh.npz",
-    "fa": PACKAGE / "artifacts/hidden/fa.npz",
-    "hi": PACKAGE / "artifacts/hidden/hi.npz",
+    "ro": HIDDEN_DIR / "ro_russell.npz",
+    "en": HIDDEN_DIR / "en.npz",
+    "es": HIDDEN_DIR / "es.npz",
+    "zh": HIDDEN_DIR / "zh.npz",
+    "fa": HIDDEN_DIR / "fa.npz",
+    "hi": HIDDEN_DIR / "hi.npz",
 }
 NAMES = {"ro": "Romanian", "en": "English", "es": "Spanish",
          "zh": "Mandarin", "fa": "Persian", "hi": "Hindi"}
@@ -44,7 +46,7 @@ def main():
 
     for lang in (sys.argv[1:] or ["en", "ro", "es", "zh", "fa", "hi"]):
         metrics = json.loads(
-            (PACKAGE / f"results/metrics_russell_{lang}.json").read_text())
+            (RESULTS_DIR / f"metrics_russell_{lang}.json").read_text())
         full = metrics["full"]
         lemma_to_label = {}
         for label, lemma_list in anchors["languages"][lang].items():
@@ -146,7 +148,7 @@ def main():
                      "centroids only; filled = anchor label centroid, "
                      "hue = Russell angle)", fontsize=13, y=1.0)
         fig.tight_layout()
-        path = PACKAGE / f"figures/russell_anchor_geometry_{lang}.png"
+        path = FIGURES_DIR / f"russell_anchor_geometry_{lang}.png"
         fig.savefig(path, dpi=160, bbox_inches="tight")
         plt.close(fig)
         print(path)

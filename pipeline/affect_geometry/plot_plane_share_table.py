@@ -10,7 +10,10 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
+from pipeline.affect_geometry.common import model_paths
+
 PACKAGE = Path(__file__).resolve().parent
+HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
 NAMES = {"en": "English", "es": "Spanish", "ro": "Romanian"}
 
 
@@ -25,7 +28,7 @@ def main():
     rows = []
     for lang in ("en", "es", "ro"):
         s = json.loads(
-            (PACKAGE / f"results/plane_share_russell_{lang}.json").read_text()
+            (RESULTS_DIR / f"plane_share_russell_{lang}.json").read_text()
         )["summary"]
         name = f"{NAMES[lang]} (L{s['layer']})"
         rows += [
@@ -82,7 +85,7 @@ def main():
              "anchors vs broader states.",
              ha="center", fontsize=9, color="0.35")
     fig.tight_layout(rect=(0, 0.07, 1, 1))
-    out = PACKAGE / "figures/russell_plane_share_table.png"
+    out = FIGURES_DIR / "russell_plane_share_table.png"
     fig.savefig(out, dpi=200, bbox_inches="tight")
     print(out)
 

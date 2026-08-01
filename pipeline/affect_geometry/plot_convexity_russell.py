@@ -14,12 +14,15 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
+from pipeline.affect_geometry.common import model_paths
+
 PACKAGE = Path(__file__).resolve().parent
+HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
 NAMES = {"ro": "Romanian", "en": "English", "es": "Spanish"}
 
 
 def main():
-    results = json.loads((PACKAGE / "results/convexity_russell.json").read_text())
+    results = json.loads((RESULTS_DIR / "convexity_russell.json").read_text())
     fig, axes = plt.subplots(3, 3, figsize=(16.5, 15))
     for row, lang in enumerate(["ro", "en", "es"]):
         s = results[lang]["summary"]
@@ -80,7 +83,7 @@ def main():
     fig.suptitle("Broader affective states as convex combinations of Russell anchor "
                  "centroids (full 2560-dim standardized space)", fontsize=14, y=0.995)
     fig.tight_layout()
-    path = PACKAGE / "figures/russell_convexity.png"
+    path = FIGURES_DIR / "russell_convexity.png"
     fig.savefig(path, dpi=160, bbox_inches="tight")
     print(path)
 

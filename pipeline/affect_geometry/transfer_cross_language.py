@@ -41,14 +41,17 @@ from pipeline.affect_geometry.analyze import (  # noqa: E402
     procrustes_disparity,
 )
 
+from pipeline.affect_geometry.common import model_paths
+
 PACKAGE = Path(__file__).resolve().parent
+HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
 ARCHIVES = {
-    "ro": PACKAGE / "artifacts/hidden/ro_russell.npz",
-    "en": PACKAGE / "artifacts/hidden/en.npz",
-    "es": PACKAGE / "artifacts/hidden/es.npz",
-    "zh": PACKAGE / "artifacts/hidden/zh.npz",
-    "fa": PACKAGE / "artifacts/hidden/fa.npz",
-    "hi": PACKAGE / "artifacts/hidden/hi.npz",
+    "ro": HIDDEN_DIR / "ro_russell.npz",
+    "en": HIDDEN_DIR / "en.npz",
+    "es": HIDDEN_DIR / "es.npz",
+    "zh": HIDDEN_DIR / "zh.npz",
+    "fa": HIDDEN_DIR / "fa.npz",
+    "hi": HIDDEN_DIR / "hi.npz",
 }
 NAMES = {"ro": "Romanian", "en": "English", "es": "Spanish",
          "zh": "Mandarin", "fa": "Persian", "hi": "Hindi"}
@@ -218,7 +221,7 @@ def main():
         printable = {k: v for k, v in summary.items() if k != "layers"}
         print(json.dumps(printable, indent=2))
 
-    out = PACKAGE / "results/cross_language_transfer.json"
+    out = RESULTS_DIR / "cross_language_transfer.json"
     out.write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n",
                    encoding="utf-8")
 
@@ -245,7 +248,7 @@ def main():
         fig.suptitle(f"{NAMES[b]} affective states on native vs foreign circumplex "
                      "axes (all-states PCA; hue = Russell angle)", fontsize=13, y=1.0)
         fig.tight_layout()
-        path = PACKAGE / f"figures/russell_transfer_{b}.png"
+        path = FIGURES_DIR / f"russell_transfer_{b}.png"
         fig.savefig(path, dpi=160, bbox_inches="tight")
         plt.close(fig)
         print(path)

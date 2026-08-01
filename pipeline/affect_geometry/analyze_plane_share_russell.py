@@ -24,11 +24,14 @@ from scipy.stats import mannwhitneyu
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
+from pipeline.affect_geometry.common import model_paths
+
 PACKAGE = Path(__file__).resolve().parent
+HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
 ARCHIVES = {
-    "ro": PACKAGE / "artifacts/hidden/ro_russell.npz",
-    "en": PACKAGE / "artifacts/hidden/en.npz",
-    "es": PACKAGE / "artifacts/hidden/es.npz",
+    "ro": HIDDEN_DIR / "ro_russell.npz",
+    "en": HIDDEN_DIR / "en.npz",
+    "es": HIDDEN_DIR / "es.npz",
 }
 
 
@@ -44,7 +47,7 @@ def plane_share(vector, components):
 def run_language(lang):
     anchors = json.loads((PACKAGE / "anchors_russell.json").read_text())
     metrics = json.loads(
-        (PACKAGE / f"results/metrics_russell_{lang}.json").read_text())
+        (RESULTS_DIR / f"metrics_russell_{lang}.json").read_text())
     best_layer = metrics["full"]["best_pc1_pc2_layer"]
 
     lemma_to_label = {}
@@ -115,7 +118,7 @@ def run_language(lang):
         "prob_random_anchor_exceeds_random_broader": float(stat / (len(a) * len(b))),
     }
     result = {"summary": summary, "anchors_loo": anchor_rows, "broader": broader_rows}
-    out = PACKAGE / f"results/plane_share_russell_{lang}.json"
+    out = RESULTS_DIR / f"plane_share_russell_{lang}.json"
     out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",
                    encoding="utf-8")
 

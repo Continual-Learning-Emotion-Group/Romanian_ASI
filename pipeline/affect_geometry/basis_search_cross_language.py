@@ -29,14 +29,17 @@ from pipeline.affect_geometry.analyze import (
     procrustes_disparity,
 )
 
+from pipeline.affect_geometry.common import model_paths
+
 PACKAGE = Path(__file__).resolve().parent
+HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
 ARCHIVES = {
-    "ro": PACKAGE / "artifacts/hidden/ro_russell.npz",
-    "en": PACKAGE / "artifacts/hidden/en.npz",
-    "es": PACKAGE / "artifacts/hidden/es.npz",
-    "zh": PACKAGE / "artifacts/hidden/zh.npz",
-    "fa": PACKAGE / "artifacts/hidden/fa.npz",
-    "hi": PACKAGE / "artifacts/hidden/hi.npz",
+    "ro": HIDDEN_DIR / "ro_russell.npz",
+    "en": HIDDEN_DIR / "en.npz",
+    "es": HIDDEN_DIR / "es.npz",
+    "zh": HIDDEN_DIR / "zh.npz",
+    "fa": HIDDEN_DIR / "fa.npz",
+    "hi": HIDDEN_DIR / "hi.npz",
 }
 WIDTH = 10
 
@@ -120,7 +123,7 @@ def run_scope(scope):
 def main():
     results = {scope: run_scope(scope) for scope in ("full", "shared")}
     results["shared_labels"] = sorted(SHARED, key=lambda l: angle_of[l])
-    out = PACKAGE / "results/cross_language_basis_search.json"
+    out = RESULTS_DIR / "cross_language_basis_search.json"
     out.write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
     print("wrote", out)
 

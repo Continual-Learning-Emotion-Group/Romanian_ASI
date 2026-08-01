@@ -2,9 +2,27 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import unicodedata
 from pathlib import Path
+
+MODEL_VARIANT = os.environ.get("AFFECT_GEOMETRY_MODEL", "qwen3.5-4b")
+
+
+def model_paths(package: Path) -> tuple[Path, Path, Path]:
+    """Per-model artifact locations (hidden, results, figures).
+
+    Select the model with AFFECT_GEOMETRY_MODEL (qwen3.5-4b | qwen3-8b).
+    Model-independent files (manifests, mapping report, reference figure)
+    stay at the unsuffixed top-level locations.
+    """
+    hidden = package / "artifacts" / "hidden" / MODEL_VARIANT
+    results = package / "results" / MODEL_VARIANT
+    figures = package / "figures" / MODEL_VARIANT
+    results.mkdir(parents=True, exist_ok=True)
+    figures.mkdir(parents=True, exist_ok=True)
+    return hidden, results, figures
 
 EXTRA_ID = re.compile(r"<extra_id_(\d+)>")
 WORD = re.compile(r"^[a-z]+(?:-[a-z]+)?$")
