@@ -219,6 +219,32 @@ the shared-affect-subspace reading.
 Figures: `figures/russell_allstates_geometry_{en,ro,es,zh,fa,hi}.png` (the
 layer-sweep panel includes the anchor-only searched curve for comparison).
 
+### 5b. Broader-only PCA control (analyze_broader_only.py)
+
+Strict version of section 5: scaler + PCA fit on broader-state centroids ONLY
+(anchors fully excluded from the fit — they influence neither standardization
+nor axes), anchors projected in, same top-10 pair search + selection-corrected
+permutation test. Anchors are strictly out-of-sample.
+
+| Language | best pair | layer | disparity | corrected p | anchor / broader mean plane share |
+|---|---|---:|---:|---:|---|
+| English | PC3+PC7 | 32 | 0.294 | 0.0002 | 7.6% / 6.7% |
+| Romanian | PC1+PC5 | 8 | 0.455 | 0.0008 | 6.5% / 11.8% |
+| Spanish | PC2+PC3 | 11 | 0.263 | 0.0002 | 7.6% / 9.0% |
+| Mandarin | PC1+PC2 | 12 | 0.306 | 0.0002 | 15.9% / 9.0% |
+| Persian | PC3+PC9 | 13 | 0.374 | 0.0002 | 5.0% / 6.9% |
+| Hindi | PC9+PC10 | 14 | 0.555 | 0.0468 | 2.2% / 5.2% |
+
+Findings: (a) the circumplex survives with the anchors held out entirely —
+five of six languages fit at 0.26–0.46 with p <= 0.0008, comparable to the
+anchor-only searched fits; in Mandarin the circumplex is literally PC1+PC2 of
+the broader states alone; (b) held-out anchor plane share is comparable to
+(in-sample) broader share in every language, so the plane is a genuinely
+shared subspace, not an anchor artifact; (c) Hindi degrades (0.555, p=0.047,
+marginal) — the smallest vocabulary (79 broader lemmas) estimates the basis
+worst; (d) English's best layer is 32 (final), unlike the mid-layer optima
+elsewhere. Output: `results/broader_only_{lang}.json`.
+
 ## 6. Cross-language transfer (transfer_cross_language.py)
 
 All languages share the model, so subspaces are directly comparable. Tier (b),
@@ -246,6 +272,28 @@ planes drawn from a shared low-dimensional affect bundle.
 
 Figures: `figures/russell_transfer_{en,ro,es,zh,fa,hi}.png` (each target on
 its own axes and on each of the five foreign languages' axes).
+
+## 6b. Frozen transfer on shared labels (transfer_shared_labels.py)
+
+Paper-table version of the frozen transfer: same protocol as section 6, but
+every cell (including the native diagonal) is scored on the 11 circumplex
+labels shared by all six languages, so all 36 cells fit the identical
+11-point shape and are comparable in every direction. Layer selection is
+label-permutation corrected. Output: `results/transfer_shared_labels.json`.
+
+29/30 off-diagonal cells significant (only ro->hi fails, D=0.535 p=0.083;
+es->hi marginal, 0.474 p=0.042; null medians ~0.64-0.75). Off-diagonal D
+range 0.174-0.535. Column winners: en target -> native en 0.197 (zh 0.198
+a 0.001 tie); es -> en 0.261; zh -> en 0.174; ro -> zh 0.242; fa -> zh
+0.186; hi -> fa 0.265. Foreign matches or beats native for all six targets
+(beats for five, ties for English). Best-basis identity varies (en x2, zh
+x2, fa x1, native x1), consistent with section 8: no basis ranking is
+claimed. Hindi is the hardest target for every basis; English the easiest.
+Native diagonals on shared labels: en 0.197 (L28), es 0.290 (L25), zh
+0.280 (L30), ro 0.292 (L31), fa 0.218 (L12), hi 0.380 (L17). Note some
+best layers shift late (28-32) on the 11-label score, so the main text
+should not claim a mid-layer band for this table; the depth-alignment
+argument (layer-l axes on layer-l centroids) still holds.
 
 ## 7. Cross-language basis search (basis_search_cross_language.py)
 
@@ -293,6 +341,71 @@ weakest basis for every target. Pending checks before leaning on the
 Persian inversion: anchor bootstrap for cell error bars, and a
 frame-uniformity / centroid-count control.
 
+**UPDATE (section 8): the Persian-best-basis ranking does NOT survive the
+frozen-plane protocol on the same shared labels — treat it as a
+search-protocol artifact and do not use this table for basis-quality
+claims in the paper.**
+
+## 8. Why do Mandarin and Persian export so well? (diagnostics/)
+
+Diagnostics run after skepticism about the Persian dominance in section 7
+(`diagnostics/diagnose_exporter_quality.py`, `..._quality2.py`,
+`diagnostics/subsample_basis_control.py`). Verdict: the frozen-transfer
+table (section 6) is robust but mostly target-driven; the shared-11-label
+free-search ranking (section 7) is fragile and its Persian sweep is an
+artifact of searching 45 pairs x 33 layers against 11 anchor points.
+
+**(a) Additive decomposition of the 6x6 frozen-transfer matrix.** Grand
+mean D = 0.338; target (column) effects explain 50% of the variance,
+source (row) effects 30%, residual 21%. Source effects: zh -0.068 (best
+exporter), fa -0.049, en +0.013, hi +0.012, ro +0.024, es +0.069. Target
+effects: es -0.073 (easiest), hi +0.119 (hardest). Largest residuals:
+fa<->hi transfer unusually well in both directions (-0.06 each).
+
+**(b) fa is NOT the consensus plane.** Mean squared-cosine affinity of each
+language's searched plane to the other five (layers 8-28, random baseline
+0.0008): en 0.099 > es 0.093 > ro 0.087 > zh 0.085 > fa 0.074 > hi 0.034.
+en-es is the most mutually aligned pair (0.215). fa's own per-layer pair
+choice is also the least stable (PC3+PC9 / PC4+PC10 / PC2+PC7...), and its
+anchor within-label coherence gap is the lowest of the six (0.40 vs zh
+0.57). So fa's exports are not explained by an unusually clean or central
+native circumplex.
+
+**(c) Frozen transfer on the shared 11 labels does NOT reproduce the
+Persian sweep.** Freezing each source's own circumplex pair and scoring the
+shared labels, column winners are: en target -> en 0.197 (zh 0.198), es ->
+en 0.261, zh -> en 0.174 (!), ro -> zh 0.242, fa -> zh 0.186, hi -> fa
+0.265. The section-7 fa-wins-everything pattern only appears under the
+free search; with only 11 points the search inflation dwarfs the between-
+basis differences. fa's spread-out, layer-unstable affect structure gives
+the free search more distinct candidate planes to exploit, which is a
+plausible mechanism for it winning specifically under that protocol.
+
+**(d) Vocabulary size does not explain basis quality — corpus purity
+does.** Subsampling en's broader vocabulary from 463 to fa's 204 (anchors
+kept, 3 seeds) IMPROVES its transfers (en->fa 0.392 -> 0.295-0.320; en->zh
+0.285 -> 0.255-0.308); zh subsampled from 694 to 204 stays at full
+strength. en's top-10 PCs capture the smallest fraction of anchor-label
+variance of all six languages (0.28 at L16 vs zh 0.41, fa 0.38, ro 0.48):
+its large unfiltered vocabulary (including non-affect extraction artifacts:
+got, made, been, put, done, taken, given, kept, used, seen, heard, found,
+sure, right, most, less) feeds the PCA register/topic variance that dilutes
+the leading components. zh and fa are the two LLM-filtered (score >= 3)
+pattern-extracted corpora. The fa somatic-idiom templates are clean: the
+wildcard absorbs intensifiers/clitics (delam [barat] tang shode), each
+template is one coherent idiom, and only 2 of 43 fa anchors are templates.
+
+**(e) No scaling artifact.** Transfer is insensitive to the standardization
+ingredient: source scales vs target scales vs no scaling changes best-layer
+D by <= 0.02 on every fa/zh/en source pair; per-dimension log-scale vectors
+are 0.96-0.98 correlated across all language pairs. The PCA axes carry the
+entire effect, which also strengthens the shared-plane reading.
+
+Paper guidance: keep the frozen-transfer table and its zh/fa-best-per-
+column statement (factually robust); attribute exporter quality to corpus
+purity, not language identity or size; do NOT claim Persian is the best
+basis (section 7 shared table stays out of the paper).
+
 ## Files
 
 - Scripts: `prepare_russell.py`, `prepare_new_languages.py` (zh/fa/hi
@@ -300,7 +413,8 @@ frame-uniformity / centroid-count control.
   `analyze_convexity_russell.py` (+ `plot_convexity_russell.py`),
   `analyze_plane_share_russell.py` (+ `plot_plane_share_table.py`),
   `analyze_all_states.py` (+ `plot_all_states.py`),
-  `transfer_cross_language.py`, `basis_search_cross_language.py`
+  `transfer_cross_language.py`, `basis_search_cross_language.py`,
+  `diagnostics/` (exporter-quality and subsample controls, section 8)
 - Anchors: `anchors_russell.json`, `anchors_russell_ro_adj_only.json`
 - Results: `results/metrics_russell_*.json`, `results/projections_russell_*.json`,
   `results/selection_ro_russell.json`, `results/russell_mapping_report.tsv`,
