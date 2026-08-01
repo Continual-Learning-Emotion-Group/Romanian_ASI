@@ -63,7 +63,10 @@ def main():
         offsets = encoded.pop("offset_mapping").tolist()
         encoded = {key: value.cuda() for key, value in encoded.items()}
         with torch.inference_mode():
-            output = model(**encoded, output_hidden_states=True, use_cache=False)
+            # logits_to_keep=1: we only need hidden states; skipping the full
+            # vocab projection saves ~5 GB peak memory on 40 GB cards.
+            output = model(**encoded, output_hidden_states=True, use_cache=False,
+                           logits_to_keep=1)
         hidden = output.hidden_states
         if sums is None:
             layers = np.arange(len(hidden), dtype=np.int16)
