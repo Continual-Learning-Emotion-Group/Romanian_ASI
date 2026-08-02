@@ -29,18 +29,11 @@ from pipeline.affect_geometry.analyze import (
     procrustes_disparity,
 )
 
-from pipeline.affect_geometry.common import model_paths
+from pipeline.affect_geometry.common import discover_archives, model_paths
 
 PACKAGE = Path(__file__).resolve().parent
 HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
-ARCHIVES = {
-    "ro": HIDDEN_DIR / "ro_russell.npz",
-    "en": HIDDEN_DIR / "en.npz",
-    "es": HIDDEN_DIR / "es.npz",
-    "zh": HIDDEN_DIR / "zh.npz",
-    "fa": HIDDEN_DIR / "fa.npz",
-    "hi": HIDDEN_DIR / "hi.npz",
-}
+ARCHIVES = discover_archives(HIDDEN_DIR)
 WIDTH = 10
 
 config = json.loads((PACKAGE / "config.json").read_text())

@@ -41,20 +41,12 @@ from pipeline.affect_geometry.analyze import (  # noqa: E402
     procrustes_disparity,
 )
 
-from pipeline.affect_geometry.common import model_paths
+from pipeline.affect_geometry.common import (
+    LANGUAGE_NAMES as NAMES, discover_archives, model_paths)
 
 PACKAGE = Path(__file__).resolve().parent
 HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
-ARCHIVES = {
-    "ro": HIDDEN_DIR / "ro_russell.npz",
-    "en": HIDDEN_DIR / "en.npz",
-    "es": HIDDEN_DIR / "es.npz",
-    "zh": HIDDEN_DIR / "zh.npz",
-    "fa": HIDDEN_DIR / "fa.npz",
-    "hi": HIDDEN_DIR / "hi.npz",
-}
-NAMES = {"ro": "Romanian", "en": "English", "es": "Spanish",
-         "zh": "Mandarin", "fa": "Persian", "hi": "Hindi"}
+ARCHIVES = discover_archives(HIDDEN_DIR)
 N_COMPONENTS = 20
 SEARCH_WIDTH = 10
 
@@ -211,7 +203,7 @@ def panel(ax, points, language, title):
 
 
 def main():
-    languages = {lang: Language(lang) for lang in ("en", "ro", "es", "zh", "fa", "hi")}
+    languages = {lang: Language(lang) for lang in ARCHIVES}
     results = {}
     best_points = {}
     for a, b in itertools.permutations(languages, 2):
@@ -227,8 +219,11 @@ def main():
 
     for b, target in languages.items():
         sources = [a for a in languages if a != b]
-        fig, axes = plt.subplots(2, 3, figsize=(19, 12.8))
+        columns = (len(sources) + 2) // 2
+        fig, axes = plt.subplots(2, columns, figsize=(6.4 * columns, 12.8))
         axes = axes.ravel()
+        for ax in axes[len(sources) + 1:]:
+            ax.axis("off")
         own_index = target.own_best_index
         own = target.per_layer[own_index]
         panel(axes[0], target.project_own(own_index), target,

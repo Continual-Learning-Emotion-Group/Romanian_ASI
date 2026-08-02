@@ -24,18 +24,10 @@ from sklearn.preprocessing import StandardScaler  # noqa: E402
 from pipeline.affect_geometry.analyze import align_to_theory  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent
-from pipeline.affect_geometry.common import model_paths
+from pipeline.affect_geometry.common import LANGUAGE_NAMES, discover_archives, model_paths
 HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
-ARCHIVES = {
-    "ro": HIDDEN_DIR / "ro_russell.npz",
-    "en": HIDDEN_DIR / "en.npz",
-    "es": HIDDEN_DIR / "es.npz",
-    "zh": HIDDEN_DIR / "zh.npz",
-    "fa": HIDDEN_DIR / "fa.npz",
-    "hi": HIDDEN_DIR / "hi.npz",
-}
-NAMES = {"ro": "Romanian", "en": "English", "es": "Spanish",
-         "zh": "Mandarin", "fa": "Persian", "hi": "Hindi"}
+ARCHIVES = discover_archives(HIDDEN_DIR)
+NAMES = dict(LANGUAGE_NAMES)
 
 
 def main():

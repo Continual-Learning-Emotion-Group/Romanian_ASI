@@ -10,11 +10,12 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
-from pipeline.affect_geometry.common import model_paths
+from pipeline.affect_geometry.common import LANGUAGE_NAMES, discover_archives, model_paths
 
 PACKAGE = Path(__file__).resolve().parent
 HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
-NAMES = {"en": "English", "es": "Spanish", "ro": "Romanian"}
+ARCHIVES = discover_archives(HIDDEN_DIR)
+NAMES = dict(LANGUAGE_NAMES)
 
 
 def fmt_p(p):
@@ -26,10 +27,11 @@ def fmt_p(p):
 
 def main():
     rows = []
-    for lang in ("en", "es", "ro"):
-        s = json.loads(
-            (RESULTS_DIR / f"plane_share_russell_{lang}.json").read_text()
-        )["summary"]
+    for lang in ARCHIVES:
+        path = RESULTS_DIR / f"plane_share_russell_{lang}.json"
+        if not path.exists():
+            continue
+        s = json.loads(path.read_text())["summary"]
         name = f"{NAMES[lang]} (L{s['layer']})"
         rows += [
             (name, "Original anchors (in-sample)", str(s["n_anchor_lemmas"]),
@@ -65,7 +67,7 @@ def main():
             cell.set_height(0.16)
             continue
         block = (r - 1) // 3
-        cell.set_facecolor(block_colors[block])
+        cell.set_facecolor(block_colors[block % len(block_colors)])
         if c == 0 and rows[r - 1][0]:
             cell.set_text_props(fontweight="bold")
         if c == 4:

@@ -14,17 +14,20 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
-from pipeline.affect_geometry.common import model_paths
+from pipeline.affect_geometry.common import LANGUAGE_NAMES, discover_archives, model_paths
 
 PACKAGE = Path(__file__).resolve().parent
 HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
-NAMES = {"ro": "Romanian", "en": "English", "es": "Spanish"}
+ARCHIVES = discover_archives(HIDDEN_DIR)
+NAMES = dict(LANGUAGE_NAMES)
 
 
 def main():
     results = json.loads((RESULTS_DIR / "convexity_russell.json").read_text())
-    fig, axes = plt.subplots(3, 3, figsize=(16.5, 15))
-    for row, lang in enumerate(["ro", "en", "es"]):
+    langs = [lang for lang in ARCHIVES if lang in results]
+    fig, axes = plt.subplots(len(langs), 3, figsize=(16.5, 5 * len(langs)),
+                             squeeze=False)
+    for row, lang in enumerate(langs):
         s = results[lang]["summary"]
         rows = results[lang]["broader"]
         cvx = np.array([r["convex_r2"] for r in rows])

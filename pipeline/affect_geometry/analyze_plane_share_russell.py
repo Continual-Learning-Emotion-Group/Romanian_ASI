@@ -24,15 +24,11 @@ from scipy.stats import mannwhitneyu
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
-from pipeline.affect_geometry.common import model_paths
+from pipeline.affect_geometry.common import discover_archives, model_paths
 
 PACKAGE = Path(__file__).resolve().parent
 HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
-ARCHIVES = {
-    "ro": HIDDEN_DIR / "ro_russell.npz",
-    "en": HIDDEN_DIR / "en.npz",
-    "es": HIDDEN_DIR / "es.npz",
-}
+ARCHIVES = discover_archives(HIDDEN_DIR)
 
 
 def plane_share(vector, components):

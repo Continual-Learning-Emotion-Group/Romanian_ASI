@@ -1,0 +1,104 @@
+{
+ "status": "DRAFT 2026-08-01: fr/id anchors from Final Data (score=3 + match_ok, 30-occurrence floor, fr gender-merged). Strict-synonymy rule as frozen 2026-07-29. Pending user approval; merge into anchors_russell.json after review.",
+ "languages": {
+  "fr": {
+   "happy": [
+    "heureux",
+    "joyeux"
+   ],
+   "delighted": [
+    "ravi"
+   ],
+   "astonished": [
+    "surpris"
+   ],
+   "angry": [
+    "en colere",
+    "furieux",
+    "enrage"
+   ],
+   "afraid": [
+    "effraye"
+   ],
+   "distressed": [
+    "angoisse"
+   ],
+   "frustrated": [
+    "frustre"
+   ],
+   "sad": [
+    "triste"
+   ],
+   "depressed": [
+    "deprime"
+   ],
+   "calm": [
+    "apaise"
+   ],
+   "serene": [
+    "paisible"
+   ],
+   "relaxed": [
+    "detendu"
+   ],
+   "satisfied": [
+    "satisfait",
+    "epanoui"
+   ],
+   "pleased": [
+    "contente"
+   ]
+  },
+  "id": {
+   "happy": [
+    "senang",
+    "bahagia",
+    "gembira"
+   ],
+   "afraid": [
+    "takut",
+    "ketakutan"
+   ],
+   "sad": [
+    "sedih"
+   ],
+   "calm": [
+    "tenang"
+   ],
+   "bored": [
+    "bosan"
+   ],
+   "annoyed": [
+    "kesal"
+   ],
+   "satisfied": [
+    "puas",
+    "kepuasan"
+   ],
+   "at ease": [
+    "nyaman"
+   ],
+   "frustrated": [
+    "frustasi"
+   ]
+  }
+ },
+ "noun_lemmas": {
+  "fr": [],
+  "id": [
+   "ketakutan",
+   "kepuasan"
+  ]
+ },
+ "builder_requirements": {
+  "fr": [
+   "diacritic-strip normalize()",
+   "gender merge (euse->eux, ere->er, ve->f, e->'' when both forms occur)",
+   "multiword phrase lemma: 'en colere'"
+  ],
+  "id": [
+   "lowercase only",
+   "orthographic-variant merge: frustrasi->frustasi, stress->stres"
+  ]
+ }
+}

@@ -159,7 +159,8 @@ def permutation_p_from_shapes(model_shapes, theory, observed, permutations, seed
 def global_pair_search_permutation_p(category_by_layer, theory, observed, candidate_pcs, permutations, seed):
     model_shapes = []
     for scores in category_by_layer:
-        for first, second in itertools.combinations(range(candidate_pcs), 2):
+        for first, second in itertools.combinations(
+                range(min(candidate_pcs, scores.shape[1])), 2):
             shape = normalized_shape(scores[:, [first, second]])
             if shape is not None:
                 model_shapes.append(shape)

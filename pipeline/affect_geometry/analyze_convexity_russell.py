@@ -24,18 +24,14 @@ import numpy as np
 from scipy.optimize import nnls
 from sklearn.preprocessing import StandardScaler
 
-from pipeline.affect_geometry.common import model_paths
+from pipeline.affect_geometry.common import discover_archives, model_paths
 
 PACKAGE = Path(__file__).resolve().parent
 HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
 SEED = 20260730
 N_ROTATIONS = 500
 LAMBDA_FACTOR = 100.0  # simplex-sum penalty scale relative to data norm
-ARCHIVES = {
-    "ro": HIDDEN_DIR / "ro_russell.npz",
-    "en": HIDDEN_DIR / "en.npz",
-    "es": HIDDEN_DIR / "es.npz",
-}
+ARCHIVES = discover_archives(HIDDEN_DIR)
 
 
 def simplex_fit(anchor_matrix, target, lam):

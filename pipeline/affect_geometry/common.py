@@ -24,6 +24,27 @@ def model_paths(package: Path) -> tuple[Path, Path, Path]:
     figures.mkdir(parents=True, exist_ok=True)
     return hidden, results, figures
 
+LANGUAGE_ORDER = ["en", "ro", "es", "zh", "fa", "hi", "fr", "id"]
+LANGUAGE_NAMES = {"ro": "Romanian", "en": "English", "es": "Spanish",
+                  "zh": "Mandarin", "fa": "Persian", "hi": "Hindi",
+                  "fr": "French", "id": "Indonesian"}
+
+
+def discover_archives(hidden_dir: Path) -> dict[str, Path]:
+    """Map language -> centroid archive for whatever extraction variant is
+    selected. Legacy 6-language dirs keep ro under ro_russell.npz; the
+    Final Data dirs ship plain {lang}.npz for all 8 languages."""
+    archives = {}
+    for lang in LANGUAGE_ORDER:
+        for name in ([f"{lang}_russell.npz", f"{lang}.npz"] if lang == "ro"
+                     else [f"{lang}.npz"]):
+            path = hidden_dir / name
+            if path.exists():
+                archives[lang] = path
+                break
+    return archives
+
+
 EXTRA_ID = re.compile(r"<extra_id_(\d+)>")
 WORD = re.compile(r"^[a-z]+(?:-[a-z]+)?$")
 WHEEL = ["joy", "trust", "fear", "surprise", "sadness", "disgust", "anger", "anticipation"]

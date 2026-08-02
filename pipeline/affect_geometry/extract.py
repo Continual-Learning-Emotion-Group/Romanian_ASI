@@ -23,6 +23,8 @@ def main():
     parser.add_argument("--run-metadata", required=True)
     parser.add_argument("--model", required=True)
     parser.add_argument("--revision", required=True)
+    parser.add_argument("--adapter", default=None,
+                        help="optional PEFT LoRA adapter directory, merged into the base weights")
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--maximum-tokens", type=int, default=512)
     parser.add_argument("--dtype", default="bfloat16")
@@ -45,7 +47,11 @@ def main():
         trust_remote_code=True,
         dtype=dtype,
         attn_implementation="sdpa",
-    ).eval().cuda()
+    )
+    if args.adapter:
+        from peft import PeftModel
+        model = PeftModel.from_pretrained(model, args.adapter).merge_and_unload()
+    model = model.eval().cuda()
 
     sums = counts = layers = hidden_size = None
     invalid = 0
@@ -106,6 +112,7 @@ def main():
         "manifest": str(args.manifest),
         "model": args.model,
         "revision": args.revision,
+        "adapter": args.adapter,
         "dtype": args.dtype,
         "batch_size": args.batch_size,
         "maximum_tokens": args.maximum_tokens,
