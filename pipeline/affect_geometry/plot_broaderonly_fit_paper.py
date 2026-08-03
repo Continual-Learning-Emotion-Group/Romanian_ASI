@@ -1,14 +1,12 @@
-"""Paper figure for the all-states PCA (F = S): same layout and style as
-plot_anchor_fit_paper.py, but the scaler + PCA are fit on ALL state centroids
-and the plotted plane is the best searched pair from all_states_{lang}.json
-(w10 search). Broader states now genuinely live in the plane, so axis limits
-adapt to the data instead of the fixed +-2.2 of the anchor version.
+"""Paper figure for the broader-only PCA (F = S \\ A): same layout and style
+as plot_allstates_fit_paper.py, but the scaler + PCA are fit on the broader
+states ONLY (anchors fully held out, mirroring analyze_broader_only.py) and
+the plotted plane is the best searched pair from broader_only_{lang}.json
+(w10 search).
 
 Run from repo root:
-  python3 -m pipeline.affect_geometry.plot_allstates_fit_paper [langs...]
-  python3 -m pipeline.affect_geometry.plot_allstates_fit_paper --combined en fa
-Output: figures/russell_allstates_fit_<lang>.{pdf,png} or
-        figures/russell_allstates_fit_<lang1>_<lang2>.{pdf,png}
+  python3 -m pipeline.affect_geometry.plot_broaderonly_fit_paper [langs...]
+Output: figures/<variant>/russell_broaderonly_fit_<lang>.{pdf,png}
 """
 import json
 import sys
@@ -36,53 +34,17 @@ from pipeline.affect_geometry.paper_style import (  # noqa: E402
 
 apply_style()
 
-from pipeline.affect_geometry.common import model_paths
+from pipeline.affect_geometry.common import model_paths  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent
 HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
 N_COMPONENTS = 20
 
-MANUAL_LABEL_OFFSETS = {
-    "en": {
-        "angry": {"xytext": (0, 12), "ha": "center"},
-        "alarmed": {"xytext": (8, 0)},
-        "afraid": {"xytext": (-8, 6), "ha": "right"},
-        "annoyed": {"xytext": (-8, -2), "ha": "right"},
-        "distressed": {"xytext": (8, -8)},
-        "miserable": {"xytext": (-8, -2), "ha": "right"},
-        "sad": {"xytext": (-8, 0), "ha": "right"},
-        "depressed": {"xytext": (-8, -4), "ha": "right"},
-        "tired": {"xytext": (6, -10)},
-        "glad": {"xytext": (2, -13), "ha": "center"},
-        "happy": {"xytext": (-8, -6), "ha": "right"},
-        "calm": {"xytext": (8, 0)},
-        "astonished": {"xytext": (0, 13), "ha": "center"},
-        "delighted": {"xytext": (8, -2)},
-        "sleepy": {"xytext": (-8, 2), "ha": "right"},
-    },
-    "fa": {
-        "excited": {"xytext": (0, 14), "ha": "center"},
-        "astonished": {"xytext": (4, -14), "ha": "center"},
-        "distressed": {"xytext": (0, -14), "ha": "center"},
-        "afraid": {"xytext": (-8, 0), "ha": "right"},
-        "annoyed": {"xytext": (-8, 0), "ha": "right"},
-        "frustrated": {"xytext": (-8, -8), "ha": "right"},
-        "depressed": {"xytext": (-8, -2), "ha": "right"},
-        "gloomy": {"xytext": (-8, -6), "ha": "right"},
-        "pleased": {"xytext": (0, 12), "ha": "center"},
-        "glad": {"xytext": (8, -2)},
-        "delighted": {"xytext": (-8, -4), "ha": "right"},
-        "happy": {"xytext": (8, -4)},
-        "at ease": {"xytext": (-8, -2), "ha": "right"},
-        "satisfied": {"xytext": (8, -4)},
-    },
-}
-
 
 def draw_language(fig, ax, ax2, lang, anchors, title_prefix=""):
     angle_of = anchors["angles_degrees"]
     summary = json.loads(
-        (RESULTS_DIR / f"all_states_{lang}.json").read_text())
+        (RESULTS_DIR / f"broader_only_{lang}.json").read_text())
     best = summary["w10"]
     lemma_to_label = {}
     for label, lemma_list in anchors["languages"][lang].items():
@@ -104,15 +66,17 @@ def draw_language(fig, ax, ax2, lang, anchors, title_prefix=""):
     pair = list(best["best_pair"])
     index = int(np.flatnonzero(layers == layer)[0])
     centroids = all_centroids[index]
-    standardized = StandardScaler().fit_transform(centroids)
-    n_comp = min(N_COMPONENTS, standardized.shape[0] - 1)
-    pca = PCA(n_components=n_comp, random_state=0).fit(standardized)
+    scaler = StandardScaler().fit(centroids[~anchor_mask])
+    standardized = scaler.transform(centroids)
+    n_comp = min(N_COMPONENTS, int((~anchor_mask).sum()) - 1)
+    pca = PCA(n_components=n_comp, random_state=0).fit(
+        standardized[~anchor_mask])
     points = pca.transform(standardized)[:, pair]
     scores = np.asarray([
         points[labels_arr == label].mean(0) for label in label_list
     ])
     aligned = align_to_theory(points, scores, theory)
-    title = (f"all-states PC{pair[0]+1}+PC{pair[1]+1} | layer {layer} | "
+    title = (f"broader-only PC{pair[0]+1}+PC{pair[1]+1} | layer {layer} | "
              f"disparity {best['best_disparity']:.2f}")
 
     highlighted = []
@@ -145,33 +109,23 @@ def draw_language(fig, ax, ax2, lang, anchors, title_prefix=""):
             ax.scatter(*theory[i], s=16, color="black", zorder=3,
                        label=None if drew_target else "Russell targets")
             drew_target = True
-    manual = MANUAL_LABEL_OFFSETS.get(lang, {})
     annotations = []
     dot_positions = []
-    frozen = []
     for i, label in enumerate(label_list):
         hue = cm.hsv(angle_of[label] / 360.0)
         mx, my = aligned[labels_arr == label].mean(0)
         ax.scatter(mx, my, s=110, color=[hue], zorder=4)
         dot_positions.append((mx, my))
-        spec = manual.get(label, {})
-        kwargs = dict(textcoords="offset points",
-                      xytext=spec.get("xytext", (6, 6)),
-                      ha=spec.get("ha", "left"),
-                      fontsize=9, fontweight="bold")
-        if spec.get("arrow"):
-            kwargs["arrowprops"] = dict(arrowstyle="-", color="0.6", lw=0.7,
-                                        shrinkA=2, shrinkB=4)
-        annotations.append(ax.annotate(label, (mx, my), **kwargs))
-        if spec:
-            frozen.append(i)
+        annotations.append(ax.annotate(
+            label, (mx, my), textcoords="offset points", xytext=(6, 6),
+            ha="left", fontsize=9, fontweight="bold"))
 
     lim = max(2.2, 1.04 * float(np.abs(aligned).max()))
     ax.set_aspect("equal")
     ax.set_xlim(-lim, lim)
     ax.set_ylim(-lim, lim)
     resolve_label_overlaps(fig, ax, annotations, np.asarray(dot_positions),
-                           obstacles=theory, frozen=frozen)
+                           obstacles=theory)
     ax.set_title(title_prefix + title, fontsize=11)
     for spine in ("top", "right"):
         ax.spines[spine].set_visible(False)
@@ -204,26 +158,6 @@ def draw_language(fig, ax, ax2, lang, anchors, title_prefix=""):
 def main():
     anchors = json.loads((PACKAGE / "anchors_russell.json").read_text())
     args = sys.argv[1:]
-
-    if args and args[0] == "--combined":
-        langs = args[1:] or ["en", "fa"]
-        fig, axes = plt.subplots(
-            2, len(langs), figsize=(6.0 * len(langs), 8.6),
-            gridspec_kw={"height_ratios": [6.0, 2.5], "hspace": 0.25,
-                         "wspace": 0.18})
-        for column, lang in enumerate(langs):
-            highlighted, lim = draw_language(
-                fig, axes[0, column], axes[1, column], lang, anchors,
-                title_prefix=f"{NAMES[lang]}: ")
-            print(lang, "highlighted:", highlighted, "| lim:", round(lim, 2))
-        stem = "russell_allstates_fit_" + "_".join(langs)
-        for suffix in ("pdf", "png"):
-            fig.savefig(FIGURES_DIR / f"{stem}.{suffix}", dpi=300,
-                        bbox_inches="tight")
-        plt.close(fig)
-        print(FIGURES_DIR / f"{stem}.pdf")
-        return
-
     for lang in (args or ["en", "ro", "es", "zh", "fa", "hi", "fr", "id"]):
         fig, (ax, ax2) = plt.subplots(
             2, 1, figsize=(6.0, 8.6),
@@ -231,12 +165,14 @@ def main():
         highlighted, lim = draw_language(fig, ax, ax2, lang, anchors)
         for suffix in ("pdf", "png"):
             fig.savefig(
-                FIGURES_DIR / f"russell_allstates_fit_{lang}.{suffix}",
+                FIGURES_DIR / f"russell_broaderonly_fit_{lang}.{suffix}",
                 dpi=300, bbox_inches="tight")
         plt.close(fig)
-        print(FIGURES_DIR / f"russell_allstates_fit_{lang}.pdf",
+        print(FIGURES_DIR / f"russell_broaderonly_fit_{lang}.pdf",
               "| highlighted:", highlighted, "| lim:", round(lim, 2))
 
 
 if __name__ == "__main__":
     main()
+
+

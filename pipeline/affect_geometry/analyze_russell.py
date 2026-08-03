@@ -33,7 +33,9 @@ from pipeline.affect_geometry.analyze import (
     geometry,
     global_pair_search_permutation_p,
     global_pc12_permutation_p,
+    normalized_shape,
     participation_ratio,
+    permutation_p_from_shapes,
     procrustes_disparity,
 )
 from pipeline.affect_geometry.common import load_json
@@ -150,6 +152,17 @@ def run_scope(scope_name, label_list, lemma_to_label, anchor_config, archive_dat
     global_pc12_p, pc12_null = global_pc12_permutation_p(
         category_by_layer, theory, best_pc12["pc1_pc2_disparity"], permutations, seed)
 
+    # Plain (uncorrected) nulls at the reported plane: label shuffles with the
+    # plane held fixed. These back the PRE effect size, matching the transfer
+    # tables' convention; the search penalty stays in the corrected p above.
+    _, pc12_plain_null = permutation_p_from_shapes(
+        [normalized_shape(category_by_layer[best_pc12_index][:, :2])],
+        theory, best_pc12["pc1_pc2_disparity"], permutations, seed)
+    searched_pair = best["searched_pc_pair"]
+    _, searched_plain_null = permutation_p_from_shapes(
+        [normalized_shape(category_by_layer[best_index][:, searched_pair])],
+        theory, best["searched_disparity"], permutations, seed)
+
     summary = {
         "labels": label_list,
         "label_count": len(label_list),
@@ -165,11 +178,25 @@ def run_scope(scope_name, label_list, lemma_to_label, anchor_config, archive_dat
             "q05": float(np.quantile(pc12_null, 0.05)),
             "q50": float(np.quantile(pc12_null, 0.50)),
         },
+        "pc1_pc2_null_mean": float(np.mean(pc12_null)),
+        "pc1_pc2_null_sd": float(np.std(pc12_null)),
+        "pc1_pc2_pre": float(
+            1 - best_pc12["pc1_pc2_disparity"] / np.mean(pc12_null)),
+        "pc1_pc2_plain_null_mean": float(np.mean(pc12_plain_null)),
+        "pc1_pc2_pre_plain": float(
+            1 - best_pc12["pc1_pc2_disparity"] / np.mean(pc12_plain_null)),
         "searched_null_min_disparity_quantiles": {
             "q01": float(np.quantile(null, 0.01)),
             "q05": float(np.quantile(null, 0.05)),
             "q50": float(np.quantile(null, 0.50)),
         },
+        "searched_null_mean": float(np.mean(null)),
+        "searched_null_sd": float(np.std(null)),
+        "searched_pre": float(
+            1 - best["searched_disparity"] / np.mean(null)),
+        "searched_plain_null_mean": float(np.mean(searched_plain_null)),
+        "searched_pre_plain": float(
+            1 - best["searched_disparity"] / np.mean(searched_plain_null)),
         "layers": rows,
     }
     selected = {
@@ -188,6 +215,11 @@ def main():
     parser.add_argument("--projection-output", required=True)
     parser.add_argument("--config", default=str(package / "config.json"))
     parser.add_argument("--anchors", default=str(package / "anchors_russell.json"))
+    parser.add_argument("--shared-languages", nargs="*",
+                        default=["en", "ro", "es", "zh", "fa", "hi"],
+                        help="languages whose anchor-label intersection defines the "
+                             "'shared' scope (frozen to the six-language set; fr/id "
+                             "would collapse the global intersection to 4 labels)")
     args = parser.parse_args()
 
     config, anchor_config = load_json(args.config), load_json(args.anchors)
@@ -203,7 +235,7 @@ def main():
             lemma_to_label[lemma] = label
     angle_of = anchor_config["angles_degrees"]
     full_labels = sorted(languages[args.language], key=lambda l: angle_of[l])
-    shared = set.intersection(*[set(v) for v in languages.values()])
+    shared = set.intersection(*[set(languages[l]) for l in args.shared_languages])
     shared_labels = sorted(shared, key=lambda l: angle_of[l])
 
     archive = np.load(args.hidden)

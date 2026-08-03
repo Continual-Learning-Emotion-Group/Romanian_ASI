@@ -31,18 +31,11 @@ from pipeline.affect_geometry.analyze import (
     procrustes_disparity,
 )
 
-from pipeline.affect_geometry.common import model_paths
+from pipeline.affect_geometry.common import discover_archives, model_paths
 
 PACKAGE = Path(__file__).resolve().parent
 HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
-ARCHIVES = {
-    "ro": HIDDEN_DIR / "ro_russell.npz",
-    "en": HIDDEN_DIR / "en.npz",
-    "es": HIDDEN_DIR / "es.npz",
-    "zh": HIDDEN_DIR / "zh.npz",
-    "fa": HIDDEN_DIR / "fa.npz",
-    "hi": HIDDEN_DIR / "hi.npz",
-}
+ARCHIVES = discover_archives(HIDDEN_DIR)
 WIDTHS = (10, 20)
 N_COMPONENTS = 20
 
@@ -114,6 +107,9 @@ def run_language(lang, config, anchors):
             width, permutations, seed)
 
         pair = best[f"searched_w{width}_pair"]
+        _, plain_null = permutation_p_from_shapes(
+            [normalized_shape(category_by_layer[best_index][:, pair])],
+            theory, best[f"searched_w{width}_disparity"], permutations, seed)
         projected = projections_by_layer[best_index]
         norms = norms_by_layer[best_index]
         pair_sq = np.square(projected[:, pair]).sum(axis=1)
@@ -125,6 +121,13 @@ def run_language(lang, config, anchors):
             "corrected_p": p,
             "null_min_disparity_q50": float(np.quantile(null, 0.50)),
             "null_min_disparity_q05": float(np.quantile(null, 0.05)),
+            "null_mean": float(np.mean(null)),
+            "null_sd": float(np.std(null)),
+            "pre": float(
+                1 - best[f"searched_w{width}_disparity"] / np.mean(null)),
+            "plain_null_mean": float(np.mean(plain_null)),
+            "pre_plain": float(
+                1 - best[f"searched_w{width}_disparity"] / np.mean(plain_null)),
             "anchor_mean_plane_share": float(share[anchor_mask].mean()),
             "anchor_median_plane_share": float(np.median(share[anchor_mask])),
             "broader_mean_plane_share": float(share[~anchor_mask].mean()),
@@ -136,12 +139,23 @@ def run_language(lang, config, anchors):
     best_pc12_index = min(range(len(per_layer)),
                           key=lambda i: per_layer[i]["pc1_pc2_disparity"])
     shapes = [normalized_shape(s[:, :2]) for s in category_by_layer]
-    pc12_p, _ = permutation_p_from_shapes(
+    pc12_p, pc12_null = permutation_p_from_shapes(
         shapes, theory, per_layer[best_pc12_index]["pc1_pc2_disparity"],
         permutations, seed)
     summary["pc1_pc2_best_layer"] = int(per_layer[best_pc12_index]["layer"])
     summary["pc1_pc2_best_disparity"] = per_layer[best_pc12_index]["pc1_pc2_disparity"]
     summary["pc1_pc2_corrected_p"] = pc12_p
+    summary["pc1_pc2_null_mean"] = float(np.mean(pc12_null))
+    summary["pc1_pc2_null_sd"] = float(np.std(pc12_null))
+    summary["pc1_pc2_pre"] = float(
+        1 - per_layer[best_pc12_index]["pc1_pc2_disparity"] / np.mean(pc12_null))
+    _, pc12_plain_null = permutation_p_from_shapes(
+        [shapes[best_pc12_index]], theory,
+        per_layer[best_pc12_index]["pc1_pc2_disparity"], permutations, seed)
+    summary["pc1_pc2_plain_null_mean"] = float(np.mean(pc12_plain_null))
+    summary["pc1_pc2_pre_plain"] = float(
+        1 - per_layer[best_pc12_index]["pc1_pc2_disparity"]
+        / np.mean(pc12_plain_null))
 
     out = RESULTS_DIR / f"all_states_{lang}.json"
     out.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n",

@@ -29,18 +29,17 @@ from sklearn.preprocessing import StandardScaler  # noqa: E402
 from pipeline.affect_geometry.analyze import align_to_theory  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent
-from pipeline.affect_geometry.common import model_paths
+from pipeline.affect_geometry.common import (  # noqa: E402
+    LANGUAGE_NAMES, discover_archives, model_paths,
+)
+from pipeline.affect_geometry.paper_style import (  # noqa: E402
+    BLUE, RED, apply_style, inplot_legend,
+)
+
+apply_style()
 HIDDEN_DIR, RESULTS_DIR, FIGURES_DIR = model_paths(PACKAGE)
-ARCHIVES = {
-    "ro": HIDDEN_DIR / "ro_russell.npz",
-    "en": HIDDEN_DIR / "en.npz",
-    "es": HIDDEN_DIR / "es.npz",
-    "zh": HIDDEN_DIR / "zh.npz",
-    "fa": HIDDEN_DIR / "fa.npz",
-    "hi": HIDDEN_DIR / "hi.npz",
-}
-NAMES = {"ro": "Romanian", "en": "English", "es": "Spanish",
-         "zh": "Mandarin", "fa": "Persian", "hi": "Hindi"}
+ARCHIVES = discover_archives(HIDDEN_DIR)
+NAMES = LANGUAGE_NAMES
 HIGHLIGHT_TARGET_ANGLES = (45.0, 165.0, 285.0)  # one word picked near each
 
 # Hand-placed offsets (points) for labels the automatic pass cannot settle:
@@ -262,26 +261,26 @@ def draw_language(fig, ax, ax2, lang, anchors, candidate_pcs, title_prefix=""):
     ax.set_ylim(-lim, lim)
     for spine in ("top", "right"):
         ax.spines[spine].set_visible(False)
-    ax.legend(loc="lower left", fontsize=8, frameon=False)
+    inplot_legend(ax, loc="lower left", fontsize=8)
 
     rows = full["layers"]
     xs = [r["layer"] for r in rows]
     ax2.plot(xs, [r["pc1_pc2_disparity"] for r in rows],
-             "o-", ms=3.5, lw=1.4, color="#1f6fb4", label="PC1+PC2")
+             "o-", ms=3.5, lw=1.4, color=BLUE, label="PC1+PC2")
     ax2.plot(xs, [r["searched_disparity"] for r in rows],
-             "s-", ms=3.5, lw=1.4, color="#d1500a", label="best searched pair")
+             "s-", ms=3.5, lw=1.4, color=RED, label="best searched pair")
     null_q50 = full["searched_null_min_disparity_quantiles"]["q50"]
     ax2.axhline(null_q50, color="0.6", ls="--", lw=1.0)
     ax2.annotate("searched null median", (xs[2], null_q50),
                  textcoords="offset points", xytext=(0, 5), fontsize=8,
                  color="0.4")
-    for best_layer, color in ((pc12_layer, "#1f6fb4"),
-                              (searched_layer, "#d1500a")):
+    for best_layer, color in ((pc12_layer, BLUE),
+                              (searched_layer, RED)):
         ax2.axvline(best_layer, color=color, ls=":", lw=1.0, alpha=0.6)
     ax2.set_xlabel("layer")
     ax2.set_ylabel("Procrustes disparity $D$")
     ax2.set_ylim(0, 1.0)
-    ax2.legend(loc="upper right", fontsize=9, frameon=False)
+    inplot_legend(ax2, loc="upper right", fontsize=9)
     for spine in ("top", "right"):
         ax2.spines[spine].set_visible(False)
 
@@ -303,7 +302,7 @@ def main():
         for column, lang in enumerate(langs):
             highlighted = draw_language(
                 fig, axes[0, column], axes[1, column], lang, anchors,
-                candidate_pcs, title_prefix=f"{NAMES[lang]} — ")
+                candidate_pcs, title_prefix=f"{NAMES[lang]}: ")
             print(lang, "highlighted:", highlighted)
         stem = "russell_anchor_fit_" + "_".join(langs)
         for suffix in ("pdf", "png"):
@@ -313,7 +312,7 @@ def main():
         print(FIGURES_DIR / f"{stem}.pdf")
         return
 
-    for lang in (args or ["en", "ro", "es", "zh", "fa", "hi"]):
+    for lang in (args or ["en", "ro", "es", "zh", "fa", "hi", "fr", "id"]):
         fig, (ax, ax2) = plt.subplots(
             2, 1, figsize=(6.0, 8.6),
             gridspec_kw={"height_ratios": [6.0, 2.5], "hspace": 0.25})
