@@ -1,0 +1,523 @@
+{
+  "summary": {
+    "language": "hi",
+    "layer": 28,
+    "n_anchor_lemmas": 41,
+    "n_broader_lemmas": 51,
+    "anchor_in_sample_median_plane_share": 0.10946181826249043,
+    "anchor_in_sample_mean_plane_share": 0.19498130630548624,
+    "anchor_loo_median_plane_share": 0.04717206174752058,
+    "anchor_loo_mean_plane_share": 0.07768460156998334,
+    "broader_median_plane_share": 0.04300473523003279,
+    "broader_mean_plane_share": 0.04922317849715025,
+    "mannwhitney_u": 1210.0,
+    "mannwhitney_p_two_sided": 0.19764261260653493,
+    "rank_biserial_effect": 0.15734098517455752,
+    "prob_random_anchor_exceeds_random_broader": 0.5786704925872788
+  },
+  "anchors_loo": [
+    {
+      "lemma": "अवसाद",
+      "label": "depressed",
+      "count": 68,
+      "plane_share": 0.0675189471071163
+    },
+    {
+      "lemma": "आक्रोश",
+      "label": "angry",
+      "count": 32,
+      "plane_share": 0.02961009129330684
+    },
+    {
+      "lemma": "आनंद",
+      "label": "happy",
+      "count": 80,
+      "plane_share": 0.014271330741595022
+    },
+    {
+      "lemma": "आश्चर्य",
+      "label": "astonished",
+      "count": 80,
+      "plane_share": 0.09967146729998665
+    },
+    {
+      "lemma": "आश्चर्यचकित",
+      "label": "astonished",
+      "count": 80,
+      "plane_share": 0.09957869741145924
+    },
+    {
+      "lemma": "आश्वस्त",
+      "label": "at ease",
+      "count": 80,
+      "plane_share": 0.14399752405301555
+    },
+    {
+      "lemma": "उत्साहित",
+      "label": "excited",
+      "count": 80,
+      "plane_share": 0.05587249799082495
+    },
+    {
+      "lemma": "उदास",
+      "label": "gloomy",
+      "count": 80,
+      "plane_share": 0.04369533980495783
+    },
+    {
+      "lemma": "उदासी",
+      "label": "gloomy",
+      "count": 57,
+      "plane_share": 0.05089072359417871
+    },
+    {
+      "lemma": "क्रोध",
+      "label": "angry",
+      "count": 80,
+      "plane_share": 0.00604093796273383
+    },
+    {
+      "lemma": "क्रोधित",
+      "label": "angry",
+      "count": 54,
+      "plane_share": 0.0157145335008968
+    },
+    {
+      "lemma": "खुश",
+      "label": "happy",
+      "count": 80,
+      "plane_share": 0.0497599451344499
+    },
+    {
+      "lemma": "खुशी",
+      "label": "happy",
+      "count": 80,
+      "plane_share": 0.04425811680705416
+    },
+    {
+      "lemma": "गुस्सा",
+      "label": "angry",
+      "count": 80,
+      "plane_share": 0.09199252367468558
+    },
+    {
+      "lemma": "गुस्से",
+      "label": "angry",
+      "count": 80,
+      "plane_share": 0.08699516210633257
+    },
+    {
+      "lemma": "घबरा",
+      "label": "alarmed",
+      "count": 80,
+      "plane_share": 0.16283173456462544
+    },
+    {
+      "lemma": "चकित",
+      "label": "astonished",
+      "count": 80,
+      "plane_share": 0.03124908413145227
+    },
+    {
+      "lemma": "जोश",
+      "label": "excited",
+      "count": 80,
+      "plane_share": 0.04717206174752058
+    },
+    {
+      "lemma": "डर",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.20518754480704043
+    },
+    {
+      "lemma": "डरा",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.24140139556277354
+    },
+    {
+      "lemma": "तनाव",
+      "label": "tense",
+      "count": 80,
+      "plane_share": 0.0028895453562977082
+    },
+    {
+      "lemma": "थक",
+      "label": "tired",
+      "count": 39,
+      "plane_share": 0.12096669502984662
+    },
+    {
+      "lemma": "दुःख",
+      "label": "sad",
+      "count": 80,
+      "plane_share": 0.019401689274708454
+    },
+    {
+      "lemma": "दुःखी",
+      "label": "sad",
+      "count": 58,
+      "plane_share": 0.03813630425527393
+    },
+    {
+      "lemma": "दुख",
+      "label": "sad",
+      "count": 80,
+      "plane_share": 0.08106805228044454
+    },
+    {
+      "lemma": "दुखी",
+      "label": "sad",
+      "count": 80,
+      "plane_share": 0.32484059415271627
+    },
+    {
+      "lemma": "नाराज",
+      "label": "annoyed",
+      "count": 80,
+      "plane_share": 0.003343762272791869
+    },
+    {
+      "lemma": "परेशान",
+      "label": "distressed",
+      "count": 80,
+      "plane_share": 0.023120992740229482
+    },
+    {
+      "lemma": "प्रसन्न",
+      "label": "pleased",
+      "count": 80,
+      "plane_share": 0.2086967451423304
+    },
+    {
+      "lemma": "प्रसन्नता",
+      "label": "pleased",
+      "count": 80,
+      "plane_share": 0.2535379451297224
+    },
+    {
+      "lemma": "बोर",
+      "label": "bored",
+      "count": 61,
+      "plane_share": 0.043569917787777614
+    },
+    {
+      "lemma": "भय",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.04816224711482312
+    },
+    {
+      "lemma": "भयभीत",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.019915553398306692
+    },
+    {
+      "lemma": "व्यथित",
+      "label": "distressed",
+      "count": 34,
+      "plane_share": 0.00808091618878008
+    },
+    {
+      "lemma": "व्याकुल",
+      "label": "distressed",
+      "count": 44,
+      "plane_share": 0.017929490708457105
+    },
+    {
+      "lemma": "शांत",
+      "label": "calm",
+      "count": 80,
+      "plane_share": 0.04596281815342959
+    },
+    {
+      "lemma": "संतुष्ट",
+      "label": "satisfied",
+      "count": 80,
+      "plane_share": 0.2034314634619644
+    },
+    {
+      "lemma": "संतोष",
+      "label": "content",
+      "count": 80,
+      "plane_share": 0.09823799632952142
+    },
+    {
+      "lemma": "सुकून",
+      "label": "calm",
+      "count": 80,
+      "plane_share": 0.0021693727719968004
+    },
+    {
+      "lemma": "हर्ष",
+      "label": "delighted",
+      "count": 76,
+      "plane_share": 0.0059957256941527756
+    },
+    {
+      "lemma": "हैरान",
+      "label": "astonished",
+      "count": 80,
+      "plane_share": 0.027901177829739315
+    }
+  ],
+  "broader": [
+    {
+      "lemma": "अकेला",
+      "count": 80,
+      "plane_share": 0.015227542489428926
+    },
+    {
+      "lemma": "अपमानित",
+      "count": 62,
+      "plane_share": 0.02514444433899447
+    },
+    {
+      "lemma": "अहंकार",
+      "count": 72,
+      "plane_share": 0.04890703056253124
+    },
+    {
+      "lemma": "अहसास",
+      "count": 80,
+      "plane_share": 0.01105882461555532
+    },
+    {
+      "lemma": "आँसू",
+      "count": 61,
+      "plane_share": 0.0006008672839659089
+    },
+    {
+      "lemma": "आंसू",
+      "count": 80,
+      "plane_share": 0.0024668062492569465
+    },
+    {
+      "lemma": "आशंका",
+      "count": 45,
+      "plane_share": 0.09370808051998247
+    },
+    {
+      "lemma": "आशा",
+      "count": 80,
+      "plane_share": 0.024401275914291233
+    },
+    {
+      "lemma": "उत्साह",
+      "count": 80,
+      "plane_share": 0.13973278567092148
+    },
+    {
+      "lemma": "उत्सुक",
+      "count": 80,
+      "plane_share": 0.0807473683914404
+    },
+    {
+      "lemma": "कृतज्ञता",
+      "count": 72,
+      "plane_share": 0.046923772530115974
+    },
+    {
+      "lemma": "खेद",
+      "count": 80,
+      "plane_share": 0.10336835080916046
+    },
+    {
+      "lemma": "गर्व",
+      "count": 80,
+      "plane_share": 0.0616961712535437
+    },
+    {
+      "lemma": "चाहती",
+      "count": 45,
+      "plane_share": 0.07557263080775559
+    },
+    {
+      "lemma": "चिंता",
+      "count": 80,
+      "plane_share": 0.010057693251787205
+    },
+    {
+      "lemma": "चिंतित",
+      "count": 80,
+      "plane_share": 0.017109413195576482
+    },
+    {
+      "lemma": "चिन्ता",
+      "count": 80,
+      "plane_share": 0.010114926660017239
+    },
+    {
+      "lemma": "जलन",
+      "count": 46,
+      "plane_share": 0.0846274167020304
+    },
+    {
+      "lemma": "टूट",
+      "count": 80,
+      "plane_share": 0.06582838859904719
+    },
+    {
+      "lemma": "तकलीफ",
+      "count": 80,
+      "plane_share": 0.0040102830198711975
+    },
+    {
+      "lemma": "दर्द",
+      "count": 80,
+      "plane_share": 0.17094404576800912
+    },
+    {
+      "lemma": "नफरत",
+      "count": 80,
+      "plane_share": 0.013077927249953018
+    },
+    {
+      "lemma": "निराश",
+      "count": 80,
+      "plane_share": 0.010531628161608516
+    },
+    {
+      "lemma": "पछतावा",
+      "count": 80,
+      "plane_share": 0.04399278216814834
+    },
+    {
+      "lemma": "पश्चाताप",
+      "count": 41,
+      "plane_share": 0.11100455073231567
+    },
+    {
+      "lemma": "पसन्द",
+      "count": 34,
+      "plane_share": 0.0608740645625563
+    },
+    {
+      "lemma": "पीड़ा",
+      "count": 80,
+      "plane_share": 0.0016162942059294296
+    },
+    {
+      "lemma": "प्यार",
+      "count": 80,
+      "plane_share": 0.018349124484378976
+    },
+    {
+      "lemma": "प्रभावित",
+      "count": 80,
+      "plane_share": 0.0811134200888256
+    },
+    {
+      "lemma": "प्रिय",
+      "count": 80,
+      "plane_share": 0.05599352203503903
+    },
+    {
+      "lemma": "प्रेम",
+      "count": 80,
+      "plane_share": 0.05922574347788214
+    },
+    {
+      "lemma": "बेचैन",
+      "count": 80,
+      "plane_share": 0.04300473523003279
+    },
+    {
+      "lemma": "बेचैनी",
+      "count": 73,
+      "plane_share": 0.04220639709022891
+    },
+    {
+      "lemma": "भाव",
+      "count": 80,
+      "plane_share": 0.013463134695260524
+    },
+    {
+      "lemma": "भावुक",
+      "count": 80,
+      "plane_share": 0.01520583840280076
+    },
+    {
+      "lemma": "मोहब्बत",
+      "count": 80,
+      "plane_share": 0.00903114896681657
+    },
+    {
+      "lemma": "रो",
+      "count": 80,
+      "plane_share": 0.03907223250141722
+    },
+    {
+      "lemma": "रोई",
+      "count": 32,
+      "plane_share": 0.06866450250016314
+    },
+    {
+      "lemma": "रोते",
+      "count": 80,
+      "plane_share": 0.038131180455383135
+    },
+    {
+      "lemma": "रोया",
+      "count": 75,
+      "plane_share": 0.07421766040898868
+    },
+    {
+      "lemma": "लगा",
+      "count": 80,
+      "plane_share": 0.08793542254619031
+    },
+    {
+      "lemma": "लगे",
+      "count": 35,
+      "plane_share": 0.1169285166054981
+    },
+    {
+      "lemma": "लालच",
+      "count": 76,
+      "plane_share": 0.022672139157047914
+    },
+    {
+      "lemma": "शर्म",
+      "count": 80,
+      "plane_share": 0.009541156507921344
+    },
+    {
+      "lemma": "शर्मिंदा",
+      "count": 80,
+      "plane_share": 0.015753790842273015
+    },
+    {
+      "lemma": "संकोच",
+      "count": 80,
+      "plane_share": 0.1097442482600774
+    },
+    {
+      "lemma": "सदमे",
+      "count": 36,
+      "plane_share": 0.0013429917163323857
+    },
+    {
+      "lemma": "सम्मानित",
+      "count": 80,
+      "plane_share": 0.10904766519829204
+    },
+    {
+      "lemma": "सुख",
+      "count": 80,
+      "plane_share": 0.03127362387315351
+    },
+    {
+      "lemma": "सुरक्षित",
+      "count": 30,
+      "plane_share": 0.05327011629666036
+    },
+    {
+      "lemma": "स्नेह",
+      "count": 80,
+      "plane_share": 0.06184842630020479
+    }
+  ]
+}

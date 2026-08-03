@@ -1998,3 +1998,263 @@ hi	-	सुरक्षित					EXCLUDE (out of circumplex scope: no Russell l
 hi	-	स्नेह					EXCLUDE (out of circumplex scope: no Russell label)	full-archive sweep 2026-07-30
 hi	-	हट					EXCLUDE (out of circumplex scope: no Russell label)	full-archive sweep 2026-07-30
 hi	-	हार					EXCLUDE (out of circumplex scope: no Russell label)	full-archive sweep 2026-07-30
+fr	happy	heureux	A	happy			KEEP	manual gloss check; no NRC-VAD gate for this language
+fr	happy	joyeux	B	joyful/cheerful			KEEP	manual gloss check; no NRC-VAD gate for this language; follows en precedent (joyful under happy)
+fr	delighted	ravi	A	delighted			KEEP	manual gloss check; no NRC-VAD gate for this language; pool count 117 (mostly fem. ravie)
+fr	astonished	surpris	A	surprised			KEEP	manual gloss check; no NRC-VAD gate for this language; includes fem. form 'surprise' via gender merge; judge-validated self-state contexts
+fr	angry	en colere	A	angry (lit. 'in anger')			KEEP	manual gloss check; no NRC-VAD gate for this language; multiword unit; manifest builder needs phrase-lemma support like fa templates
+fr	angry	furieux	B	furious			KEEP	manual gloss check; no NRC-VAD gate for this language
+fr	angry	enrage	B	enraged			KEEP	manual gloss check; no NRC-VAD gate for this language
+fr	afraid	effraye	A	frightened			KEEP	manual gloss check; no NRC-VAD gate for this language
+fr	distressed	angoisse	B	anguished (adj. angoissé)			KEEP	manual gloss check; no NRC-VAD gate for this language; follows es precedent (angustiado -> distressed); diacritic-stripped form collides with noun 'angoisse' if present
+fr	frustrated	frustre	A	frustrated			KEEP	manual gloss check; no NRC-VAD gate for this language
+fr	sad	triste	A	sad			KEEP	manual gloss check; no NRC-VAD gate for this language
+fr	depressed	deprime	A	depressed			KEEP	manual gloss check; no NRC-VAD gate for this language
+fr	calm	apaise	B	soothed/calmed			KEEP	manual gloss check; no NRC-VAD gate for this language; follows ro precedent (linistit -> calm)
+fr	serene	paisible	B	peaceful/serene			KEEP	manual gloss check; no NRC-VAD gate for this language
+fr	relaxed	detendu	A	relaxed			KEEP	manual gloss check; no NRC-VAD gate for this language
+fr	satisfied	satisfait	A	satisfied			KEEP	manual gloss check; no NRC-VAD gate for this language; pool count 111 (mostly fem. satisfaite)
+fr	satisfied	epanoui	B	fulfilled/flourishing			KEEP	manual gloss check; no NRC-VAD gate for this language; follows ro precedent (implinit -> satisfied)
+fr	pleased	contente	A	pleased/glad			KEEP	manual gloss check; no NRC-VAD gate for this language; follows es precedent (contento -> pleased); fem. form only (masc. 'content' absent from data)
+fr	distressed	inquiet	B	worried			EXCLUDE (strict synonymy rule: worried, distinct concept)	
+fr	miserable	malheureux	B	unhappy			EXCLUDE (strict synonymy rule: intermediate between sad and miserable)	
+fr	annoyed	vexe	B	offended/vexed			EXCLUDE (strict synonymy rule: offended-hurt blend, not annoyed)	
+fr	annoyed	enerve	B	annoyed/worked-up			EXCLUDE (strict synonymy rule: annoyed/agitated polysemy)	
+fr	distressed	desempare	B	distraught/at a loss			EXCLUDE (strict synonymy rule: helpless-lost blend, adjacent-but-distinct)	
+fr	astonished	choque	B	shocked			EXCLUDE (strict synonymy rule: astonished/alarmed blend)	
+fr	depressed	desespere	B	desperate/hopeless			EXCLUDE (strict synonymy rule: hopelessness blend, adjacent to depressed/miserable)	
+fr	at ease	rassure	B	reassured			EXCLUDE (strict synonymy rule: relief-after-worry, not a Russell word)	
+fr	tired	fatigue	A	tired			NOT_IN_POOL	below 30-occurrence floor (27)
+fr	excited	excite	A	excited			NOT_IN_POOL	9 occurrences; sexual-connotation polysemy would also exclude
+fr	calm	calme	A	calm			NOT_IN_POOL	absent from score-3 data
+fr	bored	ennuye	A	bored			NOT_IN_POOL	absent; also bored/bothered polysemy
+fr	tense	tendu	A	tense			NOT_IN_POOL	absent from score-3 data
+fr	-	seul	-	alone/lonely			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	aime	-	loved			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	perdu	-	lost			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	decu	-	disappointed			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	libre	-	free			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	fier	-	proud			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	coupable	-	guilty			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	beni	-	blessed			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	libere	-	liberated/freed			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	impuissant	-	powerless/helpless			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	degoute	-	disgusted			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	gene	-	embarrassed/uncomfortable			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	mechant	-	mean/bad			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	protege	-	protected			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	brise	-	broken(-hearted)			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	curieux	-	curious			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	rejete	-	rejected			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	traumatise	-	traumatized			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	sauve	-	saved			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	isole	-	isolated			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	delivre	-	delivered/freed			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	leger	-	light(-hearted)			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	nul	-	worthless			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	ridicule	-	ridiculous			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	piege	-	trapped			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	inutile	-	useless			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	detruit	-	destroyed			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	bloque	-	stuck/blocked			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	rancunier	-	resentful			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	moche	-	ugly/lousy			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	soutenu	-	supported			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	attire	-	attracted			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	respecte	-	respected			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	incompris	-	misunderstood			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	ecœure	-	disgusted/sickened			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	inferieur	-	inferior			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	sale	-	dirty			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	hypocrite	-	hypocritical			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	merveilleux	-	wonderful			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	utile	-	useful			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	indigne	-	unworthy			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	mefiant	-	distrustful/wary			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	digne	-	worthy/dignified			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	impulsif	-	impulsive			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	positif	-	positive			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	laid	-	ugly			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	deconnecte	-	disconnected			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	invisible	-	invisible			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	genereux	-	generous			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	valorise	-	valued			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	guide	-	guided			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	restaure	-	restored			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	choye	-	pampered/cherished			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	incapable	-	incapable			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	desir	-	desire (n.)			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	pardonne	-	forgiven			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	precieux	-	precious			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	enveloppe	-	enveloped/held			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	respectueux	-	respectful			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	incontrolable	-	uncontrollable			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	energique	-	energetic (arousal-adjacent, no Russell label)			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	reconnu	-	recognized			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	meprisable	-	despicable			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	neglige	-	neglected			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	indecise	-	indecisive			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	glorifie	-	glorified			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	susceptible	-	touchy/oversensitive			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	aimant	-	loving			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	entoure	-	surrounded/supported			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	desire	-	desired			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	ignore	-	ignored			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	capable	-	capable			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	repugnant	-	repugnant			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	aimable	-	kind/likeable			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	vain	-	vain/futile			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	confondu	-	confounded/confused			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	traitre	-	traitor			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	apprecie	-	appreciated			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	depouille	-	stripped/robbed			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	limite	-	limited			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	envie	-	envy/desire (n.)			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	clair	-	clear			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	inclus	-	included			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	traite	-	treated (well/badly)			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	blesse	-	hurt/wounded			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	accepte	-	accepted			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	emu	-	moved/touched			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	touche	-	touched/moved			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	plein	-	full/whole			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	soigne	-	cared-for			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	humilie	-	humiliated			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	dispose	-	willing			EXCLUDE (out of circumplex scope: no Russell label)	
+fr	-	estime	-	esteemed			EXCLUDE (out of circumplex scope: no Russell label)	
+id	happy	senang	A	happy/glad			KEEP	manual gloss check; no NRC-VAD gate for this language
+id	happy	bahagia	B	happy/blissful			KEEP	manual gloss check; no NRC-VAD gate for this language
+id	happy	gembira	B	joyful/cheerful			NOT_IN_POOL	31 raw score-3 occurrences but <30 after ambiguous-context drops; removed from anchors at manifest build 2026-08-01
+id	afraid	takut	A	afraid			KEEP	manual gloss check; no NRC-VAD gate for this language
+id	afraid	ketakutan	B	fear/frightened (n.)			KEEP	manual gloss check; no NRC-VAD gate for this language; noun form; flag in noun_lemmas
+id	sad	sedih	A	sad			KEEP	manual gloss check; no NRC-VAD gate for this language
+id	calm	tenang	A	calm			KEEP	manual gloss check; no NRC-VAD gate for this language
+id	bored	bosan	A	bored			KEEP	manual gloss check; no NRC-VAD gate for this language
+id	annoyed	kesal	A	annoyed/irked			KEEP	manual gloss check; no NRC-VAD gate for this language
+id	satisfied	puas	A	satisfied			KEEP	manual gloss check; no NRC-VAD gate for this language
+id	satisfied	kepuasan	B	satisfaction (n.)			KEEP	manual gloss check; no NRC-VAD gate for this language; noun form; flag in noun_lemmas
+id	at ease	nyaman	A	comfortable/at ease			KEEP	manual gloss check; no NRC-VAD gate for this language; follows en precedent (comfortable -> at ease)
+id	frustrated	frustasi	A	frustrated			KEEP	manual gloss check; no NRC-VAD gate for this language; requires orthographic-variant merge frustrasi->frustasi (28+19=47); neither variant clears floor alone
+id	distressed	khawatir	B	worried			EXCLUDE (strict synonymy rule: worried, distinct concept)	
+id	distressed	cemas	B	anxious/worried			EXCLUDE (strict synonymy rule: worried, distinct concept)	
+id	depressed	tertekan	B	pressured/under pressure			EXCLUDE (strict synonymy rule: pressured/depressed/stressed polysemy)	
+id	tense	stres	B	stressed			EXCLUDE (strict synonymy rule: stress blend, not a Russell word)	
+id	tense	gelisah	B	restless/uneasy			EXCLUDE (strict synonymy rule: restless-uneasy blend, adjacent-but-distinct)	
+id	bored	jenuh	B	fed up/saturated			EXCLUDE (strict synonymy rule: bored/weary/saturated polysemy)	
+id	annoyed	terganggu	B	disturbed/bothered			EXCLUDE (strict synonymy rule: disturbed/annoyed polysemy)	
+id	angry	marah	A	angry			NOT_IN_POOL	below 30-occurrence floor (27); largest coverage gap
+id	tired	lelah	A	tired			NOT_IN_POOL	below floor (26)
+id	alarmed	panik	A	panicked			NOT_IN_POOL	below floor (21)
+id	relaxed	rileks	A	relaxed			NOT_IN_POOL	below floor (23)
+id	astonished	kaget	A	startled/surprised			NOT_IN_POOL	below floor (17; terkejut 14)
+id	tense	tegang	A	tense			NOT_IN_POOL	below floor (14)
+id	depressed	depresi	A	depressed			NOT_IN_POOL	below floor (12)
+id	gloomy	murung	A	gloomy/dejected			NOT_IN_POOL	below floor (12)
+id	-	malu	-	ashamed/embarrassed			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	kecewa	-	disappointed			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	bersalah	-	guilty			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	bingung	-	confused			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	kebingungan	-	confusion (n.)			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	bangga	-	proud			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	aman	-	safe/secure			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	kesepian	-	lonely			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	beruntung	-	lucky/fortunate			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	lega	-	relieved			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	sakit	-	sick/in pain			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	minder	-	insecure/inferior			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	dihargai	-	appreciated/valued			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	penasaran	-	curious			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	menyesal	-	regretful			EXCLUDE (out of circumplex scope: no Russell label)	
+id	-	kehilangan	-	bereft/experiencing loss			EXCLUDE (out of circumplex scope: no Russell label)	
+en	delighted	delighted	strong_add	delighted (exact; new in Final Data pool)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	astonished	amazed	strong_add	amazed			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	astonished	flabbergasted	strong_add	utterly astonished			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	angry	mad	strong_add	angry (colloquial)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	angry	pissed	strong_add	angry (colloquial)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	tense	stressed	near_strong	stressed ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	tense	nervous	near_strong	nervous ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	tense	anxious	near_strong	anxious ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	satisfied	satisfied	strong_add	satisfied (exact; new in pool)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	content	content	strong_add	content (exact; LLM filter disambiguates noun sense)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	serene	serene	strong_add	serene (exact; new in pool)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	serene	peaceful	strong_add	peaceful			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	pleased	pleased	strong_add	pleased (exact; new in pool)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	gloomy	blue	loose	feeling blue = gloomy (label had no strong anchor)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+en	droopy	lethargic	loose	lethargic/listless ~ droopy (label had no strong anchor)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+ro	tense	stresat	near_strong	stressed ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+ro	tense	anxios	near_strong	anxious ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+ro	serene	pace	loose	pace=peace (noun) ~ serene (label had no strong anchor)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	delighted	encantado	strong_add	delighted			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	tense	ansioso	near_strong	anxious ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	tense	nervioso	near_strong	nervous ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	tense	estresado	near_strong	stressed ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	alarmed	alarmado	strong_add	alarmed (exact)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	astonished	asombrado	strong_add	astonished/amazed			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	astonished	maravillado	strong_add	amazed/marveling			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	afraid	espantado	strong_add	frightened			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	annoyed	harto	strong_add	fed up ~ annoyed (colloquial)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	calm	calmado	strong_add	calm (exact)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	serene	sereno	strong_add	serene (exact)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	at ease	comodo	strong_add	comfortable (en at-ease precedent)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	gloomy	abatido	loose	downcast ~ gloomy (label had no strong anchor)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+es	gloomy	desanimado	loose	disheartened ~ gloomy (label had no strong anchor)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	happy	幸福	strong_add	happiness/wellbeing			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	happy	欢乐	strong_add	joyous			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	excited	激动	strong_add	excited/stirred			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	astonished	震惊	strong_add	shocked/astonished			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	astonished	错愕	strong_add	stunned			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	astonished	惊愕	strong_add	astounded			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	alarmed	惊恐	strong_add	panicked fear			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	angry	恼怒	strong_add	irritated-angry			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	tense	焦虑	near_strong	anxious ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	tense	紧绷	strong_add	taut/tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	annoyed	不爽	strong_add	displeased/annoyed (colloquial)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	annoyed	厌烦	strong_add	fed up/annoyed			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	distressed	烦恼	strong_add	troubled/vexed			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	miserable	痛苦	strong_add	suffering/miserable			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	sad	悲痛	strong_add	deep sorrow			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	gloomy	低落	strong_add	low mood			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	gloomy	忧伤	strong_add	melancholy			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	bored	厌倦	strong_add	weary of/bored			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	calm	淡定	strong_add	calm/composed (colloquial)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	serene	平和	strong_add	at peace/serene			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	at ease	踏实	strong_add	at ease/secure			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+zh	pleased	欣慰	near_strong	gratified/pleased			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	tense	اضطراب	near_strong	anxiety (noun) ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	tense	مضطرب	near_strong	anxious ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	tense	استرس	near_strong	stress ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	tense	تنش	strong_add	tension (exact)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	astonished	حیران	strong_add	astonished/wondering			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	delighted	ذوق	strong_add	thrilled/delighted (colloquial)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	delighted	شعف	strong_add	joy/delight			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	excited	شوق	strong_add	eager excitement			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	happy	خوشبختی	strong_add	happiness/wellbeing (noun)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	angry	عصبانیت	strong_add	anger (noun)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	annoyed	کلافگی	strong_add	exasperation (noun)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	sad	اندوه	strong_add	sorrow			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	bored	کسالت	strong_add	boredom/malaise (noun)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	droopy	رخوت	loose	languor/lethargy ~ droopy (label had no strong anchor)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	relaxed	سبکی	loose	lightness after unburdening ~ relaxed (label had no strong anchor)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	at ease	آسودگی	strong_add	ease (asude = at ease)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	pleased	خشنودی	strong_add	pleasedness (noun; restores label lost to floor)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fa	pleased	لذت	strong_add	pleasure (noun)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+hi	annoyed	नाराज	strong_add	displeased/annoyed			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+hi	happy	आनंद	strong_add	joy (noun)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+hi	excited	जोश	strong_add	zeal/excitement (noun)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+hi	at ease	आश्वस्त	loose	assured/reassured ~ at ease (restores archive presence)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fr	miserable	malheureux	loose	unhappy ~ miserable (label had no strong anchor; strict verdict was intermediate sad/miserable)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fr	at ease	rassure	loose	reassured ~ at ease (label had no strong anchor)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fr	excited	energique	loose	energetic ~ excited (label had no strong anchor)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+id	happy	gembira	strong_add	joyful (re-added; above floor with extended data)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+id	angry	marah	strong_add	angry (above floor with extended data)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+id	astonished	kaget	strong_add	startled/surprised			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+id	astonished	heran	strong_add	amazed/surprised			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+id	tense	cemas	near_strong	anxious ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+id	tense	gugup	near_strong	nervous ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+id	tense	stres	near_strong	stressed ~ tense			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+id	alarmed	panik	strong_add	panicked			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+id	serene	damai	strong_add	peaceful/serene			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+id	distressed	tertekan	loose	pressured/oppressed ~ distressed (label had no strong anchor)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+id	depressed	down	loose	feeling down ~ depressed (loanword; label had no strong anchor)			ACCEPT_LOOSE_PASS	loose pass 2026-08-02; manual gloss check, NRC not consulted
+fr	tired	fatigue	A	tired			ACCEPT_FLOOR_EXCEPTION	admitted at 25 judged-clean occurrences (floor 30); deactivation-quadrant coverage
+id	tired	lelah	A	tired			ACCEPT_FLOOR_EXCEPTION	admitted at 24 judged-clean occurrences (floor 30); judged rate 0.17 so unjudged corpora NOT mined for this term

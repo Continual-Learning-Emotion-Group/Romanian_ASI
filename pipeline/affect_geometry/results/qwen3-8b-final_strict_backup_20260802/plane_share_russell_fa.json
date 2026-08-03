@@ -1,0 +1,1843 @@
+{
+  "summary": {
+    "language": "fa",
+    "layer": 21,
+    "n_anchor_lemmas": 41,
+    "n_broader_lemmas": 315,
+    "anchor_in_sample_median_plane_share": 0.1905918093037827,
+    "anchor_in_sample_mean_plane_share": 0.22006251611752495,
+    "anchor_loo_median_plane_share": 0.09408763099917876,
+    "anchor_loo_mean_plane_share": 0.12822545485771,
+    "broader_median_plane_share": 0.06824536029219239,
+    "broader_mean_plane_share": 0.07688492435055025,
+    "mannwhitney_u": 8631.0,
+    "mannwhitney_p_two_sided": 0.0004554871078849205,
+    "rank_biserial_effect": 0.3365853658536586,
+    "prob_random_anchor_exceeds_random_broader": 0.6682926829268293
+  },
+  "anchors_loo": [
+    {
+      "lemma": "آرام",
+      "label": "calm",
+      "count": 54,
+      "plane_share": 0.016810118985430195
+    },
+    {
+      "lemma": "آرامش",
+      "label": "calm",
+      "count": 80,
+      "plane_share": 0.36051390559612195
+    },
+    {
+      "lemma": "آشفته",
+      "label": "distressed",
+      "count": 64,
+      "plane_share": 0.07665591786553685
+    },
+    {
+      "lemma": "ارامش",
+      "label": "calm",
+      "count": 80,
+      "plane_share": 0.30374505364678406
+    },
+    {
+      "lemma": "افسرده",
+      "label": "depressed",
+      "count": 80,
+      "plane_share": 0.14213644436151263
+    },
+    {
+      "lemma": "افسردگی",
+      "label": "depressed",
+      "count": 80,
+      "plane_share": 0.11973577474444445
+    },
+    {
+      "lemma": "بدبخت",
+      "label": "miserable",
+      "count": 37,
+      "plane_share": 0.058925401567419794
+    },
+    {
+      "lemma": "بدبختی",
+      "label": "miserable",
+      "count": 80,
+      "plane_share": 0.021941782455878318
+    },
+    {
+      "lemma": "ترس",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.1253962924344174
+    },
+    {
+      "lemma": "خرسند",
+      "label": "glad",
+      "count": 69,
+      "plane_share": 0.1774286005103727
+    },
+    {
+      "lemma": "خسته",
+      "label": "tired",
+      "count": 80,
+      "plane_share": 0.049126743048653145
+    },
+    {
+      "lemma": "خسته‌ام",
+      "label": "tired",
+      "count": 65,
+      "plane_share": 0.05182140682129401
+    },
+    {
+      "lemma": "خستگی",
+      "label": "tired",
+      "count": 80,
+      "plane_share": 0.07034117929696562
+    },
+    {
+      "lemma": "خشم",
+      "label": "angry",
+      "count": 80,
+      "plane_share": 0.08336678342996855
+    },
+    {
+      "lemma": "خشمگین",
+      "label": "angry",
+      "count": 80,
+      "plane_share": 0.07822474040623272
+    },
+    {
+      "lemma": "خوشحال",
+      "label": "happy",
+      "count": 80,
+      "plane_share": 0.16669904815350048
+    },
+    {
+      "lemma": "خوشحالی",
+      "label": "happy",
+      "count": 80,
+      "plane_share": 0.3587049570828461
+    },
+    {
+      "lemma": "دلم ... گرفت",
+      "label": "gloomy",
+      "count": 80,
+      "plane_share": 0.06519963413698206
+    },
+    {
+      "lemma": "دلم ... گرفته",
+      "label": "gloomy",
+      "count": 80,
+      "plane_share": 0.08044496343332198
+    },
+    {
+      "lemma": "دلگیر",
+      "label": "gloomy",
+      "count": 80,
+      "plane_share": 0.10225492707983443
+    },
+    {
+      "lemma": "راحت",
+      "label": "at ease",
+      "count": 36,
+      "plane_share": 0.07848905671976458
+    },
+    {
+      "lemma": "راحتی",
+      "label": "at ease",
+      "count": 80,
+      "plane_share": 0.28855617473244294
+    },
+    {
+      "lemma": "راضی",
+      "label": "satisfied",
+      "count": 80,
+      "plane_share": 0.049387130998009
+    },
+    {
+      "lemma": "رضایت",
+      "label": "satisfied",
+      "count": 80,
+      "plane_share": 0.18879274577689478
+    },
+    {
+      "lemma": "سرخوردگی",
+      "label": "frustrated",
+      "count": 80,
+      "plane_share": 0.09408763099917876
+    },
+    {
+      "lemma": "شاد",
+      "label": "happy",
+      "count": 80,
+      "plane_share": 0.12304346157024772
+    },
+    {
+      "lemma": "شادمانی",
+      "label": "happy",
+      "count": 80,
+      "plane_share": 0.24639074120735516
+    },
+    {
+      "lemma": "شادی",
+      "label": "happy",
+      "count": 80,
+      "plane_share": 0.2594734583949169
+    },
+    {
+      "lemma": "عصبانی",
+      "label": "angry",
+      "count": 80,
+      "plane_share": 0.04149416384141296
+    },
+    {
+      "lemma": "غم",
+      "label": "sad",
+      "count": 80,
+      "plane_share": 0.03784529558655823
+    },
+    {
+      "lemma": "غمگین",
+      "label": "sad",
+      "count": 80,
+      "plane_share": 0.06072150679772327
+    },
+    {
+      "lemma": "مبهوت",
+      "label": "astonished",
+      "count": 67,
+      "plane_share": 0.16596776303154442
+    },
+    {
+      "lemma": "متحیر",
+      "label": "astonished",
+      "count": 34,
+      "plane_share": 0.187206808006593
+    },
+    {
+      "lemma": "متعجب",
+      "label": "astonished",
+      "count": 80,
+      "plane_share": 0.19229013606830764
+    },
+    {
+      "lemma": "محزون",
+      "label": "sad",
+      "count": 30,
+      "plane_share": 0.14104603253290343
+    },
+    {
+      "lemma": "مسرور",
+      "label": "delighted",
+      "count": 52,
+      "plane_share": 0.2557631729686494
+    },
+    {
+      "lemma": "هیجان",
+      "label": "excited",
+      "count": 80,
+      "plane_share": 0.052699745046988516
+    },
+    {
+      "lemma": "وحشت",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.02682374617631884
+    },
+    {
+      "lemma": "پریشان",
+      "label": "distressed",
+      "count": 80,
+      "plane_share": 0.042414925665814535
+    },
+    {
+      "lemma": "کسل",
+      "label": "bored",
+      "count": 41,
+      "plane_share": 0.06331003211399755
+    },
+    {
+      "lemma": "کلافه",
+      "label": "annoyed",
+      "count": 80,
+      "plane_share": 0.1519662458729703
+    }
+  ],
+  "broader": [
+    {
+      "lemma": "آرامش بیشتری",
+      "count": 31,
+      "plane_share": 0.14996441253908852
+    },
+    {
+      "lemma": "آرامش می",
+      "count": 54,
+      "plane_share": 0.25869390177115215
+    },
+    {
+      "lemma": "آرامشی",
+      "count": 80,
+      "plane_share": 0.3575372639268278
+    },
+    {
+      "lemma": "آزادی",
+      "count": 80,
+      "plane_share": 0.2515469347083552
+    },
+    {
+      "lemma": "آسودگی",
+      "count": 69,
+      "plane_share": 0.37258781884745573
+    },
+    {
+      "lemma": "آواره",
+      "count": 39,
+      "plane_share": 0.08097916067476366
+    },
+    {
+      "lemma": "ارزشمند",
+      "count": 80,
+      "plane_share": 0.027289046400319483
+    },
+    {
+      "lemma": "ارزشمندی",
+      "count": 80,
+      "plane_share": 0.025756694083053668
+    },
+    {
+      "lemma": "ازادی",
+      "count": 37,
+      "plane_share": 0.1843359313115301
+    },
+    {
+      "lemma": "استرس",
+      "count": 80,
+      "plane_share": 0.09887656583364333
+    },
+    {
+      "lemma": "اسیر",
+      "count": 41,
+      "plane_share": 0.08998812776344167
+    },
+    {
+      "lemma": "اضافی بودن",
+      "count": 30,
+      "plane_share": 0.02336830418181875
+    },
+    {
+      "lemma": "اضطراب",
+      "count": 80,
+      "plane_share": 0.06558991876539752
+    },
+    {
+      "lemma": "اطمینان",
+      "count": 60,
+      "plane_share": 0.17148684691705285
+    },
+    {
+      "lemma": "اعتماد به نفس",
+      "count": 32,
+      "plane_share": 0.09810518982699233
+    },
+    {
+      "lemma": "اعصابم ... ریخت",
+      "count": 80,
+      "plane_share": 0.08615481018634609
+    },
+    {
+      "lemma": "اعصابم ... ریخته",
+      "count": 80,
+      "plane_share": 0.10482135826656068
+    },
+    {
+      "lemma": "اعصابم ... شد",
+      "count": 80,
+      "plane_share": 0.10129813368484361
+    },
+    {
+      "lemma": "اعصابم ... شده",
+      "count": 80,
+      "plane_share": 0.10273954504518512
+    },
+    {
+      "lemma": "افتخار",
+      "count": 80,
+      "plane_share": 0.09841212070923695
+    },
+    {
+      "lemma": "امنیت",
+      "count": 80,
+      "plane_share": 0.2340167739825356
+    },
+    {
+      "lemma": "امنیت می",
+      "count": 65,
+      "plane_share": 0.02750924946040702
+    },
+    {
+      "lemma": "امید",
+      "count": 80,
+      "plane_share": 0.019258793810136204
+    },
+    {
+      "lemma": "امیدوار",
+      "count": 42,
+      "plane_share": 0.10881325499876361
+    },
+    {
+      "lemma": "انتقام",
+      "count": 57,
+      "plane_share": 0.08981242026232442
+    },
+    {
+      "lemma": "اندوه",
+      "count": 69,
+      "plane_share": 0.11070205864089268
+    },
+    {
+      "lemma": "انزجار",
+      "count": 80,
+      "plane_share": 0.04657514617977485
+    },
+    {
+      "lemma": "انزوا",
+      "count": 32,
+      "plane_share": 0.11452993445090583
+    },
+    {
+      "lemma": "بدیه",
+      "count": 56,
+      "plane_share": 0.017472670638195298
+    },
+    {
+      "lemma": "بزرگی",
+      "count": 35,
+      "plane_share": 0.055881922260185214
+    },
+    {
+      "lemma": "بغض",
+      "count": 40,
+      "plane_share": 0.042430151427577986
+    },
+    {
+      "lemma": "بغضم ... شد",
+      "count": 80,
+      "plane_share": 0.087286072604853
+    },
+    {
+      "lemma": "بغضم ... شده",
+      "count": 80,
+      "plane_share": 0.099191905038532
+    },
+    {
+      "lemma": "بغضم ... گرفت",
+      "count": 80,
+      "plane_share": 0.10268613224760863
+    },
+    {
+      "lemma": "بغضم ... گرفته",
+      "count": 80,
+      "plane_share": 0.1201564479579135
+    },
+    {
+      "lemma": "بلاتکلیفی",
+      "count": 37,
+      "plane_share": 0.01152467312315362
+    },
+    {
+      "lemma": "بهتری",
+      "count": 80,
+      "plane_share": 0.03897603794455202
+    },
+    {
+      "lemma": "بی ارزشی",
+      "count": 59,
+      "plane_share": 0.059045636311702475
+    },
+    {
+      "lemma": "بی تفاوتی",
+      "count": 40,
+      "plane_share": 0.024453029027050318
+    },
+    {
+      "lemma": "بی حسی",
+      "count": 64,
+      "plane_share": 0.05584988421280849
+    },
+    {
+      "lemma": "بی قراری",
+      "count": 40,
+      "plane_share": 0.0903977110274342
+    },
+    {
+      "lemma": "بی پناهی",
+      "count": 80,
+      "plane_share": 0.04859159716513347
+    },
+    {
+      "lemma": "بی کسی",
+      "count": 80,
+      "plane_share": 0.031266141858995226
+    },
+    {
+      "lemma": "بی کفایتی",
+      "count": 31,
+      "plane_share": 0.05437612435627789
+    },
+    {
+      "lemma": "بیزاری",
+      "count": 35,
+      "plane_share": 0.10775504034508938
+    },
+    {
+      "lemma": "بیهودگی",
+      "count": 80,
+      "plane_share": 0.07195096453936395
+    },
+    {
+      "lemma": "بیچارگی",
+      "count": 50,
+      "plane_share": 0.07542491371882105
+    },
+    {
+      "lemma": "بیگانگی",
+      "count": 80,
+      "plane_share": 0.025017892637140913
+    },
+    {
+      "lemma": "تأسف",
+      "count": 44,
+      "plane_share": 0.021433158293800745
+    },
+    {
+      "lemma": "تازگی",
+      "count": 37,
+      "plane_share": 0.10339017254135854
+    },
+    {
+      "lemma": "تاسف",
+      "count": 80,
+      "plane_share": 0.048785539603880615
+    },
+    {
+      "lemma": "تجربه",
+      "count": 33,
+      "plane_share": 0.0021252864256866492
+    },
+    {
+      "lemma": "تحقیر",
+      "count": 80,
+      "plane_share": 0.026315935198151258
+    },
+    {
+      "lemma": "ترحم",
+      "count": 80,
+      "plane_share": 0.07167843653718602
+    },
+    {
+      "lemma": "ترسی",
+      "count": 31,
+      "plane_share": 0.12679346534522606
+    },
+    {
+      "lemma": "تعلق",
+      "count": 80,
+      "plane_share": 0.04962879513621386
+    },
+    {
+      "lemma": "تعلق خاطر",
+      "count": 38,
+      "plane_share": 0.024606578460746785
+    },
+    {
+      "lemma": "تقصیر",
+      "count": 51,
+      "plane_share": 0.008832385170157612
+    },
+    {
+      "lemma": "تلخ",
+      "count": 80,
+      "plane_share": 0.030950345317365506
+    },
+    {
+      "lemma": "تلخی",
+      "count": 80,
+      "plane_share": 0.10537888419747113
+    },
+    {
+      "lemma": "تنش",
+      "count": 36,
+      "plane_share": 0.1413701083744218
+    },
+    {
+      "lemma": "تنفر",
+      "count": 80,
+      "plane_share": 0.09033310301367752
+    },
+    {
+      "lemma": "تنفرم",
+      "count": 31,
+      "plane_share": 0.06143426007359473
+    },
+    {
+      "lemma": "تنها",
+      "count": 80,
+      "plane_share": 0.018540468145681412
+    },
+    {
+      "lemma": "تنهائی",
+      "count": 80,
+      "plane_share": 0.0842915472062481
+    },
+    {
+      "lemma": "تنهای",
+      "count": 61,
+      "plane_share": 0.07109394504446
+    },
+    {
+      "lemma": "تنهایی",
+      "count": 80,
+      "plane_share": 0.12173919621841708
+    },
+    {
+      "lemma": "تنهاییم",
+      "count": 32,
+      "plane_share": 0.10155684011244767
+    },
+    {
+      "lemma": "تهوع",
+      "count": 80,
+      "plane_share": 0.13984226731627844
+    },
+    {
+      "lemma": "تهی",
+      "count": 31,
+      "plane_share": 0.07376840512054096
+    },
+    {
+      "lemma": "تهی بودن",
+      "count": 67,
+      "plane_share": 0.11666156747556156
+    },
+    {
+      "lemma": "جنون",
+      "count": 77,
+      "plane_share": 0.04015718732512127
+    },
+    {
+      "lemma": "جگرم ... سوخت",
+      "count": 80,
+      "plane_share": 0.056106654785836305
+    },
+    {
+      "lemma": "جگرم ... سوخته",
+      "count": 80,
+      "plane_share": 0.08475459079903842
+    },
+    {
+      "lemma": "جگرم ... شد",
+      "count": 80,
+      "plane_share": 0.08202105435636055
+    },
+    {
+      "lemma": "جگرم ... شده",
+      "count": 63,
+      "plane_share": 0.0791781300962143
+    },
+    {
+      "lemma": "جگرم ... گرفت",
+      "count": 80,
+      "plane_share": 0.08317080606500052
+    },
+    {
+      "lemma": "جگرم ... گرفته",
+      "count": 33,
+      "plane_share": 0.07624746243971658
+    },
+    {
+      "lemma": "جیگرم ... سوخت",
+      "count": 80,
+      "plane_share": 0.08462877252969082
+    },
+    {
+      "lemma": "جیگرم ... شد",
+      "count": 80,
+      "plane_share": 0.08148651066824078
+    },
+    {
+      "lemma": "جیگرم ... شده",
+      "count": 39,
+      "plane_share": 0.07976323481321548
+    },
+    {
+      "lemma": "جیگرم ... گرفت",
+      "count": 80,
+      "plane_share": 0.07897524898065157
+    },
+    {
+      "lemma": "حسادت",
+      "count": 80,
+      "plane_share": 0.02827834361377988
+    },
+    {
+      "lemma": "حساس",
+      "count": 38,
+      "plane_share": 0.03815020899720677
+    },
+    {
+      "lemma": "حسرت",
+      "count": 52,
+      "plane_share": 0.040260397935210954
+    },
+    {
+      "lemma": "حقارت",
+      "count": 80,
+      "plane_share": 0.0870887019846151
+    },
+    {
+      "lemma": "حماقت",
+      "count": 80,
+      "plane_share": 0.07871083598577419
+    },
+    {
+      "lemma": "حوصله",
+      "count": 37,
+      "plane_share": 0.0768117520191032
+    },
+    {
+      "lemma": "حیران",
+      "count": 64,
+      "plane_share": 0.09438529573742292
+    },
+    {
+      "lemma": "خالی",
+      "count": 62,
+      "plane_share": 0.03870008188856168
+    },
+    {
+      "lemma": "خالی بودن",
+      "count": 56,
+      "plane_share": 0.08286014876440441
+    },
+    {
+      "lemma": "خجالت",
+      "count": 80,
+      "plane_share": 0.052758694404078474
+    },
+    {
+      "lemma": "خرسندی",
+      "count": 78,
+      "plane_share": 0.15723758949696112
+    },
+    {
+      "lemma": "خشنودی",
+      "count": 44,
+      "plane_share": 0.20449693979275008
+    },
+    {
+      "lemma": "خطر",
+      "count": 80,
+      "plane_share": 0.0938482022207202
+    },
+    {
+      "lemma": "خفت",
+      "count": 39,
+      "plane_share": 0.0787510114473629
+    },
+    {
+      "lemma": "خفقان",
+      "count": 80,
+      "plane_share": 0.09512874435938105
+    },
+    {
+      "lemma": "خفه",
+      "count": 54,
+      "plane_share": 0.025309574622775808
+    },
+    {
+      "lemma": "خفگی",
+      "count": 80,
+      "plane_share": 0.09449379963001889
+    },
+    {
+      "lemma": "خلا",
+      "count": 80,
+      "plane_share": 0.10178754129771554
+    },
+    {
+      "lemma": "خلاء",
+      "count": 80,
+      "plane_share": 0.16356541817234768
+    },
+    {
+      "lemma": "خواری",
+      "count": 43,
+      "plane_share": 0.02992075674960674
+    },
+    {
+      "lemma": "خوب",
+      "count": 80,
+      "plane_share": 0.09158375807336895
+    },
+    {
+      "lemma": "خوب بودن",
+      "count": 41,
+      "plane_share": 0.10057636609867891
+    },
+    {
+      "lemma": "خوبم",
+      "count": 60,
+      "plane_share": 0.05617250093860658
+    },
+    {
+      "lemma": "خوبیه",
+      "count": 80,
+      "plane_share": 0.031175028062913758
+    },
+    {
+      "lemma": "خوش",
+      "count": 80,
+      "plane_share": 0.15546078505897976
+    },
+    {
+      "lemma": "خوشایند",
+      "count": 61,
+      "plane_share": 0.12624125734941635
+    },
+    {
+      "lemma": "خوشایندی",
+      "count": 80,
+      "plane_share": 0.2352840382089797
+    },
+    {
+      "lemma": "خوشبخت",
+      "count": 47,
+      "plane_share": 0.1342215875100651
+    },
+    {
+      "lemma": "خوشبختی",
+      "count": 80,
+      "plane_share": 0.22195373092381573
+    },
+    {
+      "lemma": "خوشبختی می",
+      "count": 80,
+      "plane_share": 0.17566295674237833
+    },
+    {
+      "lemma": "خوشی",
+      "count": 80,
+      "plane_share": 0.34254783893035196
+    },
+    {
+      "lemma": "خیانت",
+      "count": 80,
+      "plane_share": 0.031154027938295702
+    },
+    {
+      "lemma": "خیلی بد",
+      "count": 35,
+      "plane_share": 0.005528923507388695
+    },
+    {
+      "lemma": "خیلی خوب",
+      "count": 75,
+      "plane_share": 0.019840964763244387
+    },
+    {
+      "lemma": "داشتن",
+      "count": 30,
+      "plane_share": 0.012917195960986462
+    },
+    {
+      "lemma": "داغون",
+      "count": 37,
+      "plane_share": 0.07947686348460042
+    },
+    {
+      "lemma": "درد",
+      "count": 80,
+      "plane_share": 0.07205009919624178
+    },
+    {
+      "lemma": "درماندگی",
+      "count": 80,
+      "plane_share": 0.02721182962995831
+    },
+    {
+      "lemma": "درموندگی",
+      "count": 41,
+      "plane_share": 0.036215020844367875
+    },
+    {
+      "lemma": "دل تنگی",
+      "count": 55,
+      "plane_share": 0.049710979645183936
+    },
+    {
+      "lemma": "دلتنگ",
+      "count": 80,
+      "plane_share": 0.1300825622617614
+    },
+    {
+      "lemma": "دلتنگی",
+      "count": 80,
+      "plane_share": 0.05658359203079396
+    },
+    {
+      "lemma": "دلخور",
+      "count": 58,
+      "plane_share": 0.10938748059740105
+    },
+    {
+      "lemma": "دلسرد",
+      "count": 41,
+      "plane_share": 0.11203013532403236
+    },
+    {
+      "lemma": "دلسوزی",
+      "count": 80,
+      "plane_share": 0.014445923823263984
+    },
+    {
+      "lemma": "دلشوره",
+      "count": 56,
+      "plane_share": 0.010020049892307174
+    },
+    {
+      "lemma": "دلم ... ریخت",
+      "count": 80,
+      "plane_share": 0.06961018019529167
+    },
+    {
+      "lemma": "دلم ... ریخته",
+      "count": 80,
+      "plane_share": 0.0737570656734503
+    },
+    {
+      "lemma": "دلم ... سوخت",
+      "count": 80,
+      "plane_share": 0.07904036261367181
+    },
+    {
+      "lemma": "دلم ... سوخته",
+      "count": 80,
+      "plane_share": 0.08748014217640596
+    },
+    {
+      "lemma": "دلم ... شد",
+      "count": 80,
+      "plane_share": 0.07886337345222266
+    },
+    {
+      "lemma": "دلم ... شده",
+      "count": 80,
+      "plane_share": 0.0830696620942304
+    },
+    {
+      "lemma": "دلهره",
+      "count": 37,
+      "plane_share": 0.04378917676924015
+    },
+    {
+      "lemma": "دلگرمی",
+      "count": 39,
+      "plane_share": 0.023489147450418187
+    },
+    {
+      "lemma": "دوری",
+      "count": 46,
+      "plane_share": 0.06348295834263491
+    },
+    {
+      "lemma": "دوس",
+      "count": 30,
+      "plane_share": 0.0022637117830054195
+    },
+    {
+      "lemma": "دوست",
+      "count": 80,
+      "plane_share": 0.0008285377763067411
+    },
+    {
+      "lemma": "دوست داشتنت",
+      "count": 66,
+      "plane_share": 0.0035115235381654084
+    },
+    {
+      "lemma": "دوستت",
+      "count": 35,
+      "plane_share": 0.027711513103132655
+    },
+    {
+      "lemma": "دوستی",
+      "count": 68,
+      "plane_share": 0.032585187145737646
+    },
+    {
+      "lemma": "دوگانه‌ای",
+      "count": 31,
+      "plane_share": 0.010707099147888493
+    },
+    {
+      "lemma": "دیوانه",
+      "count": 73,
+      "plane_share": 0.1029258081317846
+    },
+    {
+      "lemma": "ذوق",
+      "count": 43,
+      "plane_share": 0.03936230993070419
+    },
+    {
+      "lemma": "رخوت",
+      "count": 52,
+      "plane_share": 0.06244440673320308
+    },
+    {
+      "lemma": "رضایت قلبی",
+      "count": 46,
+      "plane_share": 0.20904964589841968
+    },
+    {
+      "lemma": "رضایتمندی",
+      "count": 47,
+      "plane_share": 0.2808257341933116
+    },
+    {
+      "lemma": "رضایتی",
+      "count": 58,
+      "plane_share": 0.23428563580527514
+    },
+    {
+      "lemma": "رنج",
+      "count": 66,
+      "plane_share": 0.06011449933752933
+    },
+    {
+      "lemma": "رنجش",
+      "count": 30,
+      "plane_share": 0.12969091721379333
+    },
+    {
+      "lemma": "رهایی",
+      "count": 80,
+      "plane_share": 0.11235984917795586
+    },
+    {
+      "lemma": "روانم ... ریخت",
+      "count": 40,
+      "plane_share": 0.05676641962105219
+    },
+    {
+      "lemma": "روانم ... ریخته",
+      "count": 73,
+      "plane_share": 0.07111689796283384
+    },
+    {
+      "lemma": "روانم ... شد",
+      "count": 80,
+      "plane_share": 0.04871163725423268
+    },
+    {
+      "lemma": "روانم ... شده",
+      "count": 56,
+      "plane_share": 0.0459583955545729
+    },
+    {
+      "lemma": "زار",
+      "count": 66,
+      "plane_share": 0.06560589554153196
+    },
+    {
+      "lemma": "زنده",
+      "count": 80,
+      "plane_share": 0.03931335448336127
+    },
+    {
+      "lemma": "زنده بودن",
+      "count": 80,
+      "plane_share": 0.033109647561412804
+    },
+    {
+      "lemma": "زندگی",
+      "count": 33,
+      "plane_share": 0.04281690105094196
+    },
+    {
+      "lemma": "زودرنج",
+      "count": 32,
+      "plane_share": 0.047136410526871494
+    },
+    {
+      "lemma": "زیبا",
+      "count": 33,
+      "plane_share": 0.026329459907435106
+    },
+    {
+      "lemma": "سالم",
+      "count": 35,
+      "plane_share": 0.02196849201935493
+    },
+    {
+      "lemma": "سبک بالی",
+      "count": 30,
+      "plane_share": 0.017466860775886904
+    },
+    {
+      "lemma": "سبکبالی",
+      "count": 37,
+      "plane_share": 0.022529735331602223
+    },
+    {
+      "lemma": "سبکی",
+      "count": 80,
+      "plane_share": 0.055649381499086555
+    },
+    {
+      "lemma": "سربلندی",
+      "count": 49,
+      "plane_share": 0.039887579067519746
+    },
+    {
+      "lemma": "سرحال",
+      "count": 31,
+      "plane_share": 0.04762963620692916
+    },
+    {
+      "lemma": "سرخوشی",
+      "count": 73,
+      "plane_share": 0.07839086228458489
+    },
+    {
+      "lemma": "سرد",
+      "count": 80,
+      "plane_share": 0.03206117613947524
+    },
+    {
+      "lemma": "سردرگم",
+      "count": 39,
+      "plane_share": 0.09624686020187458
+    },
+    {
+      "lemma": "سردرگمی",
+      "count": 80,
+      "plane_share": 0.06759043299997888
+    },
+    {
+      "lemma": "سرزندگی",
+      "count": 80,
+      "plane_share": 0.0298829351917811
+    },
+    {
+      "lemma": "سرور",
+      "count": 30,
+      "plane_share": 0.06792470161446437
+    },
+    {
+      "lemma": "سرگردان",
+      "count": 79,
+      "plane_share": 0.11016288108686241
+    },
+    {
+      "lemma": "سعادت",
+      "count": 80,
+      "plane_share": 0.14453228448853989
+    },
+    {
+      "lemma": "سنگینی",
+      "count": 80,
+      "plane_share": 0.12569266081666974
+    },
+    {
+      "lemma": "سپاسگزار",
+      "count": 57,
+      "plane_share": 0.11548334326391856
+    },
+    {
+      "lemma": "شادابی",
+      "count": 80,
+      "plane_share": 0.27335422006728305
+    },
+    {
+      "lemma": "شرم",
+      "count": 80,
+      "plane_share": 0.05652692326536538
+    },
+    {
+      "lemma": "شرمساری",
+      "count": 80,
+      "plane_share": 0.009203715373762744
+    },
+    {
+      "lemma": "شرمنده",
+      "count": 80,
+      "plane_share": 0.10046358937027182
+    },
+    {
+      "lemma": "شرمندگی",
+      "count": 80,
+      "plane_share": 0.03233799737761075
+    },
+    {
+      "lemma": "شعف",
+      "count": 80,
+      "plane_share": 0.05145276951806026
+    },
+    {
+      "lemma": "شور",
+      "count": 80,
+      "plane_share": 0.06529244147856764
+    },
+    {
+      "lemma": "شوق",
+      "count": 46,
+      "plane_share": 0.05971044258581192
+    },
+    {
+      "lemma": "شوکه",
+      "count": 80,
+      "plane_share": 0.061892582590161276
+    },
+    {
+      "lemma": "شکست",
+      "count": 80,
+      "plane_share": 0.10955893116501461
+    },
+    {
+      "lemma": "شکسته",
+      "count": 33,
+      "plane_share": 0.08844070230841458
+    },
+    {
+      "lemma": "شیرین",
+      "count": 62,
+      "plane_share": 0.03046300812768051
+    },
+    {
+      "lemma": "شیرینی",
+      "count": 78,
+      "plane_share": 0.0731279717024682
+    },
+    {
+      "lemma": "شیفته",
+      "count": 80,
+      "plane_share": 0.12798786029749748
+    },
+    {
+      "lemma": "صمیمیت",
+      "count": 80,
+      "plane_share": 0.03482526205563933
+    },
+    {
+      "lemma": "ضعف",
+      "count": 80,
+      "plane_share": 0.09869380961964883
+    },
+    {
+      "lemma": "ضعیف",
+      "count": 44,
+      "plane_share": 0.05815856506761154
+    },
+    {
+      "lemma": "عاشق",
+      "count": 80,
+      "plane_share": 0.08299162633818992
+    },
+    {
+      "lemma": "عاشقانه",
+      "count": 80,
+      "plane_share": 0.01136070676641806
+    },
+    {
+      "lemma": "عاشقانه‌ای",
+      "count": 33,
+      "plane_share": 0.011003210857055792
+    },
+    {
+      "lemma": "عاشقت",
+      "count": 41,
+      "plane_share": 0.05028874979655146
+    },
+    {
+      "lemma": "عاشقونه",
+      "count": 32,
+      "plane_share": 0.0077662003826223834
+    },
+    {
+      "lemma": "عاشقی",
+      "count": 80,
+      "plane_share": 0.013142388508565521
+    },
+    {
+      "lemma": "عالی",
+      "count": 41,
+      "plane_share": 0.04949000691975323
+    },
+    {
+      "lemma": "عجز",
+      "count": 80,
+      "plane_share": 0.0843123070948146
+    },
+    {
+      "lemma": "عجیب",
+      "count": 71,
+      "plane_share": 0.0013426453226170825
+    },
+    {
+      "lemma": "عذاب",
+      "count": 80,
+      "plane_share": 0.048027960083130795
+    },
+    {
+      "lemma": "عذاب وجدان",
+      "count": 80,
+      "plane_share": 0.04388852487594281
+    },
+    {
+      "lemma": "عزت",
+      "count": 40,
+      "plane_share": 0.12025765666167897
+    },
+    {
+      "lemma": "عشق",
+      "count": 80,
+      "plane_share": 0.044921286541718286
+    },
+    {
+      "lemma": "عشقی",
+      "count": 34,
+      "plane_share": 0.03410486244806921
+    },
+    {
+      "lemma": "عصبانیت",
+      "count": 80,
+      "plane_share": 0.11782720979217566
+    },
+    {
+      "lemma": "عصبی",
+      "count": 80,
+      "plane_share": 0.11097436881279228
+    },
+    {
+      "lemma": "علاقه",
+      "count": 66,
+      "plane_share": 0.06487322082763866
+    },
+    {
+      "lemma": "غربت",
+      "count": 80,
+      "plane_share": 0.13881156070256462
+    },
+    {
+      "lemma": "غربتی",
+      "count": 30,
+      "plane_share": 0.14217793324959788
+    },
+    {
+      "lemma": "غرق",
+      "count": 37,
+      "plane_share": 0.015762581110908676
+    },
+    {
+      "lemma": "غرور",
+      "count": 80,
+      "plane_share": 0.07933029580115307
+    },
+    {
+      "lemma": "غروری",
+      "count": 51,
+      "plane_share": 0.07042774611161343
+    },
+    {
+      "lemma": "غریب",
+      "count": 80,
+      "plane_share": 0.015590348431019627
+    },
+    {
+      "lemma": "غریبگی",
+      "count": 80,
+      "plane_share": 0.06056215207354918
+    },
+    {
+      "lemma": "غریبی",
+      "count": 80,
+      "plane_share": 0.04521220066686832
+    },
+    {
+      "lemma": "غمگینی",
+      "count": 67,
+      "plane_share": 0.1327293887162404
+    },
+    {
+      "lemma": "غم‌انگیز",
+      "count": 80,
+      "plane_share": 0.023800876302460014
+    },
+    {
+      "lemma": "فوق‌العاده‌ای",
+      "count": 80,
+      "plane_share": 0.01128808042941259
+    },
+    {
+      "lemma": "قدرت",
+      "count": 80,
+      "plane_share": 0.10396629625423322
+    },
+    {
+      "lemma": "قدردان",
+      "count": 37,
+      "plane_share": 0.11514209755233372
+    },
+    {
+      "lemma": "قدردانی",
+      "count": 52,
+      "plane_share": 0.027528888990722082
+    },
+    {
+      "lemma": "قشنگ",
+      "count": 45,
+      "plane_share": 0.014511646997537698
+    },
+    {
+      "lemma": "قشنگو",
+      "count": 44,
+      "plane_share": 0.004918985185907322
+    },
+    {
+      "lemma": "قشنگی",
+      "count": 80,
+      "plane_share": 0.03175480632800517
+    },
+    {
+      "lemma": "قشنگیه",
+      "count": 80,
+      "plane_share": 0.013736692783559112
+    },
+    {
+      "lemma": "لذت",
+      "count": 80,
+      "plane_share": 0.13788949714329146
+    },
+    {
+      "lemma": "لعنتی",
+      "count": 56,
+      "plane_share": 0.01822832935018357
+    },
+    {
+      "lemma": "مات",
+      "count": 80,
+      "plane_share": 0.058968083378992904
+    },
+    {
+      "lemma": "مادری",
+      "count": 43,
+      "plane_share": 0.027075993742432778
+    },
+    {
+      "lemma": "متأثر",
+      "count": 63,
+      "plane_share": 0.1928324185765793
+    },
+    {
+      "lemma": "متأسف",
+      "count": 50,
+      "plane_share": 0.2239893944455405
+    },
+    {
+      "lemma": "متاثر",
+      "count": 80,
+      "plane_share": 0.17466152848301028
+    },
+    {
+      "lemma": "متاسف",
+      "count": 80,
+      "plane_share": 0.15346061724571944
+    },
+    {
+      "lemma": "متنفر",
+      "count": 43,
+      "plane_share": 0.12881285175770646
+    },
+    {
+      "lemma": "مجذوب",
+      "count": 35,
+      "plane_share": 0.17805662950168613
+    },
+    {
+      "lemma": "مجنونم",
+      "count": 80,
+      "plane_share": 0.06228000014678524
+    },
+    {
+      "lemma": "محبت",
+      "count": 80,
+      "plane_share": 0.04109948212384287
+    },
+    {
+      "lemma": "محتاج",
+      "count": 80,
+      "plane_share": 0.021218265747955944
+    },
+    {
+      "lemma": "مرگ",
+      "count": 71,
+      "plane_share": 0.06280647102052542
+    },
+    {
+      "lemma": "مسئولیت",
+      "count": 37,
+      "plane_share": 0.03103293218545843
+    },
+    {
+      "lemma": "مست",
+      "count": 80,
+      "plane_share": 0.06824536029219239
+    },
+    {
+      "lemma": "مشتاق",
+      "count": 39,
+      "plane_share": 0.14989960652165046
+    },
+    {
+      "lemma": "مضطرب",
+      "count": 80,
+      "plane_share": 0.17269792512692508
+    },
+    {
+      "lemma": "مغرور",
+      "count": 80,
+      "plane_share": 0.11542970471766936
+    },
+    {
+      "lemma": "مغزم ... شده",
+      "count": 80,
+      "plane_share": 0.07807987012291014
+    },
+    {
+      "lemma": "مغزم ... گرفته",
+      "count": 62,
+      "plane_share": 0.09426561273139873
+    },
+    {
+      "lemma": "مفید بودن",
+      "count": 80,
+      "plane_share": 0.04371340489485064
+    },
+    {
+      "lemma": "ملول",
+      "count": 34,
+      "plane_share": 0.11029621031891873
+    },
+    {
+      "lemma": "ممنون",
+      "count": 80,
+      "plane_share": 0.14662263571490441
+    },
+    {
+      "lemma": "منتظر",
+      "count": 51,
+      "plane_share": 0.0843907411608744
+    },
+    {
+      "lemma": "مهر",
+      "count": 31,
+      "plane_share": 0.0005491515775307985
+    },
+    {
+      "lemma": "موفقیت",
+      "count": 71,
+      "plane_share": 0.10537840311576296
+    },
+    {
+      "lemma": "نا امنی",
+      "count": 80,
+      "plane_share": 0.09280670522356174
+    },
+    {
+      "lemma": "نا امیدی",
+      "count": 80,
+      "plane_share": 0.09320392349326945
+    },
+    {
+      "lemma": "ناامنی",
+      "count": 80,
+      "plane_share": 0.10405075897892627
+    },
+    {
+      "lemma": "ناامید",
+      "count": 80,
+      "plane_share": 0.08077200470284603
+    },
+    {
+      "lemma": "ناامیدی",
+      "count": 80,
+      "plane_share": 0.12557843374659702
+    },
+    {
+      "lemma": "ناتوانی",
+      "count": 80,
+      "plane_share": 0.10251921055123381
+    },
+    {
+      "lemma": "ناخوشایند",
+      "count": 49,
+      "plane_share": 0.0018104808448874616
+    },
+    {
+      "lemma": "ناخوشایندی",
+      "count": 80,
+      "plane_share": 0.02403879871746495
+    },
+    {
+      "lemma": "نادم",
+      "count": 60,
+      "plane_share": 0.15527002007515647
+    },
+    {
+      "lemma": "ناراحت",
+      "count": 80,
+      "plane_share": 0.09180044808373815
+    },
+    {
+      "lemma": "ناراحتی",
+      "count": 80,
+      "plane_share": 0.0977578954664033
+    },
+    {
+      "lemma": "ناراحتی می",
+      "count": 56,
+      "plane_share": 0.005689844180109387
+    },
+    {
+      "lemma": "نارضایتی",
+      "count": 80,
+      "plane_share": 0.05422461328229078
+    },
+    {
+      "lemma": "ناکامی",
+      "count": 37,
+      "plane_share": 0.08190914865652178
+    },
+    {
+      "lemma": "نبودنت",
+      "count": 31,
+      "plane_share": 0.010502074003544862
+    },
+    {
+      "lemma": "ندامت",
+      "count": 80,
+      "plane_share": 0.014612854454733187
+    },
+    {
+      "lemma": "نزدیکی",
+      "count": 80,
+      "plane_share": 0.023582452402800894
+    },
+    {
+      "lemma": "نشاط",
+      "count": 80,
+      "plane_share": 0.12296752139832609
+    },
+    {
+      "lemma": "نفرت",
+      "count": 80,
+      "plane_share": 0.06424574769632924
+    },
+    {
+      "lemma": "نوستالژی",
+      "count": 51,
+      "plane_share": 0.04534055215399903
+    },
+    {
+      "lemma": "نوستالژیک",
+      "count": 39,
+      "plane_share": 0.041150846208437224
+    },
+    {
+      "lemma": "نومیدی",
+      "count": 36,
+      "plane_share": 0.0555155198081106
+    },
+    {
+      "lemma": "نگران",
+      "count": 80,
+      "plane_share": 0.10198295139369551
+    },
+    {
+      "lemma": "نگرانی",
+      "count": 80,
+      "plane_share": 0.022351123981399126
+    },
+    {
+      "lemma": "نیاز",
+      "count": 80,
+      "plane_share": 0.012711092698343961
+    },
+    {
+      "lemma": "همدردی",
+      "count": 80,
+      "plane_share": 0.011528620501612621
+    },
+    {
+      "lemma": "همدلی",
+      "count": 73,
+      "plane_share": 0.00880957706451907
+    },
+    {
+      "lemma": "وابستگی",
+      "count": 46,
+      "plane_share": 0.026556589622338284
+    },
+    {
+      "lemma": "واله",
+      "count": 66,
+      "plane_share": 0.06947856883939267
+    },
+    {
+      "lemma": "وحشتناکی",
+      "count": 75,
+      "plane_share": 0.03657984029548843
+    },
+    {
+      "lemma": "پرواز",
+      "count": 46,
+      "plane_share": 0.06080003746372719
+    },
+    {
+      "lemma": "پشیمان",
+      "count": 35,
+      "plane_share": 0.1079808942072452
+    },
+    {
+      "lemma": "پشیمانی",
+      "count": 80,
+      "plane_share": 0.019634571956210344
+    },
+    {
+      "lemma": "پشیمونی",
+      "count": 80,
+      "plane_share": 0.02381230996341372
+    },
+    {
+      "lemma": "پوچ",
+      "count": 74,
+      "plane_share": 0.03037313654244159
+    },
+    {
+      "lemma": "پوچی",
+      "count": 80,
+      "plane_share": 0.09028090351692938
+    },
+    {
+      "lemma": "پیروزی",
+      "count": 74,
+      "plane_share": 0.0696649457780028
+    },
+    {
+      "lemma": "پیری",
+      "count": 80,
+      "plane_share": 0.10912705088523006
+    },
+    {
+      "lemma": "کرختی",
+      "count": 50,
+      "plane_share": 0.02716424996545532
+    },
+    {
+      "lemma": "کسالت",
+      "count": 80,
+      "plane_share": 0.14476231124723624
+    },
+    {
+      "lemma": "کلافگی",
+      "count": 53,
+      "plane_share": 0.1756596459797461
+    },
+    {
+      "lemma": "کمبود",
+      "count": 80,
+      "plane_share": 0.045354338851137085
+    },
+    {
+      "lemma": "کمبود محبت",
+      "count": 79,
+      "plane_share": 0.04549414722877192
+    },
+    {
+      "lemma": "کنجکاوی",
+      "count": 80,
+      "plane_share": 0.0011565755070151596
+    },
+    {
+      "lemma": "کوچکی",
+      "count": 80,
+      "plane_share": 0.024088386415391058
+    },
+    {
+      "lemma": "کوچیکی",
+      "count": 34,
+      "plane_share": 0.025094752050388153
+    },
+    {
+      "lemma": "کینه",
+      "count": 54,
+      "plane_share": 0.03181901818956602
+    },
+    {
+      "lemma": "گریان",
+      "count": 39,
+      "plane_share": 0.12568949962708648
+    },
+    {
+      "lemma": "گریه",
+      "count": 80,
+      "plane_share": 0.025320120606934667
+    },
+    {
+      "lemma": "گناه",
+      "count": 80,
+      "plane_share": 0.062051280533424916
+    },
+    {
+      "lemma": "گناه می",
+      "count": 80,
+      "plane_share": 0.013483934125110949
+    },
+    {
+      "lemma": "گناهی",
+      "count": 30,
+      "plane_share": 0.07690576896634886
+    },
+    {
+      "lemma": "گنگی",
+      "count": 31,
+      "plane_share": 0.07299580103100381
+    },
+    {
+      "lemma": "گیج",
+      "count": 80,
+      "plane_share": 0.09464627148093198
+    },
+    {
+      "lemma": "گیجی",
+      "count": 80,
+      "plane_share": 0.09905800954404549
+    },
+    {
+      "lemma": "یأس",
+      "count": 54,
+      "plane_share": 0.0709454989556922
+    },
+    {
+      "lemma": "یاس",
+      "count": 80,
+      "plane_share": 0.015590618021802683
+    },
+    {
+      "lemma": "یتیمی",
+      "count": 40,
+      "plane_share": 0.04433361551078366
+    }
+  ]
+}

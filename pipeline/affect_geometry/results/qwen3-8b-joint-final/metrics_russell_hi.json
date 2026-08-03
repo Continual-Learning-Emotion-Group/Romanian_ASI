@@ -1,0 +1,2938 @@
+{
+  "language": "hi",
+  "experiment": "affect_geometry_russell_v2",
+  "anchors": "/Users/alexjerpelea/Romanian_ASI/pipeline/affect_geometry/anchors_russell.json",
+  "anchor_lemmas_missing_from_archive": [
+    "\u0925\u0915\u093e",
+    "\u0938\u0939\u091c"
+  ],
+  "selection_rule": "minimum anchor-slice Procrustes disparity against Russell-angle unit-circle targets; PC1+PC2 and searched pairs select layers independently; permutation nulls repeat all selection",
+  "candidate_pcs": 10,
+  "permutations": 5000,
+  "full": {
+    "labels": [
+      "happy",
+      "delighted",
+      "excited",
+      "astonished",
+      "tense",
+      "alarmed",
+      "angry",
+      "afraid",
+      "annoyed",
+      "distressed",
+      "sad",
+      "gloomy",
+      "depressed",
+      "bored",
+      "tired",
+      "calm",
+      "at ease",
+      "satisfied",
+      "content",
+      "pleased"
+    ],
+    "label_count": 20,
+    "best_pc1_pc2_layer": 36,
+    "global_pc1_pc2_layer_corrected_p": 0.021795640871825634,
+    "best_pc1_pc2_layer_metrics": {
+      "anchor_lemma_count": 41,
+      "broader_lemma_count": 51,
+      "pc1_pc2_basic_variance_fraction": 0.1640873761757122,
+      "pc1_pc2_disparity": 0.69597704571555,
+      "pc1_pc2_broader_variance_fraction": 0.037900460471574894,
+      "searched_pc_pair": [
+        0,
+        1
+      ],
+      "searched_disparity": 0.69597704571555,
+      "searched_broader_variance_fraction": 0.037900460471574894,
+      "isotropic_random_2d_expected_fraction": 0.00048828125,
+      "pc1_pc2_enrichment_over_isotropic_random": 77.62014304578538,
+      "searched_enrichment_over_isotropic_random": 77.62014304578538,
+      "broader_effective_dimension": 28.564252690215145,
+      "pc1_pc2_geometry": {
+        "plane_radius_mean": 0.7297518086442606,
+        "plane_radius_cv": 0.2588123251004767,
+        "ring_rmse": 0.3297051627127759,
+        "inside_anchor_circle_fraction": 0.9411764705882353,
+        "angular_resultant": 0.7795017594096396,
+        "angular_coverage": 0.22049824059036038
+      },
+      "searched_geometry": {
+        "plane_radius_mean": 0.7297518086442606,
+        "plane_radius_cv": 0.2588123251004767,
+        "ring_rmse": 0.3297051627127759,
+        "inside_anchor_circle_fraction": 0.9411764705882353,
+        "angular_resultant": 0.7795017594096396,
+        "angular_coverage": 0.22049824059036038
+      },
+      "layer": 36
+    },
+    "best_searched_layer": 17,
+    "best_searched_pc_pair": [
+      1,
+      8
+    ],
+    "global_search_corrected_p": 0.0027994401119776045,
+    "best_searched_layer_metrics": {
+      "anchor_lemma_count": 41,
+      "broader_lemma_count": 51,
+      "pc1_pc2_basic_variance_fraction": 0.2139346243359782,
+      "pc1_pc2_disparity": 0.7890770682197235,
+      "pc1_pc2_broader_variance_fraction": 0.03174159278183201,
+      "searched_pc_pair": [
+        1,
+        8
+      ],
+      "searched_disparity": 0.4945701224927068,
+      "searched_broader_variance_fraction": 0.028473829363267436,
+      "isotropic_random_2d_expected_fraction": 0.00048828125,
+      "pc1_pc2_enrichment_over_isotropic_random": 65.00678201719195,
+      "searched_enrichment_over_isotropic_random": 58.31440253597172,
+      "broader_effective_dimension": 22.937274085938316,
+      "pc1_pc2_geometry": {
+        "plane_radius_mean": 0.6128643377752429,
+        "plane_radius_cv": 0.5022981134416303,
+        "ring_rmse": 0.4946108130449723,
+        "inside_anchor_circle_fraction": 0.8823529411764706,
+        "angular_resultant": 0.756799354375169,
+        "angular_coverage": 0.243200645624831
+      },
+      "searched_geometry": {
+        "plane_radius_mean": 0.5264939978061572,
+        "plane_radius_cv": 0.6370092483273085,
+        "ring_rmse": 0.5802488391810742,
+        "inside_anchor_circle_fraction": 0.9019607843137255,
+        "angular_resultant": 0.2919583274602525,
+        "angular_coverage": 0.7080416725397475
+      },
+      "layer": 17
+    },
+    "pc1_pc2_null_min_disparity_quantiles": {
+      "q01": 0.6713026663576537,
+      "q05": 0.7366812680480868,
+      "q50": 0.8585098867456972
+    },
+    "searched_null_min_disparity_quantiles": {
+      "q01": 0.5270917653167801,
+      "q05": 0.5760707779780303,
+      "q50": 0.6809750162688253
+    },
+    "layers": [
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.20405230281870942,
+        "pc1_pc2_disparity": 0.7620236265305564,
+        "pc1_pc2_broader_variance_fraction": 0.06705725166803814,
+        "searched_pc_pair": [
+          0,
+          7
+        ],
+        "searched_disparity": 0.7289705967977398,
+        "searched_broader_variance_fraction": 0.0675637010604874,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 137.3332514161421,
+        "searched_enrichment_over_isotropic_random": 138.3704597718782,
+        "broader_effective_dimension": 21.162204241489835,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.5737147239536047,
+          "plane_radius_cv": 0.5943692861176169,
+          "ring_rmse": 0.5458928950060615,
+          "inside_anchor_circle_fraction": 0.9019607843137255,
+          "angular_resultant": 0.14545321069000505,
+          "angular_coverage": 0.854546789309995
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7576934018524781,
+          "plane_radius_cv": 0.4814872247629899,
+          "ring_rmse": 0.437956500248756,
+          "inside_anchor_circle_fraction": 0.7450980392156863,
+          "angular_resultant": 0.4120049624538318,
+          "angular_coverage": 0.5879950375461682
+        },
+        "layer": 0
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.20585798148738904,
+        "pc1_pc2_disparity": 0.9190015093758747,
+        "pc1_pc2_broader_variance_fraction": 0.06195585894637361,
+        "searched_pc_pair": [
+          2,
+          7
+        ],
+        "searched_disparity": 0.711827056684043,
+        "searched_broader_variance_fraction": 0.05379992034161301,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 126.88559912217315,
+        "searched_enrichment_over_isotropic_random": 110.18223685962349,
+        "broader_effective_dimension": 21.83942270043507,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.8350642593205573,
+          "plane_radius_cv": 0.32333247325161696,
+          "ring_rmse": 0.3163947382648178,
+          "inside_anchor_circle_fraction": 0.8627450980392157,
+          "angular_resultant": 0.7931037546030693,
+          "angular_coverage": 0.20689624539693074
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6378103367243372,
+          "plane_radius_cv": 0.5589256479792197,
+          "ring_rmse": 0.5081982315577206,
+          "inside_anchor_circle_fraction": 0.8823529411764706,
+          "angular_resultant": 0.22505223173894928,
+          "angular_coverage": 0.7749477682610507
+        },
+        "layer": 1
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.18444990080451457,
+        "pc1_pc2_disparity": 0.8837692469409932,
+        "pc1_pc2_broader_variance_fraction": 0.044597216572443976,
+        "searched_pc_pair": [
+          5,
+          6
+        ],
+        "searched_disparity": 0.6625776197629991,
+        "searched_broader_variance_fraction": 0.02102126567395406,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 91.33509954036526,
+        "searched_enrichment_over_isotropic_random": 43.05155210025791,
+        "broader_effective_dimension": 24.335162369079608,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6707837979716315,
+          "plane_radius_cv": 0.4087545176525314,
+          "ring_rmse": 0.42844045059736885,
+          "inside_anchor_circle_fraction": 0.8431372549019608,
+          "angular_resultant": 0.7033418740848602,
+          "angular_coverage": 0.29665812591513985
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6571209735175776,
+          "plane_radius_cv": 0.41564186107303047,
+          "ring_rmse": 0.43836557392166126,
+          "inside_anchor_circle_fraction": 0.8627450980392157,
+          "angular_resultant": 0.7533854320698875,
+          "angular_coverage": 0.2466145679301125
+        },
+        "layer": 2
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.1899270379639651,
+        "pc1_pc2_disparity": 0.8617821120834804,
+        "pc1_pc2_broader_variance_fraction": 0.050062822420180925,
+        "searched_pc_pair": [
+          5,
+          7
+        ],
+        "searched_disparity": 0.5842435256804861,
+        "searched_broader_variance_fraction": 0.025253948919909636,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 102.52866031653055,
+        "searched_enrichment_over_isotropic_random": 51.72008738797494,
+        "broader_effective_dimension": 25.041735144004242,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.579018484136855,
+          "plane_radius_cv": 0.4926569443361377,
+          "ring_rmse": 0.5085245962045751,
+          "inside_anchor_circle_fraction": 0.9215686274509803,
+          "angular_resultant": 0.473303054983347,
+          "angular_coverage": 0.526696945016653
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7809820112324157,
+          "plane_radius_cv": 0.32807992114823326,
+          "ring_rmse": 0.33707548463682346,
+          "inside_anchor_circle_fraction": 0.8235294117647058,
+          "angular_resultant": 0.847198550983698,
+          "angular_coverage": 0.152801449016302
+        },
+        "layer": 3
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.1792502376048064,
+        "pc1_pc2_disparity": 0.8685510882969626,
+        "pc1_pc2_broader_variance_fraction": 0.0410814019332245,
+        "searched_pc_pair": [
+          3,
+          8
+        ],
+        "searched_disparity": 0.5761730955171007,
+        "searched_broader_variance_fraction": 0.01501972451712794,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 84.13471115924378,
+        "searched_enrichment_over_isotropic_random": 30.76039581107802,
+        "broader_effective_dimension": 26.67964713703857,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.5839931643714545,
+          "plane_radius_cv": 0.4130190051213998,
+          "ring_rmse": 0.48087343481399897,
+          "inside_anchor_circle_fraction": 0.9215686274509803,
+          "angular_resultant": 0.53297057597445,
+          "angular_coverage": 0.46702942402555003
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6779813014339459,
+          "plane_radius_cv": 0.3872310625445082,
+          "ring_rmse": 0.4154767007234103,
+          "inside_anchor_circle_fraction": 0.8823529411764706,
+          "angular_resultant": 0.7858677509198909,
+          "angular_coverage": 0.21413224908010908
+        },
+        "layer": 4
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.16353031503377286,
+        "pc1_pc2_disparity": 0.8650859858044482,
+        "pc1_pc2_broader_variance_fraction": 0.03125941625326274,
+        "searched_pc_pair": [
+          1,
+          5
+        ],
+        "searched_disparity": 0.7092855271281134,
+        "searched_broader_variance_fraction": 0.02248544379108449,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 64.0192844866821,
+        "searched_enrichment_over_isotropic_random": 46.05018888414103,
+        "broader_effective_dimension": 28.982812381214224,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.5446610046160868,
+          "plane_radius_cv": 0.5930342988287923,
+          "ring_rmse": 0.5582690365120831,
+          "inside_anchor_circle_fraction": 0.9411764705882353,
+          "angular_resultant": 0.6379682967389836,
+          "angular_coverage": 0.3620317032610164
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.4906578491590651,
+          "plane_radius_cv": 0.6326808563361662,
+          "ring_rmse": 0.5964864666054215,
+          "inside_anchor_circle_fraction": 0.8823529411764706,
+          "angular_resultant": 0.7362682472982061,
+          "angular_coverage": 0.26373175270179394
+        },
+        "layer": 5
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.15739326575989912,
+        "pc1_pc2_disparity": 0.9128082994388265,
+        "pc1_pc2_broader_variance_fraction": 0.021338806232727107,
+        "searched_pc_pair": [
+          1,
+          2
+        ],
+        "searched_disparity": 0.7207820397294118,
+        "searched_broader_variance_fraction": 0.02100275674830137,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 43.70187516462511,
+        "searched_enrichment_over_isotropic_random": 43.0136458205212,
+        "broader_effective_dimension": 28.193041704056697,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.8264467929427033,
+          "plane_radius_cv": 0.2307631529601494,
+          "ring_rmse": 0.25786109136405544,
+          "inside_anchor_circle_fraction": 0.8235294117647058,
+          "angular_resultant": 0.9146059657045128,
+          "angular_coverage": 0.0853940342954872
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.4516327339097618,
+          "plane_radius_cv": 0.6341897158590155,
+          "ring_rmse": 0.618662713722682,
+          "inside_anchor_circle_fraction": 0.9411764705882353,
+          "angular_resultant": 0.5179502439570671,
+          "angular_coverage": 0.4820497560429329
+        },
+        "layer": 6
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.1627296376877801,
+        "pc1_pc2_disparity": 0.875747128655435,
+        "pc1_pc2_broader_variance_fraction": 0.01677036942912614,
+        "searched_pc_pair": [
+          1,
+          3
+        ],
+        "searched_disparity": 0.7134239607234131,
+        "searched_broader_variance_fraction": 0.01983111613720437,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 34.34571659085034,
+        "searched_enrichment_over_isotropic_random": 40.614125848994554,
+        "broader_effective_dimension": 29.632355770374833,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.8392018383684811,
+          "plane_radius_cv": 0.16782695339662965,
+          "ring_rmse": 0.21375721772419531,
+          "inside_anchor_circle_fraction": 0.9019607843137255,
+          "angular_resultant": 0.9601469365859903,
+          "angular_coverage": 0.03985306341400974
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6038939839780088,
+          "plane_radius_cv": 0.375889690909717,
+          "ring_rmse": 0.45653899216578164,
+          "inside_anchor_circle_fraction": 0.9803921568627451,
+          "angular_resultant": 0.8233924564703038,
+          "angular_coverage": 0.1766075435296962
+        },
+        "layer": 7
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.1639795177678723,
+        "pc1_pc2_disparity": 0.8436451435513772,
+        "pc1_pc2_broader_variance_fraction": 0.01620807015925546,
+        "searched_pc_pair": [
+          1,
+          2
+        ],
+        "searched_disparity": 0.7019795797540003,
+        "searched_broader_variance_fraction": 0.015862141712307792,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 33.19412768615518,
+        "searched_enrichment_over_isotropic_random": 32.485666226806345,
+        "broader_effective_dimension": 31.19822836662701,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7511803237983198,
+          "plane_radius_cv": 0.23627525540725688,
+          "ring_rmse": 0.30563421126677387,
+          "inside_anchor_circle_fraction": 0.9607843137254902,
+          "angular_resultant": 0.9574549324857715,
+          "angular_coverage": 0.042545067514228485
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7740565272191982,
+          "plane_radius_cv": 0.17154395189767474,
+          "ring_rmse": 0.2620729547438575,
+          "inside_anchor_circle_fraction": 0.9607843137254902,
+          "angular_resultant": 0.9286270682346489,
+          "angular_coverage": 0.07137293176535109
+        },
+        "layer": 8
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.16269128392680204,
+        "pc1_pc2_disparity": 0.8662989834824689,
+        "pc1_pc2_broader_variance_fraction": 0.016262135626800112,
+        "searched_pc_pair": [
+          2,
+          3
+        ],
+        "searched_disparity": 0.6198632063079801,
+        "searched_broader_variance_fraction": 0.011429148455684605,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 33.30485376368663,
+        "searched_enrichment_over_isotropic_random": 23.406896037242074,
+        "broader_effective_dimension": 31.148309742934277,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6311670835000035,
+          "plane_radius_cv": 0.33385131804166707,
+          "ring_rmse": 0.42478104623857904,
+          "inside_anchor_circle_fraction": 0.9607843137254902,
+          "angular_resultant": 0.9093049435882996,
+          "angular_coverage": 0.09069505641170039
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5215370512748692,
+          "plane_radius_cv": 0.3639075200640611,
+          "ring_rmse": 0.5147305253806188,
+          "inside_anchor_circle_fraction": 1.0,
+          "angular_resultant": 0.8602512828116474,
+          "angular_coverage": 0.13974871718835258
+        },
+        "layer": 9
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.18258971909878552,
+        "pc1_pc2_disparity": 0.8413863664299789,
+        "pc1_pc2_broader_variance_fraction": 0.015148658027489102,
+        "searched_pc_pair": [
+          3,
+          8
+        ],
+        "searched_disparity": 0.5896870638750373,
+        "searched_broader_variance_fraction": 0.012243029820899108,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 31.024451640297677,
+        "searched_enrichment_over_isotropic_random": 25.07372507320138,
+        "broader_effective_dimension": 29.63257359485089,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.675286825526799,
+          "plane_radius_cv": 0.30677987959858555,
+          "ring_rmse": 0.38516975332145953,
+          "inside_anchor_circle_fraction": 0.9411764705882353,
+          "angular_resultant": 0.9562855135189373,
+          "angular_coverage": 0.043714486481062687
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.3997431877585093,
+          "plane_radius_cv": 0.4935912844924058,
+          "ring_rmse": 0.6318539225751493,
+          "inside_anchor_circle_fraction": 1.0,
+          "angular_resultant": 0.5791945902675713,
+          "angular_coverage": 0.42080540973242875
+        },
+        "layer": 10
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.19378781584841265,
+        "pc1_pc2_disparity": 0.8215122722277315,
+        "pc1_pc2_broader_variance_fraction": 0.011801381129396606,
+        "searched_pc_pair": [
+          3,
+          8
+        ],
+        "searched_disparity": 0.6119032935389016,
+        "searched_broader_variance_fraction": 0.011696498225434103,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 24.169228553004253,
+        "searched_enrichment_over_isotropic_random": 23.95442836568904,
+        "broader_effective_dimension": 27.454392400958994,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7607796353744267,
+          "plane_radius_cv": 0.19629891750278658,
+          "ring_rmse": 0.2820086591354335,
+          "inside_anchor_circle_fraction": 0.9411764705882353,
+          "angular_resultant": 0.9645585171981828,
+          "angular_coverage": 0.03544148280181725
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.4011790605098838,
+          "plane_radius_cv": 0.6275417398919382,
+          "ring_rmse": 0.6495905680161118,
+          "inside_anchor_circle_fraction": 0.9803921568627451,
+          "angular_resultant": 0.757945236113234,
+          "angular_coverage": 0.24205476388676594
+        },
+        "layer": 11
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.19454119294947622,
+        "pc1_pc2_disparity": 0.8602821306802217,
+        "pc1_pc2_broader_variance_fraction": 0.01463214535554523,
+        "searched_pc_pair": [
+          3,
+          8
+        ],
+        "searched_disparity": 0.6107206368359882,
+        "searched_broader_variance_fraction": 0.018353838470644864,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 29.966633688156634,
+        "searched_enrichment_over_isotropic_random": 37.588661187880675,
+        "broader_effective_dimension": 24.43947008522399,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7531837020861972,
+          "plane_radius_cv": 0.2527916608275387,
+          "ring_rmse": 0.31172086258283715,
+          "inside_anchor_circle_fraction": 0.8823529411764706,
+          "angular_resultant": 0.9622327098722055,
+          "angular_coverage": 0.03776729012779445
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.45639970324665863,
+          "plane_radius_cv": 0.7529809773391652,
+          "ring_rmse": 0.6431202692501304,
+          "inside_anchor_circle_fraction": 0.9019607843137255,
+          "angular_resultant": 0.5371912467047832,
+          "angular_coverage": 0.46280875329521676
+        },
+        "layer": 12
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.20269181782146206,
+        "pc1_pc2_disparity": 0.8737145604811543,
+        "pc1_pc2_broader_variance_fraction": 0.014913121825837466,
+        "searched_pc_pair": [
+          1,
+          2
+        ],
+        "searched_disparity": 0.6194300914125258,
+        "searched_broader_variance_fraction": 0.021521611043254302,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 30.542073499315126,
+        "searched_enrichment_over_isotropic_random": 44.07625941658481,
+        "broader_effective_dimension": 24.28408606467008,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.735076392431092,
+          "plane_radius_cv": 0.2780895933037068,
+          "ring_rmse": 0.3346204814159663,
+          "inside_anchor_circle_fraction": 0.8627450980392157,
+          "angular_resultant": 0.9637428652687643,
+          "angular_coverage": 0.03625713473123571
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.43604341578533995,
+          "plane_radius_cv": 0.6720835024365017,
+          "ring_rmse": 0.6355547007513375,
+          "inside_anchor_circle_fraction": 0.9607843137254902,
+          "angular_resultant": 0.46508645756425143,
+          "angular_coverage": 0.5349135424357485
+        },
+        "layer": 13
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.20329177246216024,
+        "pc1_pc2_disparity": 0.8380102328762021,
+        "pc1_pc2_broader_variance_fraction": 0.02221980291630494,
+        "searched_pc_pair": [
+          4,
+          8
+        ],
+        "searched_disparity": 0.5692869247888701,
+        "searched_broader_variance_fraction": 0.019078037513999366,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 45.506156372592514,
+        "searched_enrichment_over_isotropic_random": 39.07182082867071,
+        "broader_effective_dimension": 24.13368304683549,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6425701268130786,
+          "plane_radius_cv": 0.4035709485214521,
+          "ring_rmse": 0.44159296140805104,
+          "inside_anchor_circle_fraction": 0.9019607843137255,
+          "angular_resultant": 0.8525434345730376,
+          "angular_coverage": 0.1474565654269624
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.4553142507706906,
+          "plane_radius_cv": 0.6417061380877092,
+          "ring_rmse": 0.6181023536396479,
+          "inside_anchor_circle_fraction": 0.9411764705882353,
+          "angular_resultant": 0.17801038013763357,
+          "angular_coverage": 0.8219896198623664
+        },
+        "layer": 14
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.2027645712656172,
+        "pc1_pc2_disparity": 0.7912108776308829,
+        "pc1_pc2_broader_variance_fraction": 0.0260566375403264,
+        "searched_pc_pair": [
+          1,
+          8
+        ],
+        "searched_disparity": 0.5064962934940631,
+        "searched_broader_variance_fraction": 0.022046434574274344,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 53.36399368258846,
+        "searched_enrichment_over_isotropic_random": 45.15109800811385,
+        "broader_effective_dimension": 23.630736686539585,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6078914238771532,
+          "plane_radius_cv": 0.45903605262055536,
+          "ring_rmse": 0.48126368432529787,
+          "inside_anchor_circle_fraction": 0.8627450980392157,
+          "angular_resultant": 0.7680022905129501,
+          "angular_coverage": 0.2319977094870499
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.4818631899086014,
+          "plane_radius_cv": 0.5934994894823299,
+          "ring_rmse": 0.5918221801394595,
+          "inside_anchor_circle_fraction": 0.9215686274509803,
+          "angular_resultant": 0.5321370636900387,
+          "angular_coverage": 0.46786293630996134
+        },
+        "layer": 15
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.20797206284300687,
+        "pc1_pc2_disparity": 0.7796579906989175,
+        "pc1_pc2_broader_variance_fraction": 0.030066797270095896,
+        "searched_pc_pair": [
+          1,
+          8
+        ],
+        "searched_disparity": 0.5227761516702383,
+        "searched_broader_variance_fraction": 0.025751745692024777,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 61.576800809156396,
+        "searched_enrichment_over_isotropic_random": 52.739575177266744,
+        "broader_effective_dimension": 23.084451367835456,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6066024266733773,
+          "plane_radius_cv": 0.47886940344254597,
+          "ring_rmse": 0.48902169971067444,
+          "inside_anchor_circle_fraction": 0.8823529411764706,
+          "angular_resultant": 0.7458748507975707,
+          "angular_coverage": 0.25412514920242935
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.47136849727458985,
+          "plane_radius_cv": 0.6783614578175717,
+          "ring_rmse": 0.6178159803358276,
+          "inside_anchor_circle_fraction": 0.9215686274509803,
+          "angular_resultant": 0.39275910439534595,
+          "angular_coverage": 0.607240895604654
+        },
+        "layer": 16
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.2139346243359782,
+        "pc1_pc2_disparity": 0.7890770682197235,
+        "pc1_pc2_broader_variance_fraction": 0.03174159278183201,
+        "searched_pc_pair": [
+          1,
+          8
+        ],
+        "searched_disparity": 0.4945701224927068,
+        "searched_broader_variance_fraction": 0.028473829363267436,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 65.00678201719195,
+        "searched_enrichment_over_isotropic_random": 58.31440253597172,
+        "broader_effective_dimension": 22.937274085938316,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6128643377752429,
+          "plane_radius_cv": 0.5022981134416303,
+          "ring_rmse": 0.4946108130449723,
+          "inside_anchor_circle_fraction": 0.8823529411764706,
+          "angular_resultant": 0.756799354375169,
+          "angular_coverage": 0.243200645624831
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5264939978061572,
+          "plane_radius_cv": 0.6370092483273085,
+          "ring_rmse": 0.5802488391810742,
+          "inside_anchor_circle_fraction": 0.9019607843137255,
+          "angular_resultant": 0.2919583274602525,
+          "angular_coverage": 0.7080416725397475
+        },
+        "layer": 17
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.2151360600194165,
+        "pc1_pc2_disparity": 0.7839131971928165,
+        "pc1_pc2_broader_variance_fraction": 0.03402706198429481,
+        "searched_pc_pair": [
+          1,
+          8
+        ],
+        "searched_disparity": 0.5276000051290806,
+        "searched_broader_variance_fraction": 0.03048465795951693,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 69.68742294383578,
+        "searched_enrichment_over_isotropic_random": 62.432579501090686,
+        "broader_effective_dimension": 22.199072397042055,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6170117616799566,
+          "plane_radius_cv": 0.48703479978162206,
+          "ring_rmse": 0.486809990465852,
+          "inside_anchor_circle_fraction": 0.9019607843137255,
+          "angular_resultant": 0.7048713626706307,
+          "angular_coverage": 0.29512863732936934
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5274009669165237,
+          "plane_radius_cv": 0.6440783378885386,
+          "ring_rmse": 0.5820115717587274,
+          "inside_anchor_circle_fraction": 0.9019607843137255,
+          "angular_resultant": 0.45876196576524186,
+          "angular_coverage": 0.5412380342347581
+        },
+        "layer": 18
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.216690157386855,
+        "pc1_pc2_disparity": 0.7829080802445915,
+        "pc1_pc2_broader_variance_fraction": 0.043948145680506666,
+        "searched_pc_pair": [
+          0,
+          2
+        ],
+        "searched_disparity": 0.6525634367921964,
+        "searched_broader_variance_fraction": 0.03869576708615609,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 90.00580235367764,
+        "searched_enrichment_over_isotropic_random": 79.24893099244765,
+        "broader_effective_dimension": 22.008753916172456,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6031023918858122,
+          "plane_radius_cv": 0.47831033161468095,
+          "ring_rmse": 0.49065539112536516,
+          "inside_anchor_circle_fraction": 0.9019607843137255,
+          "angular_resultant": 0.5470043581725385,
+          "angular_coverage": 0.45299564182746155
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6962666544102646,
+          "plane_radius_cv": 0.38174783157237113,
+          "ring_rmse": 0.40361203377383664,
+          "inside_anchor_circle_fraction": 0.8431372549019608,
+          "angular_resultant": 0.7482011556667859,
+          "angular_coverage": 0.2517988443332141
+        },
+        "layer": 19
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.21177720936901911,
+        "pc1_pc2_disparity": 0.7773247833468406,
+        "pc1_pc2_broader_variance_fraction": 0.052555136709253845,
+        "searched_pc_pair": [
+          2,
+          4
+        ],
+        "searched_disparity": 0.6378984665707602,
+        "searched_broader_variance_fraction": 0.03060001361784484,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 107.63291998055186,
+        "searched_enrichment_over_isotropic_random": 62.66882788934623,
+        "broader_effective_dimension": 21.668267893574917,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6468274671239213,
+          "plane_radius_cv": 0.4277820095666724,
+          "ring_rmse": 0.4486584073135939,
+          "inside_anchor_circle_fraction": 0.9019607843137255,
+          "angular_resultant": 0.534505824220654,
+          "angular_coverage": 0.46549417577934604
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6724007300402758,
+          "plane_radius_cv": 0.49741315987159346,
+          "ring_rmse": 0.4681724290847807,
+          "inside_anchor_circle_fraction": 0.8627450980392157,
+          "angular_resultant": 0.4627550705737934,
+          "angular_coverage": 0.5372449294262066
+        },
+        "layer": 20
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.20911603342180096,
+        "pc1_pc2_disparity": 0.7843297240394907,
+        "pc1_pc2_broader_variance_fraction": 0.06678919866237432,
+        "searched_pc_pair": [
+          1,
+          2
+        ],
+        "searched_disparity": 0.6633994783134143,
+        "searched_broader_variance_fraction": 0.04107309715625815,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 136.78427886054257,
+        "searched_enrichment_over_isotropic_random": 84.11770297601669,
+        "broader_effective_dimension": 21.657826190007196,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7081481599813951,
+          "plane_radius_cv": 0.41044295351606375,
+          "ring_rmse": 0.4118949984285413,
+          "inside_anchor_circle_fraction": 0.803921568627451,
+          "angular_resultant": 0.5058234035676015,
+          "angular_coverage": 0.49417659643239853
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.801811985963857,
+          "plane_radius_cv": 0.3745910863551604,
+          "ring_rmse": 0.3598466149224005,
+          "inside_anchor_circle_fraction": 0.7647058823529411,
+          "angular_resultant": 0.7893903693881624,
+          "angular_coverage": 0.21060963061183757
+        },
+        "layer": 21
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.20169142980777194,
+        "pc1_pc2_disparity": 0.8161885677304235,
+        "pc1_pc2_broader_variance_fraction": 0.06696209492472399,
+        "searched_pc_pair": [
+          1,
+          2
+        ],
+        "searched_disparity": 0.6436790692271067,
+        "searched_broader_variance_fraction": 0.040181798111467354,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 137.13837040583473,
+        "searched_enrichment_over_isotropic_random": 82.29232253228516,
+        "broader_effective_dimension": 22.11275201258222,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7158779570186218,
+          "plane_radius_cv": 0.42586625783849547,
+          "ring_rmse": 0.41673732170588335,
+          "inside_anchor_circle_fraction": 0.803921568627451,
+          "angular_resultant": 0.5902499387458227,
+          "angular_coverage": 0.40975006125417734
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.677785086064462,
+          "plane_radius_cv": 0.5539118213749417,
+          "ring_rmse": 0.4947449009763593,
+          "inside_anchor_circle_fraction": 0.8235294117647058,
+          "angular_resultant": 0.525244459739624,
+          "angular_coverage": 0.47475554026037603
+        },
+        "layer": 22
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.19843492893018663,
+        "pc1_pc2_disparity": 0.8282960930834482,
+        "pc1_pc2_broader_variance_fraction": 0.06908231058587784,
+        "searched_pc_pair": [
+          1,
+          2
+        ],
+        "searched_disparity": 0.6974265328571916,
+        "searched_broader_variance_fraction": 0.03727354128128388,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 141.48057207987782,
+        "searched_enrichment_over_isotropic_random": 76.33621254406938,
+        "broader_effective_dimension": 21.39989969012976,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6977945066825834,
+          "plane_radius_cv": 0.40763439527045103,
+          "ring_rmse": 0.4150146286216882,
+          "inside_anchor_circle_fraction": 0.8823529411764706,
+          "angular_resultant": 0.617583904626395,
+          "angular_coverage": 0.382416095373605
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5957521875771473,
+          "plane_radius_cv": 0.6047321082821397,
+          "ring_rmse": 0.5414897136782477,
+          "inside_anchor_circle_fraction": 0.8431372549019608,
+          "angular_resultant": 0.26266201249597965,
+          "angular_coverage": 0.7373379875040204
+        },
+        "layer": 23
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.18831885546171193,
+        "pc1_pc2_disparity": 0.8199087053845784,
+        "pc1_pc2_broader_variance_fraction": 0.07069874123191484,
+        "searched_pc_pair": [
+          1,
+          3
+        ],
+        "searched_disparity": 0.6845344460172778,
+        "searched_broader_variance_fraction": 0.032904083488165085,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 144.79102204296157,
+        "searched_enrichment_over_isotropic_random": 67.3875629837621,
+        "broader_effective_dimension": 22.43978952882749,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6170661105608979,
+          "plane_radius_cv": 0.5424867322940533,
+          "ring_rmse": 0.5086217113961089,
+          "inside_anchor_circle_fraction": 0.8627450980392157,
+          "angular_resultant": 0.2822201707348167,
+          "angular_coverage": 0.7177798292651834
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5891356096542414,
+          "plane_radius_cv": 0.5897519963470427,
+          "ring_rmse": 0.5380769575353773,
+          "inside_anchor_circle_fraction": 0.8235294117647058,
+          "angular_resultant": 0.39611009421234883,
+          "angular_coverage": 0.6038899057876512
+        },
+        "layer": 24
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.18721016953297637,
+        "pc1_pc2_disparity": 0.8494695898137105,
+        "pc1_pc2_broader_variance_fraction": 0.07244444021428585,
+        "searched_pc_pair": [
+          1,
+          2
+        ],
+        "searched_disparity": 0.7452859509428487,
+        "searched_broader_variance_fraction": 0.04833781522977728,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 148.36621355885742,
+        "searched_enrichment_over_isotropic_random": 98.99584559058385,
+        "broader_effective_dimension": 24.76079131078749,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7863343200364695,
+          "plane_radius_cv": 0.3546366888480389,
+          "ring_rmse": 0.3513084048695579,
+          "inside_anchor_circle_fraction": 0.6862745098039216,
+          "angular_resultant": 0.5629259946085083,
+          "angular_coverage": 0.43707400539149166
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7089252241012567,
+          "plane_radius_cv": 0.42386455975048515,
+          "ring_rmse": 0.4183512045945778,
+          "inside_anchor_circle_fraction": 0.803921568627451,
+          "angular_resultant": 0.5732866897996056,
+          "angular_coverage": 0.4267133102003944
+        },
+        "layer": 25
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.17582100848820015,
+        "pc1_pc2_disparity": 0.8013989933818055,
+        "pc1_pc2_broader_variance_fraction": 0.06044760987284555,
+        "searched_pc_pair": [
+          1,
+          4
+        ],
+        "searched_disparity": 0.7211774714583717,
+        "searched_broader_variance_fraction": 0.030985781576981647,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 123.79670501958769,
+        "searched_enrichment_over_isotropic_random": 63.45888066965842,
+        "broader_effective_dimension": 25.66380501683203,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7941540698215587,
+          "plane_radius_cv": 0.2979160760460422,
+          "ring_rmse": 0.313604804322038,
+          "inside_anchor_circle_fraction": 0.7450980392156863,
+          "angular_resultant": 0.6810740556538103,
+          "angular_coverage": 0.3189259443461897
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7047367637811063,
+          "plane_radius_cv": 0.4385872912888334,
+          "ring_rmse": 0.42745307821883866,
+          "inside_anchor_circle_fraction": 0.8431372549019608,
+          "angular_resultant": 0.6074671402813427,
+          "angular_coverage": 0.39253285971865726
+        },
+        "layer": 26
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.18324661966029177,
+        "pc1_pc2_disparity": 0.7549031504126166,
+        "pc1_pc2_broader_variance_fraction": 0.05235654911248533,
+        "searched_pc_pair": [
+          1,
+          2
+        ],
+        "searched_disparity": 0.7343389723625076,
+        "searched_broader_variance_fraction": 0.03632110571405189,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 107.22621258236994,
+        "searched_enrichment_over_isotropic_random": 74.38562450237829,
+        "broader_effective_dimension": 25.02048662849615,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6714216923690707,
+          "plane_radius_cv": 0.3429581344632529,
+          "ring_rmse": 0.4012328017211456,
+          "inside_anchor_circle_fraction": 0.9215686274509803,
+          "angular_resultant": 0.632592121687627,
+          "angular_coverage": 0.367407878312373
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7719596220696409,
+          "plane_radius_cv": 0.28107357539047556,
+          "ring_rmse": 0.3147723434850166,
+          "inside_anchor_circle_fraction": 0.8823529411764706,
+          "angular_resultant": 0.7623201283074162,
+          "angular_coverage": 0.23767987169258376
+        },
+        "layer": 27
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.17833973005944043,
+        "pc1_pc2_disparity": 0.7349130430733859,
+        "pc1_pc2_broader_variance_fraction": 0.05116731396252028,
+        "searched_pc_pair": [
+          1,
+          2
+        ],
+        "searched_disparity": 0.6760485061270944,
+        "searched_broader_variance_fraction": 0.030035350335475018,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 104.79065899524153,
+        "searched_enrichment_over_isotropic_random": 61.51239748705284,
+        "broader_effective_dimension": 25.123250738889187,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6407627642964159,
+          "plane_radius_cv": 0.34611677108533917,
+          "ring_rmse": 0.4221814782683088,
+          "inside_anchor_circle_fraction": 0.9607843137254902,
+          "angular_resultant": 0.5690733045793632,
+          "angular_coverage": 0.4309266954206368
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7203558001645035,
+          "plane_radius_cv": 0.2955234147118014,
+          "ring_rmse": 0.35145359142531113,
+          "inside_anchor_circle_fraction": 0.9215686274509803,
+          "angular_resultant": 0.7503937558876572,
+          "angular_coverage": 0.24960624411234278
+        },
+        "layer": 28
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.17915506027948402,
+        "pc1_pc2_disparity": 0.7738525060588104,
+        "pc1_pc2_broader_variance_fraction": 0.04933072535309066,
+        "searched_pc_pair": [
+          1,
+          2
+        ],
+        "searched_disparity": 0.7089425073891442,
+        "searched_broader_variance_fraction": 0.027502071672834374,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 101.02932552312966,
+        "searched_enrichment_over_isotropic_random": 56.32424278596477,
+        "broader_effective_dimension": 25.424328332385976,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.5923669044095531,
+          "plane_radius_cv": 0.41155779771652823,
+          "ring_rmse": 0.47497355091124693,
+          "inside_anchor_circle_fraction": 0.9803921568627451,
+          "angular_resultant": 0.5142040691703712,
+          "angular_coverage": 0.4857959308296288
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6302361670474529,
+          "plane_radius_cv": 0.3765170242775752,
+          "ring_rmse": 0.43935639437605123,
+          "inside_anchor_circle_fraction": 0.9411764705882353,
+          "angular_resultant": 0.6983990420669919,
+          "angular_coverage": 0.3016009579330081
+        },
+        "layer": 29
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.18614846338876473,
+        "pc1_pc2_disparity": 0.7782759267299495,
+        "pc1_pc2_broader_variance_fraction": 0.053704823188280966,
+        "searched_pc_pair": [
+          1,
+          2
+        ],
+        "searched_disparity": 0.6915919175215829,
+        "searched_broader_variance_fraction": 0.026304452767263304,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 109.9874778895994,
+        "searched_enrichment_over_isotropic_random": 53.87151926735527,
+        "broader_effective_dimension": 24.963151801343418,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.540214210918544,
+          "plane_radius_cv": 0.5503042272721012,
+          "ring_rmse": 0.5475213756693713,
+          "inside_anchor_circle_fraction": 0.9019607843137255,
+          "angular_resultant": 0.29564202641468873,
+          "angular_coverage": 0.7043579735853113
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5568267189064614,
+          "plane_radius_cv": 0.5444150282550805,
+          "ring_rmse": 0.5369351426378235,
+          "inside_anchor_circle_fraction": 0.9411764705882353,
+          "angular_resultant": 0.580123544929411,
+          "angular_coverage": 0.419876455070589
+        },
+        "layer": 30
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.1917549586700639,
+        "pc1_pc2_disparity": 0.8134849437869178,
+        "pc1_pc2_broader_variance_fraction": 0.05121574217388376,
+        "searched_pc_pair": [
+          2,
+          3
+        ],
+        "searched_disparity": 0.667401738161266,
+        "searched_broader_variance_fraction": 0.030773921223331214,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 104.88983997211396,
+        "searched_enrichment_over_isotropic_random": 63.02499066538232,
+        "broader_effective_dimension": 23.681561520586303,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6522002418422702,
+          "plane_radius_cv": 0.4031408847542015,
+          "ring_rmse": 0.43600012762325135,
+          "inside_anchor_circle_fraction": 0.8431372549019608,
+          "angular_resultant": 0.6909436966848759,
+          "angular_coverage": 0.3090563033151241
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6352120558457941,
+          "plane_radius_cv": 0.5862041831409477,
+          "ring_rmse": 0.521272640873412,
+          "inside_anchor_circle_fraction": 0.8627450980392157,
+          "angular_resultant": 0.47135257011637033,
+          "angular_coverage": 0.5286474298836297
+        },
+        "layer": 31
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.20132592622304576,
+        "pc1_pc2_disparity": 0.8115397954789645,
+        "pc1_pc2_broader_variance_fraction": 0.05256007826886044,
+        "searched_pc_pair": [
+          2,
+          6
+        ],
+        "searched_disparity": 0.6303054711990191,
+        "searched_broader_variance_fraction": 0.02236311037355919,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 107.64304029462618,
+        "searched_enrichment_over_isotropic_random": 45.799650045049226,
+        "broader_effective_dimension": 22.326278850601827,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6703753740874657,
+          "plane_radius_cv": 0.3841498947470304,
+          "ring_rmse": 0.41829574316969365,
+          "inside_anchor_circle_fraction": 0.803921568627451,
+          "angular_resultant": 0.7113956052679828,
+          "angular_coverage": 0.28860439473201716
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6319886614345553,
+          "plane_radius_cv": 0.43496774382216774,
+          "ring_rmse": 0.459346744417038,
+          "inside_anchor_circle_fraction": 0.8627450980392157,
+          "angular_resultant": 0.5780130319351936,
+          "angular_coverage": 0.4219869680648064
+        },
+        "layer": 32
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.20763817289387315,
+        "pc1_pc2_disparity": 0.8054595298476086,
+        "pc1_pc2_broader_variance_fraction": 0.05842313363538335,
+        "searched_pc_pair": [
+          2,
+          6
+        ],
+        "searched_disparity": 0.6629878612094364,
+        "searched_broader_variance_fraction": 0.02028595266684799,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 119.65057768526509,
+        "searched_enrichment_over_isotropic_random": 41.54563106170468,
+        "broader_effective_dimension": 22.533136964822358,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7068120039554209,
+          "plane_radius_cv": 0.31096108984161214,
+          "ring_rmse": 0.36642502420061573,
+          "inside_anchor_circle_fraction": 0.8431372549019608,
+          "angular_resultant": 0.745480020104479,
+          "angular_coverage": 0.254519979895521
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6507988866155686,
+          "plane_radius_cv": 0.37821652616858376,
+          "ring_rmse": 0.42723265549309214,
+          "inside_anchor_circle_fraction": 0.9019607843137255,
+          "angular_resultant": 0.6438423185130413,
+          "angular_coverage": 0.3561576814869587
+        },
+        "layer": 33
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.20471804440747066,
+        "pc1_pc2_disparity": 0.818922213398982,
+        "pc1_pc2_broader_variance_fraction": 0.057767643781427666,
+        "searched_pc_pair": [
+          2,
+          6
+        ],
+        "searched_disparity": 0.6700562562264616,
+        "searched_broader_variance_fraction": 0.01723469001441175,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 118.30813446436386,
+        "searched_enrichment_over_isotropic_random": 35.29664514951528,
+        "broader_effective_dimension": 23.170536301675693,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7670508707119955,
+          "plane_radius_cv": 0.25098727015239997,
+          "ring_rmse": 0.3022072944483529,
+          "inside_anchor_circle_fraction": 0.8235294117647058,
+          "angular_resultant": 0.7897722981850401,
+          "angular_coverage": 0.21022770181495987
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6378146650936014,
+          "plane_radius_cv": 0.4140606693783876,
+          "ring_rmse": 0.4482452903442459,
+          "inside_anchor_circle_fraction": 0.9215686274509803,
+          "angular_resultant": 0.6141400550920292,
+          "angular_coverage": 0.3858599449079708
+        },
+        "layer": 34
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.2015614872333324,
+        "pc1_pc2_disparity": 0.7970886757596249,
+        "pc1_pc2_broader_variance_fraction": 0.06041434610992644,
+        "searched_pc_pair": [
+          3,
+          5
+        ],
+        "searched_disparity": 0.7474474902320822,
+        "searched_broader_variance_fraction": 0.019155096692086974,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 123.72858083312934,
+        "searched_enrichment_over_isotropic_random": 39.22963802539412,
+        "broader_effective_dimension": 23.892712406761092,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.8049563504169103,
+          "plane_radius_cv": 0.2169578853458499,
+          "ring_rmse": 0.26180474275161425,
+          "inside_anchor_circle_fraction": 0.8235294117647058,
+          "angular_resultant": 0.7904671155373778,
+          "angular_coverage": 0.2095328844626222
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5657280955076771,
+          "plane_radius_cv": 0.5535083812786978,
+          "ring_rmse": 0.5353930958249186,
+          "inside_anchor_circle_fraction": 0.9215686274509803,
+          "angular_resultant": 0.6155580577019281,
+          "angular_coverage": 0.38444194229807194
+        },
+        "layer": 35
+      },
+      {
+        "anchor_lemma_count": 41,
+        "broader_lemma_count": 51,
+        "pc1_pc2_basic_variance_fraction": 0.1640873761757122,
+        "pc1_pc2_disparity": 0.69597704571555,
+        "pc1_pc2_broader_variance_fraction": 0.037900460471574894,
+        "searched_pc_pair": [
+          0,
+          1
+        ],
+        "searched_disparity": 0.69597704571555,
+        "searched_broader_variance_fraction": 0.037900460471574894,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 77.62014304578538,
+        "searched_enrichment_over_isotropic_random": 77.62014304578538,
+        "broader_effective_dimension": 28.564252690215145,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7297518086442606,
+          "plane_radius_cv": 0.2588123251004767,
+          "ring_rmse": 0.3297051627127759,
+          "inside_anchor_circle_fraction": 0.9411764705882353,
+          "angular_resultant": 0.7795017594096396,
+          "angular_coverage": 0.22049824059036038
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7297518086442606,
+          "plane_radius_cv": 0.2588123251004767,
+          "ring_rmse": 0.3297051627127759,
+          "inside_anchor_circle_fraction": 0.9411764705882353,
+          "angular_resultant": 0.7795017594096396,
+          "angular_coverage": 0.22049824059036038
+        },
+        "layer": 36
+      }
+    ]
+  },
+  "shared": {
+    "labels": [
+      "happy",
+      "delighted",
+      "excited",
+      "astonished",
+      "tense",
+      "angry",
+      "afraid",
+      "annoyed",
+      "distressed",
+      "sad",
+      "depressed",
+      "bored",
+      "tired",
+      "calm",
+      "at ease",
+      "satisfied"
+    ],
+    "label_count": 16,
+    "best_pc1_pc2_layer": 20,
+    "global_pc1_pc2_layer_corrected_p": 0.3311337732453509,
+    "best_pc1_pc2_layer_metrics": {
+      "anchor_lemma_count": 35,
+      "broader_lemma_count": 57,
+      "pc1_pc2_basic_variance_fraction": 0.21570815673356672,
+      "pc1_pc2_disparity": 0.7877871539332852,
+      "pc1_pc2_broader_variance_fraction": 0.04465115996542724,
+      "searched_pc_pair": [
+        4,
+        7
+      ],
+      "searched_disparity": 0.6373934141121615,
+      "searched_broader_variance_fraction": 0.026896488310418118,
+      "isotropic_random_2d_expected_fraction": 0.00048828125,
+      "pc1_pc2_enrichment_over_isotropic_random": 91.44557560919499,
+      "searched_enrichment_over_isotropic_random": 55.084008059736306,
+      "broader_effective_dimension": 23.18315022423137,
+      "pc1_pc2_geometry": {
+        "plane_radius_mean": 0.5873720974952941,
+        "plane_radius_cv": 0.5938788191928953,
+        "ring_rmse": 0.5403171783754693,
+        "inside_anchor_circle_fraction": 0.8421052631578947,
+        "angular_resultant": 0.1209826972435538,
+        "angular_coverage": 0.8790173027564462
+      },
+      "searched_geometry": {
+        "plane_radius_mean": 0.7271914669555312,
+        "plane_radius_cv": 0.43234176182222744,
+        "ring_rmse": 0.4162557658940978,
+        "inside_anchor_circle_fraction": 0.7894736842105263,
+        "angular_resultant": 0.5067509894778002,
+        "angular_coverage": 0.4932490105221998
+      },
+      "layer": 20
+    },
+    "best_searched_layer": 36,
+    "best_searched_pc_pair": [
+      6,
+      9
+    ],
+    "global_search_corrected_p": 0.19956008798240352,
+    "best_searched_layer_metrics": {
+      "anchor_lemma_count": 35,
+      "broader_lemma_count": 57,
+      "pc1_pc2_basic_variance_fraction": 0.16552145439180427,
+      "pc1_pc2_disparity": 0.8077002517902548,
+      "pc1_pc2_broader_variance_fraction": 0.03134523621088564,
+      "searched_pc_pair": [
+        6,
+        9
+      ],
+      "searched_disparity": 0.5587176623749308,
+      "searched_broader_variance_fraction": 0.01593868667451219,
+      "isotropic_random_2d_expected_fraction": 0.00048828125,
+      "pc1_pc2_enrichment_over_isotropic_random": 64.19504375989379,
+      "searched_enrichment_over_isotropic_random": 32.642430309400964,
+      "broader_effective_dimension": 29.367703414459328,
+      "pc1_pc2_geometry": {
+        "plane_radius_mean": 0.6267064493052265,
+        "plane_radius_cv": 0.3646443339939817,
+        "ring_rmse": 0.43768907962308995,
+        "inside_anchor_circle_fraction": 0.9649122807017544,
+        "angular_resultant": 0.5552562646673807,
+        "angular_coverage": 0.44474373533261935
+      },
+      "searched_geometry": {
+        "plane_radius_mean": 0.469795088484087,
+        "plane_radius_cv": 0.59011943336095,
+        "ring_rmse": 0.5983114662466749,
+        "inside_anchor_circle_fraction": 0.9649122807017544,
+        "angular_resultant": 0.30400236686257603,
+        "angular_coverage": 0.695997633137424
+      },
+      "layer": 36
+    },
+    "pc1_pc2_null_min_disparity_quantiles": {
+      "q01": 0.6141616060801547,
+      "q05": 0.6830076966602505,
+      "q50": 0.8192963990063169
+    },
+    "searched_null_min_disparity_quantiles": {
+      "q01": 0.44767304943103964,
+      "q05": 0.5050099983537418,
+      "q50": 0.6131367188915716
+    },
+    "layers": [
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.2075444960341925,
+        "pc1_pc2_disparity": 0.8629533502539413,
+        "pc1_pc2_broader_variance_fraction": 0.06636680832597336,
+        "searched_pc_pair": [
+          7,
+          8
+        ],
+        "searched_disparity": 0.6275442118501364,
+        "searched_broader_variance_fraction": 0.054626491838222734,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 135.91922345159347,
+        "searched_enrichment_over_isotropic_random": 111.87505528468016,
+        "broader_effective_dimension": 21.474232174803536,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.754850596848304,
+          "plane_radius_cv": 0.5913309305609624,
+          "ring_rmse": 0.5092556209087526,
+          "inside_anchor_circle_fraction": 0.7017543859649122,
+          "angular_resultant": 0.651208035180441,
+          "angular_coverage": 0.348791964819559
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.8559484259831119,
+          "plane_radius_cv": 0.48840104662647316,
+          "ring_rmse": 0.44216897634870245,
+          "inside_anchor_circle_fraction": 0.6842105263157895,
+          "angular_resultant": 0.17890400476324642,
+          "angular_coverage": 0.8210959952367536
+        },
+        "layer": 0
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.22468236876971676,
+        "pc1_pc2_disparity": 0.8727404466930915,
+        "pc1_pc2_broader_variance_fraction": 0.062226703229477875,
+        "searched_pc_pair": [
+          5,
+          6
+        ],
+        "searched_disparity": 0.731514664455333,
+        "searched_broader_variance_fraction": 0.044188676252388745,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 127.44028821397067,
+        "searched_enrichment_over_isotropic_random": 90.49840896489215,
+        "broader_effective_dimension": 22.768051935366618,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.8090737346877286,
+          "plane_radius_cv": 0.3211253092649368,
+          "ring_rmse": 0.32242236439574135,
+          "inside_anchor_circle_fraction": 0.8596491228070176,
+          "angular_resultant": 0.7846823909532389,
+          "angular_coverage": 0.21531760904676112
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 1.0184165008730688,
+          "plane_radius_cv": 0.5551691005314693,
+          "ring_rmse": 0.5656932326455169,
+          "inside_anchor_circle_fraction": 0.49122807017543857,
+          "angular_resultant": 0.6165327706981685,
+          "angular_coverage": 0.3834672293018315
+        },
+        "layer": 1
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.20123239809053636,
+        "pc1_pc2_disparity": 0.9181452063598019,
+        "pc1_pc2_broader_variance_fraction": 0.043706839383424886,
+        "searched_pc_pair": [
+          6,
+          7
+        ],
+        "searched_disparity": 0.7251814428305849,
+        "searched_broader_variance_fraction": 0.014769000155039468,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 89.51160705725417,
+        "searched_enrichment_over_isotropic_random": 30.246912317520824,
+        "broader_effective_dimension": 24.927016290565252,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.730714684087625,
+          "plane_radius_cv": 0.38661623936259903,
+          "ring_rmse": 0.3902874756088011,
+          "inside_anchor_circle_fraction": 0.8947368421052632,
+          "angular_resultant": 0.7639569770567975,
+          "angular_coverage": 0.23604302294320245
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7526462921366815,
+          "plane_radius_cv": 0.2571352161079513,
+          "ring_rmse": 0.3140675728741246,
+          "inside_anchor_circle_fraction": 0.8771929824561403,
+          "angular_resultant": 0.9481023148494925,
+          "angular_coverage": 0.05189768515050752
+        },
+        "layer": 2
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.2035901602352111,
+        "pc1_pc2_disparity": 0.9175572739576465,
+        "pc1_pc2_broader_variance_fraction": 0.046638302639904684,
+        "searched_pc_pair": [
+          6,
+          7
+        ],
+        "searched_disparity": 0.6553350283174839,
+        "searched_broader_variance_fraction": 0.017460880105689993,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 95.51524380652478,
+        "searched_enrichment_over_isotropic_random": 35.759882456453106,
+        "broader_effective_dimension": 25.45177982258237,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6896927084293613,
+          "plane_radius_cv": 0.40434548563338263,
+          "ring_rmse": 0.41720666021723163,
+          "inside_anchor_circle_fraction": 0.8596491228070176,
+          "angular_resultant": 0.674699873414795,
+          "angular_coverage": 0.325300126585205
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.8429127029409194,
+          "plane_radius_cv": 0.22401794111596818,
+          "ring_rmse": 0.245626280006416,
+          "inside_anchor_circle_fraction": 0.8421052631578947,
+          "angular_resultant": 0.9545361703510181,
+          "angular_coverage": 0.04546382964898188
+        },
+        "layer": 3
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.19415860267795887,
+        "pc1_pc2_disparity": 0.9204274975173778,
+        "pc1_pc2_broader_variance_fraction": 0.03949302339535176,
+        "searched_pc_pair": [
+          5,
+          6
+        ],
+        "searched_disparity": 0.7978819503917387,
+        "searched_broader_variance_fraction": 0.015496513335819074,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 80.88171191368042,
+        "searched_enrichment_over_isotropic_random": 31.736859311757453,
+        "broader_effective_dimension": 27.485888928019207,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.5697998129165762,
+          "plane_radius_cv": 0.5483115308886296,
+          "ring_rmse": 0.531679730668334,
+          "inside_anchor_circle_fraction": 0.9122807017543859,
+          "angular_resultant": 0.5079978201816955,
+          "angular_coverage": 0.4920021798183045
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.4979755698906609,
+          "plane_radius_cv": 0.5264563446770975,
+          "ring_rmse": 0.5663547046592653,
+          "inside_anchor_circle_fraction": 0.9649122807017544,
+          "angular_resultant": 0.45259824811337607,
+          "angular_coverage": 0.5474017518866239
+        },
+        "layer": 4
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.17795986650015683,
+        "pc1_pc2_disparity": 0.8976358507910837,
+        "pc1_pc2_broader_variance_fraction": 0.030109390786761385,
+        "searched_pc_pair": [
+          6,
+          8
+        ],
+        "searched_disparity": 0.8170426534830413,
+        "searched_broader_variance_fraction": 0.013197150677607926,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 61.664032331287316,
+        "searched_enrichment_over_isotropic_random": 27.02776458774104,
+        "broader_effective_dimension": 30.674609339046345,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.673058097707087,
+          "plane_radius_cv": 0.48518299084995775,
+          "ring_rmse": 0.46209311965407496,
+          "inside_anchor_circle_fraction": 0.8771929824561403,
+          "angular_resultant": 0.75805746971313,
+          "angular_coverage": 0.24194253028686996
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.4400838578846838,
+          "plane_radius_cv": 0.536337233963335,
+          "ring_rmse": 0.6076329753935542,
+          "inside_anchor_circle_fraction": 0.9649122807017544,
+          "angular_resultant": 0.39199460468268005,
+          "angular_coverage": 0.6080053953173199
+        },
+        "layer": 5
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.17849957964333904,
+        "pc1_pc2_disparity": 0.8545429796447775,
+        "pc1_pc2_broader_variance_fraction": 0.014779462945413265,
+        "searched_pc_pair": [
+          1,
+          8
+        ],
+        "searched_disparity": 0.7881027799198688,
+        "searched_broader_variance_fraction": 0.011586827551245798,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 30.268340112206367,
+        "searched_enrichment_over_isotropic_random": 23.72982282495139,
+        "broader_effective_dimension": 30.23647735977318,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.8890699474040357,
+          "plane_radius_cv": 0.19009678792404813,
+          "ring_rmse": 0.20216239510790537,
+          "inside_anchor_circle_fraction": 0.7543859649122807,
+          "angular_resultant": 0.9708435962396208,
+          "angular_coverage": 0.0291564037603792
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.598472218541795,
+          "plane_radius_cv": 0.3968767890808319,
+          "ring_rmse": 0.4665192199527995,
+          "inside_anchor_circle_fraction": 0.9122807017543859,
+          "angular_resultant": 0.9171371679307042,
+          "angular_coverage": 0.08286283206929579
+        },
+        "layer": 6
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.18684458320790565,
+        "pc1_pc2_disparity": 0.8765501614118764,
+        "pc1_pc2_broader_variance_fraction": 0.011213716095264278,
+        "searched_pc_pair": [
+          7,
+          9
+        ],
+        "searched_disparity": 0.8425844426190742,
+        "searched_broader_variance_fraction": 0.0143105390641432,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 22.96569056310124,
+        "searched_enrichment_over_isotropic_random": 29.30798400336527,
+        "broader_effective_dimension": 31.815976559084998,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.8922664876335883,
+          "plane_radius_cv": 0.16060459357870202,
+          "ring_rmse": 0.1792819025437543,
+          "inside_anchor_circle_fraction": 0.8070175438596491,
+          "angular_resultant": 0.9816871216572592,
+          "angular_coverage": 0.018312878342740757
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6626664352880415,
+          "plane_radius_cv": 0.28075665289421825,
+          "ring_rmse": 0.38523732430672664,
+          "inside_anchor_circle_fraction": 0.9649122807017544,
+          "angular_resultant": 0.8643604208271123,
+          "angular_coverage": 0.13563957917288771
+        },
+        "layer": 7
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.1789293096980904,
+        "pc1_pc2_disparity": 0.8790805404362683,
+        "pc1_pc2_broader_variance_fraction": 0.012313750033405879,
+        "searched_pc_pair": [
+          3,
+          8
+        ],
+        "searched_disparity": 0.8204195310901413,
+        "searched_broader_variance_fraction": 0.01704592007930535,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 25.218560068415243,
+        "searched_enrichment_over_isotropic_random": 34.91004432241736,
+        "broader_effective_dimension": 33.40974973984486,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.8311774599708024,
+          "plane_radius_cv": 0.18336158108447842,
+          "ring_rmse": 0.22743931693562291,
+          "inside_anchor_circle_fraction": 0.8421052631578947,
+          "angular_resultant": 0.9737096038608967,
+          "angular_coverage": 0.026290396139103334
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.4980214431569826,
+          "plane_radius_cv": 0.5456749419174899,
+          "ring_rmse": 0.570819398221129,
+          "inside_anchor_circle_fraction": 0.9473684210526315,
+          "angular_resultant": 0.5896182050171147,
+          "angular_coverage": 0.4103817949828853
+        },
+        "layer": 8
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.17739035278203574,
+        "pc1_pc2_disparity": 0.9381295257432536,
+        "pc1_pc2_broader_variance_fraction": 0.013372680102811195,
+        "searched_pc_pair": [
+          2,
+          9
+        ],
+        "searched_disparity": 0.6366460523877795,
+        "searched_broader_variance_fraction": 0.009955678469072235,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 27.387248850557327,
+        "searched_enrichment_over_isotropic_random": 20.389229504659934,
+        "broader_effective_dimension": 33.391231085508295,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7565288352545514,
+          "plane_radius_cv": 0.25252974257364963,
+          "ring_rmse": 0.30947826161413516,
+          "inside_anchor_circle_fraction": 0.9122807017543859,
+          "angular_resultant": 0.95558319054522,
+          "angular_coverage": 0.04441680945477999
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5142777187860377,
+          "plane_radius_cv": 0.42644437184019596,
+          "ring_rmse": 0.5329384377732125,
+          "inside_anchor_circle_fraction": 0.9473684210526315,
+          "angular_resultant": 0.8191292657458711,
+          "angular_coverage": 0.18087073425412892
+        },
+        "layer": 9
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.1999123049984621,
+        "pc1_pc2_disparity": 0.9157375583709148,
+        "pc1_pc2_broader_variance_fraction": 0.01583331343199274,
+        "searched_pc_pair": [
+          3,
+          6
+        ],
+        "searched_disparity": 0.7068562070569697,
+        "searched_broader_variance_fraction": 0.017045653241109956,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 32.42662590872112,
+        "searched_enrichment_over_isotropic_random": 34.90949783779318,
+        "broader_effective_dimension": 32.09391791848409,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.780561433408164,
+          "plane_radius_cv": 0.24050514320325242,
+          "ring_rmse": 0.2887827500253045,
+          "inside_anchor_circle_fraction": 0.8771929824561403,
+          "angular_resultant": 0.9625473707377145,
+          "angular_coverage": 0.03745262926228554
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6564817625054552,
+          "plane_radius_cv": 0.4918793506820836,
+          "ring_rmse": 0.47146106236911167,
+          "inside_anchor_circle_fraction": 0.8771929824561403,
+          "angular_resultant": 0.8238967250238841,
+          "angular_coverage": 0.1761032749761159
+        },
+        "layer": 10
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.2093956057430862,
+        "pc1_pc2_disparity": 0.8983841633049303,
+        "pc1_pc2_broader_variance_fraction": 0.013650911968077264,
+        "searched_pc_pair": [
+          4,
+          9
+        ],
+        "searched_disparity": 0.6200393710928527,
+        "searched_broader_variance_fraction": 0.017307642858797812,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 27.957067710622237,
+        "searched_enrichment_over_isotropic_random": 35.44605257481791,
+        "broader_effective_dimension": 29.83279144218071,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7998399411479117,
+          "plane_radius_cv": 0.18484972787957749,
+          "ring_rmse": 0.24884478989867984,
+          "inside_anchor_circle_fraction": 0.8947368421052632,
+          "angular_resultant": 0.9524306712029739,
+          "angular_coverage": 0.047569328797026134
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6139582991208598,
+          "plane_radius_cv": 0.49195054890912765,
+          "ring_rmse": 0.490157748118556,
+          "inside_anchor_circle_fraction": 0.8596491228070176,
+          "angular_resultant": 0.5571386104076944,
+          "angular_coverage": 0.4428613895923056
+        },
+        "layer": 11
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.2081095278431188,
+        "pc1_pc2_disparity": 0.9289835605873908,
+        "pc1_pc2_broader_variance_fraction": 0.015125046798593859,
+        "searched_pc_pair": [
+          7,
+          9
+        ],
+        "searched_disparity": 0.6181123285549541,
+        "searched_broader_variance_fraction": 0.01374744614553351,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 30.976095843520227,
+        "searched_enrichment_over_isotropic_random": 28.154769706052633,
+        "broader_effective_dimension": 26.634076413529204,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.8111811584790104,
+          "plane_radius_cv": 0.20757398552592382,
+          "ring_rmse": 0.2529909386251002,
+          "inside_anchor_circle_fraction": 0.8421052631578947,
+          "angular_resultant": 0.9577203836486012,
+          "angular_coverage": 0.04227961635139876
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7837000884478725,
+          "plane_radius_cv": 0.2780765244125997,
+          "ring_rmse": 0.3070480826040744,
+          "inside_anchor_circle_fraction": 0.8947368421052632,
+          "angular_resultant": 0.8869488116813284,
+          "angular_coverage": 0.11305118831867156
+        },
+        "layer": 12
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.21721705571616137,
+        "pc1_pc2_disparity": 0.949266287246975,
+        "pc1_pc2_broader_variance_fraction": 0.014577109212027275,
+        "searched_pc_pair": [
+          4,
+          9
+        ],
+        "searched_disparity": 0.6137017026794203,
+        "searched_broader_variance_fraction": 0.020649835374555784,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 29.853919666231864,
+        "searched_enrichment_over_isotropic_random": 42.290862847090246,
+        "broader_effective_dimension": 26.254423176064385,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7804002950590418,
+          "plane_radius_cv": 0.23177772231816118,
+          "ring_rmse": 0.2845020013958855,
+          "inside_anchor_circle_fraction": 0.8771929824561403,
+          "angular_resultant": 0.954022525908182,
+          "angular_coverage": 0.04597747409181796
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5868440983198877,
+          "plane_radius_cv": 0.5878646582985128,
+          "ring_rmse": 0.5382493697171843,
+          "inside_anchor_circle_fraction": 0.9122807017543859,
+          "angular_resultant": 0.50969671800915,
+          "angular_coverage": 0.49030328199085005
+        },
+        "layer": 13
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.2123431670467268,
+        "pc1_pc2_disparity": 0.884089968606635,
+        "pc1_pc2_broader_variance_fraction": 0.021979209859305467,
+        "searched_pc_pair": [
+          4,
+          7
+        ],
+        "searched_disparity": 0.6293210847245554,
+        "searched_broader_variance_fraction": 0.022574311607146014,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 45.0134217918576,
+        "searched_enrichment_over_isotropic_random": 46.23219017143505,
+        "broader_effective_dimension": 26.069833455989137,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7806585589664536,
+          "plane_radius_cv": 0.2960116721556096,
+          "ring_rmse": 0.3186071308106341,
+          "inside_anchor_circle_fraction": 0.8245614035087719,
+          "angular_resultant": 0.9426172530484972,
+          "angular_coverage": 0.057382746951502805
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6736341903536835,
+          "plane_radius_cv": 0.47466794330942924,
+          "ring_rmse": 0.45689860863080906,
+          "inside_anchor_circle_fraction": 0.8070175438596491,
+          "angular_resultant": 0.5801929586567719,
+          "angular_coverage": 0.4198070413432281
+        },
+        "layer": 14
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.2106241619711624,
+        "pc1_pc2_disparity": 0.8854406659671297,
+        "pc1_pc2_broader_variance_fraction": 0.025240062196756573,
+        "searched_pc_pair": [
+          5,
+          7
+        ],
+        "searched_disparity": 0.5699397587748637,
+        "searched_broader_variance_fraction": 0.0172671813487651,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 51.691647378957455,
+        "searched_enrichment_over_isotropic_random": 35.363187402270924,
+        "broader_effective_dimension": 25.563492113799203,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7746572776889836,
+          "plane_radius_cv": 0.3414710100307821,
+          "ring_rmse": 0.3474935418621773,
+          "inside_anchor_circle_fraction": 0.7719298245614035,
+          "angular_resultant": 0.9275892251815894,
+          "angular_coverage": 0.07241077481841063
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5454611643702223,
+          "plane_radius_cv": 0.5005971850432356,
+          "ring_rmse": 0.5302502323083349,
+          "inside_anchor_circle_fraction": 0.8947368421052632,
+          "angular_resultant": 0.48319555943534886,
+          "angular_coverage": 0.5168044405646511
+        },
+        "layer": 15
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.2144251629844778,
+        "pc1_pc2_disparity": 0.8720363399411426,
+        "pc1_pc2_broader_variance_fraction": 0.028711789674148912,
+        "searched_pc_pair": [
+          7,
+          9
+        ],
+        "searched_disparity": 0.6229986908802331,
+        "searched_broader_variance_fraction": 0.017095063869285193,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 58.80174525265697,
+        "searched_enrichment_over_isotropic_random": 35.010690804296075,
+        "broader_effective_dimension": 24.913986542927663,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7311384805721752,
+          "plane_radius_cv": 0.42955075620351363,
+          "ring_rmse": 0.4134257891501036,
+          "inside_anchor_circle_fraction": 0.7719298245614035,
+          "angular_resultant": 0.8759422239370068,
+          "angular_coverage": 0.12405777606299317
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5261917800248667,
+          "plane_radius_cv": 0.47660169935758384,
+          "ring_rmse": 0.5360846874176912,
+          "inside_anchor_circle_fraction": 0.9298245614035088,
+          "angular_resultant": 0.49444606913770495,
+          "angular_coverage": 0.505553930862295
+        },
+        "layer": 16
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.21965049874661557,
+        "pc1_pc2_disparity": 0.8604432572372764,
+        "pc1_pc2_broader_variance_fraction": 0.031841712178106794,
+        "searched_pc_pair": [
+          7,
+          9
+        ],
+        "searched_disparity": 0.6344179182710694,
+        "searched_broader_variance_fraction": 0.016752802579817865,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 65.21182654076271,
+        "searched_enrichment_over_isotropic_random": 34.30973968346699,
+        "broader_effective_dimension": 24.636917137422454,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7008898535074364,
+          "plane_radius_cv": 0.4813774498263614,
+          "ring_rmse": 0.45088870713523976,
+          "inside_anchor_circle_fraction": 0.7719298245614035,
+          "angular_resultant": 0.8085976339038964,
+          "angular_coverage": 0.19140236609610362
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6005991566543463,
+          "plane_radius_cv": 0.4573095853617124,
+          "ring_rmse": 0.4847257086728584,
+          "inside_anchor_circle_fraction": 0.9298245614035088,
+          "angular_resultant": 0.6645127784611885,
+          "angular_coverage": 0.3354872215388115
+        },
+        "layer": 17
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.22064210588050562,
+        "pc1_pc2_disparity": 0.8314887415048193,
+        "pc1_pc2_broader_variance_fraction": 0.03409824553341654,
+        "searched_pc_pair": [
+          7,
+          9
+        ],
+        "searched_disparity": 0.6641310139645391,
+        "searched_broader_variance_fraction": 0.016402308538508235,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 69.83320685243707,
+        "searched_enrichment_over_isotropic_random": 33.591927886864866,
+        "broader_effective_dimension": 23.869413228870933,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6781512861354488,
+          "plane_radius_cv": 0.500297932270685,
+          "ring_rmse": 0.4676493803943786,
+          "inside_anchor_circle_fraction": 0.7719298245614035,
+          "angular_resultant": 0.7348183397242495,
+          "angular_coverage": 0.2651816602757505
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.661195180104008,
+          "plane_radius_cv": 0.4188940687328247,
+          "ring_rmse": 0.43760883945482115,
+          "inside_anchor_circle_fraction": 0.8771929824561403,
+          "angular_resultant": 0.7672829181563491,
+          "angular_coverage": 0.23271708184365092
+        },
+        "layer": 18
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.21977428306535501,
+        "pc1_pc2_disparity": 0.8013122740341385,
+        "pc1_pc2_broader_variance_fraction": 0.04239466503760112,
+        "searched_pc_pair": [
+          7,
+          9
+        ],
+        "searched_disparity": 0.6103904429451517,
+        "searched_broader_variance_fraction": 0.01639984351414127,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 86.82427399700711,
+        "searched_enrichment_over_isotropic_random": 33.58687951696132,
+        "broader_effective_dimension": 23.594474372736723,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6187048540392794,
+          "plane_radius_cv": 0.5856695369998562,
+          "ring_rmse": 0.5260116760295307,
+          "inside_anchor_circle_fraction": 0.7894736842105263,
+          "angular_resultant": 0.49989761478108324,
+          "angular_coverage": 0.5001023852189168
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.572733546865791,
+          "plane_radius_cv": 0.5327447078716482,
+          "ring_rmse": 0.5250288600519591,
+          "inside_anchor_circle_fraction": 0.9473684210526315,
+          "angular_resultant": 0.5094146379344262,
+          "angular_coverage": 0.4905853620655738
+        },
+        "layer": 19
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.21570815673356672,
+        "pc1_pc2_disparity": 0.7877871539332852,
+        "pc1_pc2_broader_variance_fraction": 0.04465115996542724,
+        "searched_pc_pair": [
+          4,
+          7
+        ],
+        "searched_disparity": 0.6373934141121615,
+        "searched_broader_variance_fraction": 0.026896488310418118,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 91.44557560919499,
+        "searched_enrichment_over_isotropic_random": 55.084008059736306,
+        "broader_effective_dimension": 23.18315022423137,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.5873720974952941,
+          "plane_radius_cv": 0.5938788191928953,
+          "ring_rmse": 0.5403171783754693,
+          "inside_anchor_circle_fraction": 0.8421052631578947,
+          "angular_resultant": 0.1209826972435538,
+          "angular_coverage": 0.8790173027564462
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7271914669555312,
+          "plane_radius_cv": 0.43234176182222744,
+          "ring_rmse": 0.4162557658940978,
+          "inside_anchor_circle_fraction": 0.7894736842105263,
+          "angular_resultant": 0.5067509894778002,
+          "angular_coverage": 0.4932490105221998
+        },
+        "layer": 20
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.21065858282517,
+        "pc1_pc2_disparity": 0.8083663629819365,
+        "pc1_pc2_broader_variance_fraction": 0.059545640169337555,
+        "searched_pc_pair": [
+          4,
+          7
+        ],
+        "searched_disparity": 0.6114183704502385,
+        "searched_broader_variance_fraction": 0.022433497879953062,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 121.94947106680331,
+        "searched_enrichment_over_isotropic_random": 45.94380365814386,
+        "broader_effective_dimension": 23.05362468555748,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6834881546219932,
+          "plane_radius_cv": 0.520060229557178,
+          "ring_rmse": 0.4759495876415292,
+          "inside_anchor_circle_fraction": 0.7719298245614035,
+          "angular_resultant": 0.2633370726599068,
+          "angular_coverage": 0.7366629273400932
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6805854195977933,
+          "plane_radius_cv": 0.44454275233035967,
+          "ring_rmse": 0.43995654621566616,
+          "inside_anchor_circle_fraction": 0.7894736842105263,
+          "angular_resultant": 0.461136829852183,
+          "angular_coverage": 0.538863170147817
+        },
+        "layer": 21
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.20419685113975258,
+        "pc1_pc2_disparity": 0.8824227019225037,
+        "pc1_pc2_broader_variance_fraction": 0.0669961473263623,
+        "searched_pc_pair": [
+          7,
+          9
+        ],
+        "searched_disparity": 0.7118249494590984,
+        "searched_broader_variance_fraction": 0.016652591313648355,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 137.20810972439,
+        "searched_enrichment_over_isotropic_random": 34.104507010351824,
+        "broader_effective_dimension": 23.594008183671093,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7549399422435722,
+          "plane_radius_cv": 0.429511805708943,
+          "ring_rmse": 0.40644327719756684,
+          "inside_anchor_circle_fraction": 0.7894736842105263,
+          "angular_resultant": 0.5353649857714644,
+          "angular_coverage": 0.4646350142285356
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.641023823923372,
+          "plane_radius_cv": 0.5082454625177885,
+          "ring_rmse": 0.48477610639918844,
+          "inside_anchor_circle_fraction": 0.8947368421052632,
+          "angular_resultant": 0.29878834108731656,
+          "angular_coverage": 0.7012116589126834
+        },
+        "layer": 22
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.1994040966753311,
+        "pc1_pc2_disparity": 0.9562640255246578,
+        "pc1_pc2_broader_variance_fraction": 0.06484324475101134,
+        "searched_pc_pair": [
+          2,
+          9
+        ],
+        "searched_disparity": 0.6678880175866604,
+        "searched_broader_variance_fraction": 0.02581458701537114,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 132.79896525007123,
+        "searched_enrichment_over_isotropic_random": 52.86827420748008,
+        "broader_effective_dimension": 22.54056720153301,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7501232067953496,
+          "plane_radius_cv": 0.4123493538695124,
+          "ring_rmse": 0.3976340430329446,
+          "inside_anchor_circle_fraction": 0.8070175438596491,
+          "angular_resultant": 0.640662754800902,
+          "angular_coverage": 0.35933724519909804
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6883010635712988,
+          "plane_radius_cv": 0.410838999229159,
+          "ring_rmse": 0.4208577856688523,
+          "inside_anchor_circle_fraction": 0.9122807017543859,
+          "angular_resultant": 0.46982231924824475,
+          "angular_coverage": 0.5301776807517553
+        },
+        "layer": 23
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.1942941185812177,
+        "pc1_pc2_disparity": 0.9134127762420328,
+        "pc1_pc2_broader_variance_fraction": 0.06086122212419659,
+        "searched_pc_pair": [
+          3,
+          5
+        ],
+        "searched_disparity": 0.6840692640051407,
+        "searched_broader_variance_fraction": 0.03479117518858608,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 124.64378291035463,
+        "searched_enrichment_over_isotropic_random": 71.25232678622427,
+        "broader_effective_dimension": 23.328114683102513,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7275732266870885,
+          "plane_radius_cv": 0.4035012354043398,
+          "ring_rmse": 0.4005042111433411,
+          "inside_anchor_circle_fraction": 0.8421052631578947,
+          "angular_resultant": 0.5368624194463909,
+          "angular_coverage": 0.4631375805536091
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6503538527379599,
+          "plane_radius_cv": 0.4731529265410519,
+          "ring_rmse": 0.4657704101450192,
+          "inside_anchor_circle_fraction": 0.8421052631578947,
+          "angular_resultant": 0.19154081220518138,
+          "angular_coverage": 0.8084591877948186
+        },
+        "layer": 24
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.18840718877475274,
+        "pc1_pc2_disparity": 0.9374983363763503,
+        "pc1_pc2_broader_variance_fraction": 0.05430824437256305,
+        "searched_pc_pair": [
+          2,
+          3
+        ],
+        "searched_disparity": 0.7260663724998659,
+        "searched_broader_variance_fraction": 0.021980044835619068,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 111.22328447500911,
+        "searched_enrichment_over_isotropic_random": 45.01513182334784,
+        "broader_effective_dimension": 24.574472592177063,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6905032751052819,
+          "plane_radius_cv": 0.508482793745451,
+          "ring_rmse": 0.4680446311721081,
+          "inside_anchor_circle_fraction": 0.7719298245614035,
+          "angular_resultant": 0.4515842951785628,
+          "angular_coverage": 0.5484157048214372
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.603966973245613,
+          "plane_radius_cv": 0.5809167510190891,
+          "ring_rmse": 0.5290945669531543,
+          "inside_anchor_circle_fraction": 0.8245614035087719,
+          "angular_resultant": 0.33130803946614684,
+          "angular_coverage": 0.6686919605338532
+        },
+        "layer": 25
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.1803829993309486,
+        "pc1_pc2_disparity": 0.8648102230677371,
+        "pc1_pc2_broader_variance_fraction": 0.04080818022689375,
+        "searched_pc_pair": [
+          3,
+          5
+        ],
+        "searched_disparity": 0.6918491281227557,
+        "searched_broader_variance_fraction": 0.019150816130910804,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 83.5751531046784,
+        "searched_enrichment_over_isotropic_random": 39.22087143610533,
+        "broader_effective_dimension": 25.43117520890307,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6406524295704171,
+          "plane_radius_cv": 0.506234316338492,
+          "ring_rmse": 0.48406022093550816,
+          "inside_anchor_circle_fraction": 0.8245614035087719,
+          "angular_resultant": 0.14302421902834178,
+          "angular_coverage": 0.8569757809716583
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.4972142377826116,
+          "plane_radius_cv": 0.6015183360799501,
+          "ring_rmse": 0.5850166247957207,
+          "inside_anchor_circle_fraction": 0.9298245614035088,
+          "angular_resultant": 0.020064693479487212,
+          "angular_coverage": 0.9799353065205127
+        },
+        "layer": 26
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.18555707418505757,
+        "pc1_pc2_disparity": 0.909785735746025,
+        "pc1_pc2_broader_variance_fraction": 0.04504422266680734,
+        "searched_pc_pair": [
+          2,
+          3
+        ],
+        "searched_disparity": 0.8215040743633147,
+        "searched_broader_variance_fraction": 0.020918562195692315,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 92.25056802162143,
+        "searched_enrichment_over_isotropic_random": 42.84121537677787,
+        "broader_effective_dimension": 24.761900799155953,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.830539208301067,
+          "plane_radius_cv": 0.23080626973784782,
+          "ring_rmse": 0.2558581987752575,
+          "inside_anchor_circle_fraction": 0.8245614035087719,
+          "angular_resultant": 0.82609245918562,
+          "angular_coverage": 0.17390754081437998
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7153755284013994,
+          "plane_radius_cv": 0.36015497846370953,
+          "ring_rmse": 0.38391741435957,
+          "inside_anchor_circle_fraction": 0.8421052631578947,
+          "angular_resultant": 0.7537006857106646,
+          "angular_coverage": 0.24629931428933538
+        },
+        "layer": 27
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.18194370536534687,
+        "pc1_pc2_disparity": 0.8998743819253732,
+        "pc1_pc2_broader_variance_fraction": 0.044235659355473265,
+        "searched_pc_pair": [
+          2,
+          3
+        ],
+        "searched_disparity": 0.8040601156656897,
+        "searched_broader_variance_fraction": 0.023268803517768142,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 90.59463036000923,
+        "searched_enrichment_over_isotropic_random": 47.65450960438915,
+        "broader_effective_dimension": 25.14563943098295,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.824851372531486,
+          "plane_radius_cv": 0.2597632255244163,
+          "ring_rmse": 0.2767435332905991,
+          "inside_anchor_circle_fraction": 0.7894736842105263,
+          "angular_resultant": 0.8134146880865939,
+          "angular_coverage": 0.1865853119134061
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6795848727807491,
+          "plane_radius_cv": 0.38636313752485946,
+          "ring_rmse": 0.414254805164091,
+          "inside_anchor_circle_fraction": 0.8596491228070176,
+          "angular_resultant": 0.7439467830360248,
+          "angular_coverage": 0.2560532169639752
+        },
+        "layer": 28
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.18345922697384487,
+        "pc1_pc2_disparity": 0.9402934216826448,
+        "pc1_pc2_broader_variance_fraction": 0.04210699692165976,
+        "searched_pc_pair": [
+          3,
+          8
+        ],
+        "searched_disparity": 0.7885801435674432,
+        "searched_broader_variance_fraction": 0.030434498396964757,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 86.2351296955592,
+        "searched_enrichment_over_isotropic_random": 62.32985271698382,
+        "broader_effective_dimension": 25.32206773805682,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7605265752567639,
+          "plane_radius_cv": 0.2890463592375975,
+          "ring_rmse": 0.3250717205722868,
+          "inside_anchor_circle_fraction": 0.8771929824561403,
+          "angular_resultant": 0.7853132044581254,
+          "angular_coverage": 0.21468679554187464
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.670102086261511,
+          "plane_radius_cv": 0.6651298194804006,
+          "ring_rmse": 0.5545137268358393,
+          "inside_anchor_circle_fraction": 0.7719298245614035,
+          "angular_resultant": 0.4533746670738601,
+          "angular_coverage": 0.5466253329261399
+        },
+        "layer": 29
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.18835418009598662,
+        "pc1_pc2_disparity": 0.8933450750285435,
+        "pc1_pc2_broader_variance_fraction": 0.043846286758292656,
+        "searched_pc_pair": [
+          8,
+          9
+        ],
+        "searched_disparity": 0.6369940050560112,
+        "searched_broader_variance_fraction": 0.03800377818715901,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 89.79719528098336,
+        "searched_enrichment_over_isotropic_random": 77.83173772730166,
+        "broader_effective_dimension": 24.882598080682968,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7316433130070659,
+          "plane_radius_cv": 0.3313118504329796,
+          "ring_rmse": 0.36162700325689096,
+          "inside_anchor_circle_fraction": 0.8771929824561403,
+          "angular_resultant": 0.7562742892793769,
+          "angular_coverage": 0.2437257107206231
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.63587097536841,
+          "plane_radius_cv": 0.6452174134327716,
+          "ring_rmse": 0.5485576939045547,
+          "inside_anchor_circle_fraction": 0.7543859649122807,
+          "angular_resultant": 0.6147084933347087,
+          "angular_coverage": 0.38529150666529133
+        },
+        "layer": 30
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.19692680072701968,
+        "pc1_pc2_disparity": 0.879914122286438,
+        "pc1_pc2_broader_variance_fraction": 0.04110008370134083,
+        "searched_pc_pair": [
+          8,
+          9
+        ],
+        "searched_disparity": 0.6728374955375052,
+        "searched_broader_variance_fraction": 0.038244427092485954,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 84.172971420346,
+        "searched_enrichment_over_isotropic_random": 78.32458668541125,
+        "broader_effective_dimension": 23.926071474055245,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7785702005483796,
+          "plane_radius_cv": 0.2771333244810602,
+          "ring_rmse": 0.3091712748150221,
+          "inside_anchor_circle_fraction": 0.8245614035087719,
+          "angular_resultant": 0.8369011269874698,
+          "angular_coverage": 0.16309887301253023
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7734543459657528,
+          "plane_radius_cv": 0.5187149137320758,
+          "ring_rmse": 0.46074529012481336,
+          "inside_anchor_circle_fraction": 0.7894736842105263,
+          "angular_resultant": 0.7362291921118087,
+          "angular_coverage": 0.2637708078881913
+        },
+        "layer": 31
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.20721105481277258,
+        "pc1_pc2_disparity": 0.9048189264315872,
+        "pc1_pc2_broader_variance_fraction": 0.04455367154619663,
+        "searched_pc_pair": [
+          2,
+          7
+        ],
+        "searched_disparity": 0.6061106439846767,
+        "searched_broader_variance_fraction": 0.025893171017114996,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 91.24591932661072,
+        "searched_enrichment_over_isotropic_random": 53.0292142430515,
+        "broader_effective_dimension": 22.588144980864794,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7772698829428089,
+          "plane_radius_cv": 0.2933259671053592,
+          "ring_rmse": 0.31873141323106124,
+          "inside_anchor_circle_fraction": 0.8245614035087719,
+          "angular_resultant": 0.8333367343117811,
+          "angular_coverage": 0.16666326568821888
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.6722872512039892,
+          "plane_radius_cv": 0.4912088391254211,
+          "ring_rmse": 0.4652416262167196,
+          "inside_anchor_circle_fraction": 0.8421052631578947,
+          "angular_resultant": 0.5637400652748422,
+          "angular_coverage": 0.4362599347251578
+        },
+        "layer": 32
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.2124716465066988,
+        "pc1_pc2_disparity": 0.9167550497331021,
+        "pc1_pc2_broader_variance_fraction": 0.052057262450999515,
+        "searched_pc_pair": [
+          2,
+          8
+        ],
+        "searched_disparity": 0.7195958726737121,
+        "searched_broader_variance_fraction": 0.020133200130407005,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 106.613273499647,
+        "searched_enrichment_over_isotropic_random": 41.23279386707355,
+        "broader_effective_dimension": 22.570010852332743,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.7866754984318672,
+          "plane_radius_cv": 0.29007766466505464,
+          "ring_rmse": 0.312379912716829,
+          "inside_anchor_circle_fraction": 0.8070175438596491,
+          "angular_resultant": 0.8307093676340307,
+          "angular_coverage": 0.1692906323659693
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5297194131446503,
+          "plane_radius_cv": 0.5624462413404038,
+          "ring_rmse": 0.5567147340361784,
+          "inside_anchor_circle_fraction": 0.9473684210526315,
+          "angular_resultant": 0.26246313342395455,
+          "angular_coverage": 0.7375368665760454
+        },
+        "layer": 33
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.21119489884111237,
+        "pc1_pc2_disparity": 0.9153211167656108,
+        "pc1_pc2_broader_variance_fraction": 0.0508223195461053,
+        "searched_pc_pair": [
+          2,
+          7
+        ],
+        "searched_disparity": 0.7284272466574789,
+        "searched_broader_variance_fraction": 0.0219551107353691,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 104.08411043042365,
+        "searched_enrichment_over_isotropic_random": 44.96406678603593,
+        "broader_effective_dimension": 23.248663315326482,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.8046897854179362,
+          "plane_radius_cv": 0.2670607618308397,
+          "ring_rmse": 0.29039378191384224,
+          "inside_anchor_circle_fraction": 0.8070175438596491,
+          "angular_resultant": 0.8403805172671366,
+          "angular_coverage": 0.15961948273286342
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.5485950115440439,
+          "plane_radius_cv": 0.5136660509857139,
+          "ring_rmse": 0.5321415966512115,
+          "inside_anchor_circle_fraction": 0.9298245614035088,
+          "angular_resultant": 0.4148223556099562,
+          "angular_coverage": 0.5851776443900438
+        },
+        "layer": 34
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.20754516888394686,
+        "pc1_pc2_disparity": 0.9163632670566576,
+        "pc1_pc2_broader_variance_fraction": 0.05294264869762945,
+        "searched_pc_pair": [
+          0,
+          8
+        ],
+        "searched_disparity": 0.7887992801634787,
+        "searched_broader_variance_fraction": 0.05620354951801771,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 108.42654453274513,
+        "searched_enrichment_over_isotropic_random": 115.10486941290029,
+        "broader_effective_dimension": 23.972474904559334,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.810620204407433,
+          "plane_radius_cv": 0.2768208317384434,
+          "ring_rmse": 0.2936299078144043,
+          "inside_anchor_circle_fraction": 0.8070175438596491,
+          "angular_resultant": 0.8202644647611468,
+          "angular_coverage": 0.17973553523885322
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.7101075556241321,
+          "plane_radius_cv": 0.2842211427914355,
+          "ring_rmse": 0.3532308052026696,
+          "inside_anchor_circle_fraction": 0.8596491228070176,
+          "angular_resultant": 0.6369867072015315,
+          "angular_coverage": 0.3630132927984685
+        },
+        "layer": 35
+      },
+      {
+        "anchor_lemma_count": 35,
+        "broader_lemma_count": 57,
+        "pc1_pc2_basic_variance_fraction": 0.16552145439180427,
+        "pc1_pc2_disparity": 0.8077002517902548,
+        "pc1_pc2_broader_variance_fraction": 0.03134523621088564,
+        "searched_pc_pair": [
+          6,
+          9
+        ],
+        "searched_disparity": 0.5587176623749308,
+        "searched_broader_variance_fraction": 0.01593868667451219,
+        "isotropic_random_2d_expected_fraction": 0.00048828125,
+        "pc1_pc2_enrichment_over_isotropic_random": 64.19504375989379,
+        "searched_enrichment_over_isotropic_random": 32.642430309400964,
+        "broader_effective_dimension": 29.367703414459328,
+        "pc1_pc2_geometry": {
+          "plane_radius_mean": 0.6267064493052265,
+          "plane_radius_cv": 0.3646443339939817,
+          "ring_rmse": 0.43768907962308995,
+          "inside_anchor_circle_fraction": 0.9649122807017544,
+          "angular_resultant": 0.5552562646673807,
+          "angular_coverage": 0.44474373533261935
+        },
+        "searched_geometry": {
+          "plane_radius_mean": 0.469795088484087,
+          "plane_radius_cv": 0.59011943336095,
+          "ring_rmse": 0.5983114662466749,
+          "inside_anchor_circle_fraction": 0.9649122807017544,
+          "angular_resultant": 0.30400236686257603,
+          "angular_coverage": 0.695997633137424
+        },
+        "layer": 36
+      }
+    ]
+  },
+  "noun_adjective_checks": {
+    "pc1_pc2": {
+      "happy": {
+        "noun_lemmas": [
+          "\u0906\u0928\u0902\u0926",
+          "\u0916\u0941\u0936\u0940"
+        ],
+        "adjective_lemmas": [
+          "\u0916\u0941\u0936"
+        ],
+        "displacement_over_anchor_rms_radius": 0.4212187747528819
+      },
+      "excited": {
+        "noun_lemmas": [
+          "\u091c\u094b\u0936"
+        ],
+        "adjective_lemmas": [
+          "\u0909\u0924\u094d\u0938\u093e\u0939\u093f\u0924"
+        ],
+        "displacement_over_anchor_rms_radius": 1.2750572212568616
+      },
+      "astonished": {
+        "noun_lemmas": [
+          "\u0906\u0936\u094d\u091a\u0930\u094d\u092f"
+        ],
+        "adjective_lemmas": [
+          "\u0906\u0936\u094d\u091a\u0930\u094d\u092f\u091a\u0915\u093f\u0924",
+          "\u091a\u0915\u093f\u0924",
+          "\u0939\u0948\u0930\u093e\u0928"
+        ],
+        "displacement_over_anchor_rms_radius": 0.4221186243288242
+      },
+      "angry": {
+        "noun_lemmas": [
+          "\u0906\u0915\u094d\u0930\u094b\u0936",
+          "\u0915\u094d\u0930\u094b\u0927",
+          "\u0917\u0941\u0938\u094d\u0938\u093e",
+          "\u0917\u0941\u0938\u094d\u0938\u0947"
+        ],
+        "adjective_lemmas": [
+          "\u0915\u094d\u0930\u094b\u0927\u093f\u0924"
+        ],
+        "displacement_over_anchor_rms_radius": 0.9914954960984141
+      },
+      "afraid": {
+        "noun_lemmas": [
+          "\u0921\u0930",
+          "\u092d\u092f"
+        ],
+        "adjective_lemmas": [
+          "\u0921\u0930\u093e",
+          "\u092d\u092f\u092d\u0940\u0924"
+        ],
+        "displacement_over_anchor_rms_radius": 0.33925519620593647
+      },
+      "sad": {
+        "noun_lemmas": [
+          "\u0926\u0941\u0903\u0916",
+          "\u0926\u0941\u0916"
+        ],
+        "adjective_lemmas": [
+          "\u0926\u0941\u0903\u0916\u0940",
+          "\u0926\u0941\u0916\u0940"
+        ],
+        "displacement_over_anchor_rms_radius": 0.3883458123732131
+      },
+      "gloomy": {
+        "noun_lemmas": [
+          "\u0909\u0926\u093e\u0938\u0940"
+        ],
+        "adjective_lemmas": [
+          "\u0909\u0926\u093e\u0938"
+        ],
+        "displacement_over_anchor_rms_radius": 0.026074827431607245
+      },
+      "calm": {
+        "noun_lemmas": [
+          "\u0938\u0941\u0915\u0942\u0928"
+        ],
+        "adjective_lemmas": [
+          "\u0936\u093e\u0902\u0924"
+        ],
+        "displacement_over_anchor_rms_radius": 0.7653268701518667
+      },
+      "pleased": {
+        "noun_lemmas": [
+          "\u092a\u094d\u0930\u0938\u0928\u094d\u0928\u0924\u093e"
+        ],
+        "adjective_lemmas": [
+          "\u092a\u094d\u0930\u0938\u0928\u094d\u0928"
+        ],
+        "displacement_over_anchor_rms_radius": 0.3587611791903361
+      }
+    },
+    "searched": {
+      "happy": {
+        "noun_lemmas": [
+          "\u0906\u0928\u0902\u0926",
+          "\u0916\u0941\u0936\u0940"
+        ],
+        "adjective_lemmas": [
+          "\u0916\u0941\u0936"
+        ],
+        "displacement_over_anchor_rms_radius": 0.1725207264472231
+      },
+      "excited": {
+        "noun_lemmas": [
+          "\u091c\u094b\u0936"
+        ],
+        "adjective_lemmas": [
+          "\u0909\u0924\u094d\u0938\u093e\u0939\u093f\u0924"
+        ],
+        "displacement_over_anchor_rms_radius": 1.0924036215089978
+      },
+      "astonished": {
+        "noun_lemmas": [
+          "\u0906\u0936\u094d\u091a\u0930\u094d\u092f"
+        ],
+        "adjective_lemmas": [
+          "\u0906\u0936\u094d\u091a\u0930\u094d\u092f\u091a\u0915\u093f\u0924",
+          "\u091a\u0915\u093f\u0924",
+          "\u0939\u0948\u0930\u093e\u0928"
+        ],
+        "displacement_over_anchor_rms_radius": 1.1112417411768658
+      },
+      "angry": {
+        "noun_lemmas": [
+          "\u0906\u0915\u094d\u0930\u094b\u0936",
+          "\u0915\u094d\u0930\u094b\u0927",
+          "\u0917\u0941\u0938\u094d\u0938\u093e",
+          "\u0917\u0941\u0938\u094d\u0938\u0947"
+        ],
+        "adjective_lemmas": [
+          "\u0915\u094d\u0930\u094b\u0927\u093f\u0924"
+        ],
+        "displacement_over_anchor_rms_radius": 0.46242037683564974
+      },
+      "afraid": {
+        "noun_lemmas": [
+          "\u0921\u0930",
+          "\u092d\u092f"
+        ],
+        "adjective_lemmas": [
+          "\u0921\u0930\u093e",
+          "\u092d\u092f\u092d\u0940\u0924"
+        ],
+        "displacement_over_anchor_rms_radius": 0.4557858687351164
+      },
+      "sad": {
+        "noun_lemmas": [
+          "\u0926\u0941\u0903\u0916",
+          "\u0926\u0941\u0916"
+        ],
+        "adjective_lemmas": [
+          "\u0926\u0941\u0903\u0916\u0940",
+          "\u0926\u0941\u0916\u0940"
+        ],
+        "displacement_over_anchor_rms_radius": 0.32709629527838874
+      },
+      "gloomy": {
+        "noun_lemmas": [
+          "\u0909\u0926\u093e\u0938\u0940"
+        ],
+        "adjective_lemmas": [
+          "\u0909\u0926\u093e\u0938"
+        ],
+        "displacement_over_anchor_rms_radius": 0.20502571054841168
+      },
+      "calm": {
+        "noun_lemmas": [
+          "\u0938\u0941\u0915\u0942\u0928"
+        ],
+        "adjective_lemmas": [
+          "\u0936\u093e\u0902\u0924"
+        ],
+        "displacement_over_anchor_rms_radius": 0.7615577318484524
+      },
+      "pleased": {
+        "noun_lemmas": [
+          "\u092a\u094d\u0930\u0938\u0928\u094d\u0928\u0924\u093e"
+        ],
+        "adjective_lemmas": [
+          "\u092a\u094d\u0930\u0938\u0928\u094d\u0928"
+        ],
+        "displacement_over_anchor_rms_radius": 0.36201608714119643
+      }
+    }
+  }
+}

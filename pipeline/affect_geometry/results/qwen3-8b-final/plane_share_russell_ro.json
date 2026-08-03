@@ -1,0 +1,672 @@
+{
+  "summary": {
+    "language": "ro",
+    "layer": 20,
+    "n_anchor_lemmas": 40,
+    "n_broader_lemmas": 82,
+    "anchor_in_sample_median_plane_share": 0.2431812319588969,
+    "anchor_in_sample_mean_plane_share": 0.2154161235786085,
+    "anchor_loo_median_plane_share": 0.10538101094316402,
+    "anchor_loo_mean_plane_share": 0.11972923038166874,
+    "broader_median_plane_share": 0.04017561991444221,
+    "broader_mean_plane_share": 0.057149580094962196,
+    "mannwhitney_u": 2350.0,
+    "mannwhitney_p_two_sided": 0.00010906398526133509,
+    "rank_biserial_effect": 0.4329268292682926,
+    "prob_random_anchor_exceeds_random_broader": 0.7164634146341463
+  },
+  "anchors_loo": [
+    {
+      "lemma": "amarat",
+      "label": "miserable",
+      "count": 40,
+      "plane_share": 0.005849207866665793
+    },
+    {
+      "lemma": "anxios",
+      "label": "tense",
+      "count": 30,
+      "plane_share": 0.17502819244475706
+    },
+    {
+      "lemma": "bucurie",
+      "label": "glad",
+      "count": 32,
+      "plane_share": 0.03980512096575437
+    },
+    {
+      "lemma": "bucuros",
+      "label": "glad",
+      "count": 80,
+      "plane_share": 0.12770474463109877
+    },
+    {
+      "lemma": "calm",
+      "label": "calm",
+      "count": 35,
+      "plane_share": 0.0985467072304484
+    },
+    {
+      "lemma": "deprimat",
+      "label": "depressed",
+      "count": 80,
+      "plane_share": 0.06894842893346523
+    },
+    {
+      "lemma": "entuziasmat",
+      "label": "excited",
+      "count": 80,
+      "plane_share": 0.03446623396220912
+    },
+    {
+      "lemma": "epuizat",
+      "label": "tired",
+      "count": 74,
+      "plane_share": 0.04513714587100006
+    },
+    {
+      "lemma": "fericit",
+      "label": "happy",
+      "count": 80,
+      "plane_share": 0.15803125844289467
+    },
+    {
+      "lemma": "fermecat",
+      "label": "delighted",
+      "count": 30,
+      "plane_share": 0.0659715519334173
+    },
+    {
+      "lemma": "frica",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.04700338647718127
+    },
+    {
+      "lemma": "frustrat",
+      "label": "frustrated",
+      "count": 80,
+      "plane_share": 0.010572754347603854
+    },
+    {
+      "lemma": "furios",
+      "label": "angry",
+      "count": 80,
+      "plane_share": 0.04294633499620483
+    },
+    {
+      "lemma": "groaza",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.05089585243598385
+    },
+    {
+      "lemma": "impacat",
+      "label": "at ease",
+      "count": 80,
+      "plane_share": 0.18526978219719373
+    },
+    {
+      "lemma": "implinit",
+      "label": "satisfied",
+      "count": 80,
+      "plane_share": 0.12412224144313841
+    },
+    {
+      "lemma": "incantat",
+      "label": "delighted",
+      "count": 80,
+      "plane_share": 0.19220111447006752
+    },
+    {
+      "lemma": "indignat",
+      "label": "angry",
+      "count": 64,
+      "plane_share": 0.09445477934460215
+    },
+    {
+      "lemma": "ingrozit",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.11158971979620542
+    },
+    {
+      "lemma": "liniste",
+      "label": "calm",
+      "count": 32,
+      "plane_share": 0.14911968587398122
+    },
+    {
+      "lemma": "linistit",
+      "label": "calm",
+      "count": 80,
+      "plane_share": 0.2827290472902915
+    },
+    {
+      "lemma": "mahnit",
+      "label": "sad",
+      "count": 80,
+      "plane_share": 0.03957620513130971
+    },
+    {
+      "lemma": "mirat",
+      "label": "astonished",
+      "count": 55,
+      "plane_share": 0.31325553030326864
+    },
+    {
+      "lemma": "multumit",
+      "label": "content",
+      "count": 80,
+      "plane_share": 0.15085799386734466
+    },
+    {
+      "lemma": "obosit",
+      "label": "tired",
+      "count": 80,
+      "plane_share": 0.042724879688205986
+    },
+    {
+      "lemma": "pace",
+      "label": "serene",
+      "count": 57,
+      "plane_share": 0.08665399984128273
+    },
+    {
+      "lemma": "panicat",
+      "label": "alarmed",
+      "count": 80,
+      "plane_share": 0.1205288360967257
+    },
+    {
+      "lemma": "plictisit",
+      "label": "bored",
+      "count": 56,
+      "plane_share": 0.00945776374041516
+    },
+    {
+      "lemma": "relaxat",
+      "label": "relaxed",
+      "count": 80,
+      "plane_share": 0.14200974420721837
+    },
+    {
+      "lemma": "revoltat",
+      "label": "angry",
+      "count": 80,
+      "plane_share": 0.10466392656228918
+    },
+    {
+      "lemma": "satisfacut",
+      "label": "satisfied",
+      "count": 77,
+      "plane_share": 0.1738160993489792
+    },
+    {
+      "lemma": "speriat",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.1210689044014168
+    },
+    {
+      "lemma": "stresat",
+      "label": "tense",
+      "count": 80,
+      "plane_share": 0.2129449460858894
+    },
+    {
+      "lemma": "surprins",
+      "label": "astonished",
+      "count": 80,
+      "plane_share": 0.25400896591933664
+    },
+    {
+      "lemma": "teama",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.021490935038715367
+    },
+    {
+      "lemma": "tensionat",
+      "label": "tense",
+      "count": 58,
+      "plane_share": 0.10609809532403887
+    },
+    {
+      "lemma": "trist",
+      "label": "sad",
+      "count": 80,
+      "plane_share": 0.004775031050130654
+    },
+    {
+      "lemma": "tulburat",
+      "label": "distressed",
+      "count": 34,
+      "plane_share": 0.011514957196633776
+    },
+    {
+      "lemma": "uimit",
+      "label": "astonished",
+      "count": 80,
+      "plane_share": 0.38111314079083275
+    },
+    {
+      "lemma": "uluit",
+      "label": "astonished",
+      "count": 80,
+      "plane_share": 0.3822159697185514
+    }
+  ],
+  "broader": [
+    {
+      "lemma": "agitat",
+      "count": 80,
+      "plane_share": 0.19013116938618765
+    },
+    {
+      "lemma": "anxietate",
+      "count": 39,
+      "plane_share": 0.21129115214412525
+    },
+    {
+      "lemma": "bine",
+      "count": 80,
+      "plane_share": 0.15824391321446377
+    },
+    {
+      "lemma": "ciuda",
+      "count": 67,
+      "plane_share": 0.07925837989304796
+    },
+    {
+      "lemma": "consternat",
+      "count": 59,
+      "plane_share": 0.27116726361225246
+    },
+    {
+      "lemma": "contrariat",
+      "count": 45,
+      "plane_share": 0.060957070546317174
+    },
+    {
+      "lemma": "coplesit",
+      "count": 80,
+      "plane_share": 0.014954826932432917
+    },
+    {
+      "lemma": "curios",
+      "count": 80,
+      "plane_share": 0.04465846852055053
+    },
+    {
+      "lemma": "dependenta",
+      "count": 40,
+      "plane_share": 0.015299008116091634
+    },
+    {
+      "lemma": "deranjat",
+      "count": 59,
+      "plane_share": 0.00558909368588618
+    },
+    {
+      "lemma": "descurajat",
+      "count": 38,
+      "plane_share": 0.009462848509948829
+    },
+    {
+      "lemma": "devastat",
+      "count": 76,
+      "plane_share": 0.04860756434363026
+    },
+    {
+      "lemma": "dezamagit",
+      "count": 80,
+      "plane_share": 0.07972333487741752
+    },
+    {
+      "lemma": "dezgustat",
+      "count": 56,
+      "plane_share": 0.10524409867919127
+    },
+    {
+      "lemma": "disperat",
+      "count": 80,
+      "plane_share": 0.02199124067099587
+    },
+    {
+      "lemma": "distrus",
+      "count": 47,
+      "plane_share": 0.00677521230908654
+    },
+    {
+      "lemma": "dor",
+      "count": 80,
+      "plane_share": 0.015274846452693802
+    },
+    {
+      "lemma": "dragoste",
+      "count": 31,
+      "plane_share": 0.040215090734555245
+    },
+    {
+      "lemma": "durere",
+      "count": 60,
+      "plane_share": 0.05274542095571122
+    },
+    {
+      "lemma": "emotionat",
+      "count": 80,
+      "plane_share": 0.0053135098827727855
+    },
+    {
+      "lemma": "excelent",
+      "count": 67,
+      "plane_share": 0.08621634093824067
+    },
+    {
+      "lemma": "extraordinar",
+      "count": 80,
+      "plane_share": 0.04327775667184102
+    },
+    {
+      "lemma": "fascinat",
+      "count": 80,
+      "plane_share": 0.05644496859821062
+    },
+    {
+      "lemma": "foame",
+      "count": 80,
+      "plane_share": 0.03692089863693259
+    },
+    {
+      "lemma": "fricos",
+      "count": 37,
+      "plane_share": 0.059730371119382904
+    },
+    {
+      "lemma": "frig",
+      "count": 80,
+      "plane_share": 0.07931951189264186
+    },
+    {
+      "lemma": "greata",
+      "count": 80,
+      "plane_share": 0.06801711736386577
+    },
+    {
+      "lemma": "groaznic",
+      "count": 45,
+      "plane_share": 0.02848676737081318
+    },
+    {
+      "lemma": "impresionat",
+      "count": 80,
+      "plane_share": 0.17763224721829485
+    },
+    {
+      "lemma": "incredere",
+      "count": 80,
+      "plane_share": 0.008964229326673826
+    },
+    {
+      "lemma": "increzator",
+      "count": 80,
+      "plane_share": 0.051724814084365765
+    },
+    {
+      "lemma": "indiferent",
+      "count": 46,
+      "plane_share": 0.03742243504213725
+    },
+    {
+      "lemma": "ingrijorat",
+      "count": 80,
+      "plane_share": 0.05011976264958627
+    },
+    {
+      "lemma": "ingrozitor",
+      "count": 37,
+      "plane_share": 0.015096119368307188
+    },
+    {
+      "lemma": "innebunit",
+      "count": 80,
+      "plane_share": 0.024547519325397733
+    },
+    {
+      "lemma": "iubire",
+      "count": 49,
+      "plane_share": 0.07169313038595322
+    },
+    {
+      "lemma": "iubit",
+      "count": 80,
+      "plane_share": 0.09980262219821172
+    },
+    {
+      "lemma": "jena",
+      "count": 80,
+      "plane_share": 0.09266590915689464
+    },
+    {
+      "lemma": "jenat",
+      "count": 51,
+      "plane_share": 0.030396650836568666
+    },
+    {
+      "lemma": "jignit",
+      "count": 80,
+      "plane_share": 0.010159910002609195
+    },
+    {
+      "lemma": "lipsa",
+      "count": 78,
+      "plane_share": 0.004969559610104174
+    },
+    {
+      "lemma": "mandru",
+      "count": 80,
+      "plane_share": 0.11688263938595721
+    },
+    {
+      "lemma": "mila",
+      "count": 80,
+      "plane_share": 0.04216489988695088
+    },
+    {
+      "lemma": "minunat",
+      "count": 80,
+      "plane_share": 0.08632357000584097
+    },
+    {
+      "lemma": "miscat",
+      "count": 47,
+      "plane_share": 0.040618572459222894
+    },
+    {
+      "lemma": "neajutorat",
+      "count": 80,
+      "plane_share": 0.010333317595295387
+    },
+    {
+      "lemma": "necajit",
+      "count": 47,
+      "plane_share": 0.006173652618138653
+    },
+    {
+      "lemma": "nefericit",
+      "count": 80,
+      "plane_share": 0.0415706291385868
+    },
+    {
+      "lemma": "nelinistit",
+      "count": 48,
+      "plane_share": 0.05133841199890224
+    },
+    {
+      "lemma": "nemultumit",
+      "count": 80,
+      "plane_share": 0.06412871350424906
+    },
+    {
+      "lemma": "nerabdator",
+      "count": 59,
+      "plane_share": 0.017726142468041623
+    },
+    {
+      "lemma": "nervos",
+      "count": 80,
+      "plane_share": 0.18663566523391026
+    },
+    {
+      "lemma": "ofensat",
+      "count": 44,
+      "plane_share": 0.03309206788196392
+    },
+    {
+      "lemma": "onorat",
+      "count": 80,
+      "plane_share": 0.08836720577937313
+    },
+    {
+      "lemma": "optimist",
+      "count": 80,
+      "plane_share": 0.018710951192218772
+    },
+    {
+      "lemma": "oribil",
+      "count": 33,
+      "plane_share": 0.02567829144127739
+    },
+    {
+      "lemma": "oripilat",
+      "count": 37,
+      "plane_share": 0.10991427061305656
+    },
+    {
+      "lemma": "oroare",
+      "count": 50,
+      "plane_share": 0.08328615545185775
+    },
+    {
+      "lemma": "pasionat",
+      "count": 80,
+      "plane_share": 0.010778749812611663
+    },
+    {
+      "lemma": "pesimist",
+      "count": 34,
+      "plane_share": 0.008126773331902086
+    },
+    {
+      "lemma": "pofta",
+      "count": 51,
+      "plane_share": 0.021601229224816065
+    },
+    {
+      "lemma": "prost",
+      "count": 80,
+      "plane_share": 0.005361280990772513
+    },
+    {
+      "lemma": "ranit",
+      "count": 72,
+      "plane_share": 0.012517718422317841
+    },
+    {
+      "lemma": "rau",
+      "count": 80,
+      "plane_share": 0.031813461442748235
+    },
+    {
+      "lemma": "recunoscator",
+      "count": 80,
+      "plane_share": 0.1005323903827869
+    },
+    {
+      "lemma": "rusinat",
+      "count": 76,
+      "plane_share": 0.03237416537343431
+    },
+    {
+      "lemma": "rusine",
+      "count": 80,
+      "plane_share": 0.04013614909432918
+    },
+    {
+      "lemma": "satul",
+      "count": 80,
+      "plane_share": 0.00609762161063575
+    },
+    {
+      "lemma": "scarba",
+      "count": 80,
+      "plane_share": 0.1059385425200662
+    },
+    {
+      "lemma": "scarbit",
+      "count": 65,
+      "plane_share": 0.013087092118746707
+    },
+    {
+      "lemma": "sete",
+      "count": 80,
+      "plane_share": 0.025634706340900978
+    },
+    {
+      "lemma": "sila",
+      "count": 80,
+      "plane_share": 0.04037778752760062
+    },
+    {
+      "lemma": "singur",
+      "count": 80,
+      "plane_share": 0.039045576141603804
+    },
+    {
+      "lemma": "socat",
+      "count": 80,
+      "plane_share": 0.21727107572121618
+    },
+    {
+      "lemma": "speranta",
+      "count": 80,
+      "plane_share": 0.003282383648265987
+    },
+    {
+      "lemma": "stanjenit",
+      "count": 37,
+      "plane_share": 0.014377887659167402
+    },
+    {
+      "lemma": "stupefiat",
+      "count": 49,
+      "plane_share": 0.2475130267054427
+    },
+    {
+      "lemma": "suparat",
+      "count": 80,
+      "plane_share": 0.022104953562330103
+    },
+    {
+      "lemma": "traumatizat",
+      "count": 40,
+      "plane_share": 0.06986370035456485
+    },
+    {
+      "lemma": "umilit",
+      "count": 80,
+      "plane_share": 0.0004688028529999163
+    },
+    {
+      "lemma": "ura",
+      "count": 32,
+      "plane_share": 0.020556318701085072
+    },
+    {
+      "lemma": "vinovat",
+      "count": 80,
+      "plane_share": 0.003946862327319698
+    }
+  ]
+}

@@ -1,13 +1,12 @@
 {
-  "status": "frozen 2026-07-29 under strict-synonymy rule (user-approved rule, applied to all languages); zh/fa/hi added 2026-07-30 under the same rule Full-archive sweep 2026-07-30: every archive lemma now has an audit verdict; ro gains relaxed:[relaxat]; zh +18 lemmas, fa +4, en +1. fr/id added 2026-08-01 under the same rule from Final Data (score=3 + match_ok, 30-occurrence floor, fr gender-merged, id variant-merged frustrasi->frustasi); audit in russell_mapping_report.tsv (fr/id rows); fr 14 labels/18 lemmas, id 9 labels/13 lemmas. | 2026-08-02 loose pass (user-requested): all 8 languages swept against the full Final Data lemma pools; strong/near-strong synonyms added freely, loose matches only to labels lacking a strong anchor, each lemma assigned to its single best label; worried-words remain excluded; id pool extended with 4 calibrated unjudged corpora (threads/x/yt/kaggle_reddit). Strict set: anchors_russell.json.bak_strict_20260802 | 2026-08-02 tired exception: fr fatigue (25 occ) + id lelah (24 occ) admitted below the 30 floor (ANCHOR_FLOOR_EXCEPTIONS in prepare_final_data.py) to cover the deactivation quadrant in the global intersection",
+  "status": "frozen 2026-07-29 under strict-synonymy rule (user-approved rule, applied to all languages); zh/fa/hi added 2026-07-30 under the same rule Full-archive sweep 2026-07-30: every archive lemma now has an audit verdict; ro gains relaxed:[relaxat]; zh +18 lemmas, fa +4, en +1. fr/id added 2026-08-01 under the same rule from Final Data (score=3 + match_ok, 30-occurrence floor, fr gender-merged, id variant-merged frustrasi->frustasi); audit in russell_mapping_report.tsv (fr/id rows); fr 14 labels/18 lemmas, id 9 labels/13 lemmas.",
   "noun_lemmas": {
     "ro": [
       "frica",
       "teama",
       "groaza",
       "liniste",
-      "bucurie",
-      "pace"
+      "bucurie"
     ],
     "en": [],
     "es": [],
@@ -27,23 +26,7 @@
       "آرامش",
       "ارامش",
       "راحتی",
-      "رضایت",
-      "اضطراب",
-      "استرس",
-      "تنش",
-      "ذوق",
-      "شعف",
-      "شوق",
-      "خوشبختی",
-      "عصبانیت",
-      "کلافگی",
-      "اندوه",
-      "کسالت",
-      "رخوت",
-      "سبکی",
-      "آسودگی",
-      "خشنودی",
-      "لذت"
+      "رضایت"
     ],
     "hi": [
       "खुशी",
@@ -62,9 +45,7 @@
       "अवसाद",
       "सुकून",
       "संतोष",
-      "प्रसन्नता",
-      "आनंद",
-      "जोश"
+      "प्रसन्नता"
     ],
     "fr": [],
     "id": [
@@ -131,8 +112,7 @@
       "delighted": [
         "thrilled",
         "ecstatic",
-        "elated",
-        "delighted"
+        "elated"
       ],
       "excited": [
         "excited",
@@ -140,15 +120,10 @@
         "exhilarated"
       ],
       "astonished": [
-        "surprised",
-        "amazed",
-        "flabbergasted"
+        "surprised"
       ],
       "tense": [
-        "tense",
-        "stressed",
-        "nervous",
-        "anxious"
+        "tense"
       ],
       "alarmed": [
         "panicked",
@@ -158,9 +133,7 @@
         "angry",
         "furious",
         "livid",
-        "outraged",
-        "mad",
-        "pissed"
+        "outraged"
       ],
       "afraid": [
         "afraid",
@@ -211,25 +184,6 @@
       ],
       "glad": [
         "glad"
-      ],
-      "satisfied": [
-        "satisfied"
-      ],
-      "content": [
-        "content"
-      ],
-      "serene": [
-        "serene",
-        "peaceful"
-      ],
-      "pleased": [
-        "pleased"
-      ],
-      "gloomy": [
-        "blue"
-      ],
-      "droopy": [
-        "lethargic"
       ]
     },
     "ro": {
@@ -250,9 +204,7 @@
         "surprins"
       ],
       "tense": [
-        "tensionat",
-        "stresat",
-        "anxios"
+        "tensionat"
       ],
       "alarmed": [
         "panicat"
@@ -316,9 +268,6 @@
       ],
       "relaxed": [
         "relaxat"
-      ],
-      "serene": [
-        "pace"
       ]
     },
     "es": {
@@ -329,9 +278,7 @@
         "entusiasmado"
       ],
       "astonished": [
-        "sorprendido",
-        "asombrado",
-        "maravillado"
+        "sorprendido"
       ],
       "angry": [
         "enojado",
@@ -343,12 +290,10 @@
       "afraid": [
         "asustado",
         "aterrado",
-        "aterrorizado",
-        "espantado"
+        "aterrorizado"
       ],
       "annoyed": [
-        "molesto",
-        "harto"
+        "molesto"
       ],
       "distressed": [
         "angustiado"
@@ -374,8 +319,7 @@
         "exhausto"
       ],
       "calm": [
-        "tranquilo",
-        "calmado"
+        "tranquilo"
       ],
       "relaxed": [
         "relajado"
@@ -388,27 +332,6 @@
       ],
       "pleased": [
         "contento"
-      ],
-      "delighted": [
-        "encantado"
-      ],
-      "tense": [
-        "ansioso",
-        "nervioso",
-        "estresado"
-      ],
-      "alarmed": [
-        "alarmado"
-      ],
-      "serene": [
-        "sereno"
-      ],
-      "at ease": [
-        "comodo"
-      ],
-      "gloomy": [
-        "abatido",
-        "desanimado"
       ]
     },
     "zh": {
@@ -417,9 +340,7 @@
         "快乐",
         "喜悦",
         "欢喜",
-        "快活",
-        "幸福",
-        "欢乐"
+        "快活"
       ],
       "delighted": [
         "欣喜",
@@ -429,8 +350,7 @@
       ],
       "excited": [
         "兴奋",
-        "亢奋",
-        "激动"
+        "亢奋"
       ],
       "astonished": [
         "惊讶",
@@ -439,29 +359,22 @@
         "讶异",
         "惊异",
         "惊诧",
-        "愕然",
-        "震惊",
-        "错愕",
-        "惊愕"
+        "愕然"
       ],
       "tense": [
-        "紧张",
-        "焦虑",
-        "紧绷"
+        "紧张"
       ],
       "alarmed": [
         "惊慌",
         "恐慌",
-        "惊惶",
-        "惊恐"
+        "惊惶"
       ],
       "angry": [
         "生气",
         "愤怒",
         "气愤",
         "愤慨",
-        "怒气",
-        "恼怒"
+        "怒气"
       ],
       "afraid": [
         "害怕",
@@ -471,13 +384,10 @@
       ],
       "annoyed": [
         "恼火",
-        "气恼",
-        "不爽",
-        "厌烦"
+        "气恼"
       ],
       "distressed": [
-        "苦恼",
-        "烦恼"
+        "苦恼"
       ],
       "frustrated": [
         "挫败",
@@ -489,14 +399,11 @@
         "伤心",
         "悲伤",
         "哀伤",
-        "伤悲",
-        "悲痛"
+        "伤悲"
       ],
       "gloomy": [
         "忧郁",
-        "闷闷不乐",
-        "低落",
-        "忧伤"
+        "闷闷不乐"
       ],
       "depressed": [
         "沮丧",
@@ -504,8 +411,7 @@
       ],
       "bored": [
         "无聊",
-        "百无聊赖",
-        "厌倦"
+        "百无聊赖"
       ],
       "tired": [
         "疲惫",
@@ -517,8 +423,7 @@
         "昏昏欲睡"
       ],
       "calm": [
-        "平静",
-        "淡定"
+        "平静"
       ],
       "relaxed": [
         "放松",
@@ -527,8 +432,7 @@
       "at ease": [
         "安心",
         "自在",
-        "心安",
-        "踏实"
+        "心安"
       ],
       "satisfied": [
         "满意",
@@ -539,19 +443,14 @@
         "知足"
       ],
       "serene": [
-        "宁静",
-        "平和"
+        "宁静"
       ],
       "glad": [
         "高兴"
       ],
       "pleased": [
         "愉快",
-        "愉悦",
-        "欣慰"
-      ],
-      "miserable": [
-        "痛苦"
+        "愉悦"
       ]
     },
     "fa": {
@@ -561,37 +460,30 @@
         "شادی",
         "خوشحالی",
         "خوشحالم",
-        "شادمانی",
-        "خوشبختی"
+        "شادمانی"
       ],
       "delighted": [
-        "مسرور",
-        "ذوق",
-        "شعف"
+        "مسرور"
       ],
       "excited": [
-        "هیجان",
-        "شوق"
+        "هیجان"
       ],
       "astonished": [
         "متعجب",
         "مبهوت",
-        "متحیر",
-        "حیران"
+        "متحیر"
       ],
       "angry": [
         "عصبانی",
         "خشمگین",
-        "خشم",
-        "عصبانیت"
+        "خشم"
       ],
       "afraid": [
         "ترس",
         "وحشت"
       ],
       "annoyed": [
-        "کلافه",
-        "کلافگی"
+        "کلافه"
       ],
       "distressed": [
         "پریشان",
@@ -607,8 +499,7 @@
       "sad": [
         "غمگین",
         "غم",
-        "محزون",
-        "اندوه"
+        "محزون"
       ],
       "gloomy": [
         "دلگیر",
@@ -620,8 +511,7 @@
         "افسردگی"
       ],
       "bored": [
-        "کسل",
-        "کسالت"
+        "کسل"
       ],
       "tired": [
         "خسته",
@@ -635,8 +525,7 @@
       ],
       "at ease": [
         "راحت",
-        "راحتی",
-        "آسودگی"
+        "راحتی"
       ],
       "satisfied": [
         "راضی",
@@ -646,35 +535,19 @@
         "خرسند"
       ],
       "pleased": [
-        "خشنود",
-        "خشنودی",
-        "لذت"
-      ],
-      "tense": [
-        "اضطراب",
-        "مضطرب",
-        "استرس",
-        "تنش"
-      ],
-      "droopy": [
-        "رخوت"
-      ],
-      "relaxed": [
-        "سبکی"
+        "خشنود"
       ]
     },
     "hi": {
       "happy": [
         "खुश",
-        "खुशी",
-        "आनंद"
+        "खुशी"
       ],
       "delighted": [
         "हर्ष"
       ],
       "excited": [
-        "उत्साहित",
-        "जोश"
+        "उत्साहित"
       ],
       "astonished": [
         "हैरान",
@@ -731,8 +604,7 @@
         "सुकून"
       ],
       "at ease": [
-        "सहज",
-        "आश्वस्त"
+        "सहज"
       ],
       "satisfied": [
         "संतुष्ट"
@@ -743,9 +615,6 @@
       "pleased": [
         "प्रसन्न",
         "प्रसन्नता"
-      ],
-      "annoyed": [
-        "नाराज"
       ]
     },
     "fr": {
@@ -794,25 +663,12 @@
       ],
       "pleased": [
         "contente"
-      ],
-      "miserable": [
-        "malheureux"
-      ],
-      "at ease": [
-        "rassure"
-      ],
-      "excited": [
-        "energique"
-      ],
-      "tired": [
-        "fatigue"
       ]
     },
     "id": {
       "happy": [
         "senang",
-        "bahagia",
-        "gembira"
+        "bahagia"
       ],
       "afraid": [
         "takut",
@@ -839,33 +695,6 @@
       ],
       "frustrated": [
         "frustasi"
-      ],
-      "angry": [
-        "marah"
-      ],
-      "astonished": [
-        "kaget",
-        "heran"
-      ],
-      "tense": [
-        "cemas",
-        "gugup",
-        "stres"
-      ],
-      "alarmed": [
-        "panik"
-      ],
-      "serene": [
-        "damai"
-      ],
-      "distressed": [
-        "tertekan"
-      ],
-      "depressed": [
-        "down"
-      ],
-      "tired": [
-        "lelah"
       ]
     }
   }

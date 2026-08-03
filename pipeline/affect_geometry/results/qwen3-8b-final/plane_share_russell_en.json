@@ -1,0 +1,2612 @@
+{
+  "summary": {
+    "language": "en",
+    "layer": 21,
+    "n_anchor_lemmas": 55,
+    "n_broader_lemmas": 452,
+    "anchor_in_sample_median_plane_share": 0.20934076685533884,
+    "anchor_in_sample_mean_plane_share": 0.2372675478855048,
+    "anchor_loo_median_plane_share": 0.15123031292024924,
+    "anchor_loo_mean_plane_share": 0.1755018412027697,
+    "broader_median_plane_share": 0.03642760598778504,
+    "broader_mean_plane_share": 0.05234475007026694,
+    "mannwhitney_u": 21954.0,
+    "mannwhitney_p_two_sided": 1.6422977805164722e-20,
+    "rank_biserial_effect": 0.7662107803700724,
+    "prob_random_anchor_exceeds_random_broader": 0.8831053901850362
+  },
+  "anchors_loo": [
+    {
+      "lemma": "afraid",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.13057562044677498
+    },
+    {
+      "lemma": "amazed",
+      "label": "astonished",
+      "count": 61,
+      "plane_share": 0.1929775345551641
+    },
+    {
+      "lemma": "angry",
+      "label": "angry",
+      "count": 80,
+      "plane_share": 0.23745337958546053
+    },
+    {
+      "lemma": "annoyed",
+      "label": "annoyed",
+      "count": 80,
+      "plane_share": 0.16146076620239505
+    },
+    {
+      "lemma": "anxious",
+      "label": "tense",
+      "count": 80,
+      "plane_share": 0.2114238956467783
+    },
+    {
+      "lemma": "blue",
+      "label": "gloomy",
+      "count": 80,
+      "plane_share": 0.06991767771021355
+    },
+    {
+      "lemma": "bored",
+      "label": "bored",
+      "count": 80,
+      "plane_share": 0.03125960374149314
+    },
+    {
+      "lemma": "calm",
+      "label": "calm",
+      "count": 80,
+      "plane_share": 0.31924003631822456
+    },
+    {
+      "lemma": "cheerful",
+      "label": "happy",
+      "count": 80,
+      "plane_share": 0.15123031292024924
+    },
+    {
+      "lemma": "comfortable",
+      "label": "at ease",
+      "count": 80,
+      "plane_share": 0.05555618336648885
+    },
+    {
+      "lemma": "content",
+      "label": "content",
+      "count": 80,
+      "plane_share": 0.22057483678039078
+    },
+    {
+      "lemma": "delighted",
+      "label": "delighted",
+      "count": 80,
+      "plane_share": 0.4645200120103271
+    },
+    {
+      "lemma": "depressed",
+      "label": "depressed",
+      "count": 80,
+      "plane_share": 0.14382902449994805
+    },
+    {
+      "lemma": "distressed",
+      "label": "distressed",
+      "count": 80,
+      "plane_share": 0.12138887971107544
+    },
+    {
+      "lemma": "ecstatic",
+      "label": "delighted",
+      "count": 80,
+      "plane_share": 0.22606188922515416
+    },
+    {
+      "lemma": "elated",
+      "label": "delighted",
+      "count": 80,
+      "plane_share": 0.16287889234610567
+    },
+    {
+      "lemma": "excited",
+      "label": "excited",
+      "count": 80,
+      "plane_share": 0.19196795492314808
+    },
+    {
+      "lemma": "exhausted",
+      "label": "tired",
+      "count": 80,
+      "plane_share": 0.12506603531828106
+    },
+    {
+      "lemma": "exhilarated",
+      "label": "excited",
+      "count": 80,
+      "plane_share": 0.14033313147606233
+    },
+    {
+      "lemma": "fearful",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.14276256143209193
+    },
+    {
+      "lemma": "flabbergasted",
+      "label": "astonished",
+      "count": 35,
+      "plane_share": 0.03702463979760465
+    },
+    {
+      "lemma": "frightened",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.1256046940864575
+    },
+    {
+      "lemma": "frustrated",
+      "label": "frustrated",
+      "count": 80,
+      "plane_share": 0.12766631362485525
+    },
+    {
+      "lemma": "furious",
+      "label": "angry",
+      "count": 80,
+      "plane_share": 0.31191019421133076
+    },
+    {
+      "lemma": "glad",
+      "label": "glad",
+      "count": 80,
+      "plane_share": 0.24814797373420971
+    },
+    {
+      "lemma": "happy",
+      "label": "happy",
+      "count": 80,
+      "plane_share": 0.3362519753540997
+    },
+    {
+      "lemma": "hyped",
+      "label": "excited",
+      "count": 53,
+      "plane_share": 0.02536491595329712
+    },
+    {
+      "lemma": "irritated",
+      "label": "annoyed",
+      "count": 80,
+      "plane_share": 0.12950288544436334
+    },
+    {
+      "lemma": "joyful",
+      "label": "happy",
+      "count": 80,
+      "plane_share": 0.1758853366131016
+    },
+    {
+      "lemma": "lethargic",
+      "label": "droopy",
+      "count": 80,
+      "plane_share": 0.1551949243950234
+    },
+    {
+      "lemma": "livid",
+      "label": "angry",
+      "count": 79,
+      "plane_share": 0.14531449076806083
+    },
+    {
+      "lemma": "mad",
+      "label": "angry",
+      "count": 64,
+      "plane_share": 0.20952108542820286
+    },
+    {
+      "lemma": "merry",
+      "label": "happy",
+      "count": 36,
+      "plane_share": 0.02998960163778206
+    },
+    {
+      "lemma": "miserable",
+      "label": "miserable",
+      "count": 80,
+      "plane_share": 0.04297812116765554
+    },
+    {
+      "lemma": "nervous",
+      "label": "tense",
+      "count": 80,
+      "plane_share": 0.052553838441613085
+    },
+    {
+      "lemma": "outraged",
+      "label": "angry",
+      "count": 80,
+      "plane_share": 0.2866139470148154
+    },
+    {
+      "lemma": "panicked",
+      "label": "alarmed",
+      "count": 80,
+      "plane_share": 0.134042076529865
+    },
+    {
+      "lemma": "panicky",
+      "label": "alarmed",
+      "count": 80,
+      "plane_share": 0.13785440658451842
+    },
+    {
+      "lemma": "peaceful",
+      "label": "serene",
+      "count": 80,
+      "plane_share": 0.3195246071027547
+    },
+    {
+      "lemma": "pissed",
+      "label": "angry",
+      "count": 80,
+      "plane_share": 0.2084622283377392
+    },
+    {
+      "lemma": "pleased",
+      "label": "pleased",
+      "count": 80,
+      "plane_share": 0.4440343890703313
+    },
+    {
+      "lemma": "relaxed",
+      "label": "relaxed",
+      "count": 80,
+      "plane_share": 0.3351276129387806
+    },
+    {
+      "lemma": "rested",
+      "label": "relaxed",
+      "count": 71,
+      "plane_share": 0.16611060462140598
+    },
+    {
+      "lemma": "sad",
+      "label": "sad",
+      "count": 80,
+      "plane_share": 0.03423952070233904
+    },
+    {
+      "lemma": "satisfied",
+      "label": "satisfied",
+      "count": 80,
+      "plane_share": 0.19270424549938298
+    },
+    {
+      "lemma": "scared",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.14394620135794636
+    },
+    {
+      "lemma": "serene",
+      "label": "serene",
+      "count": 80,
+      "plane_share": 0.21340335114530343
+    },
+    {
+      "lemma": "sleepy",
+      "label": "sleepy",
+      "count": 69,
+      "plane_share": 0.13572032913562396
+    },
+    {
+      "lemma": "spent",
+      "label": "tired",
+      "count": 55,
+      "plane_share": 0.049925125076308995
+    },
+    {
+      "lemma": "stressed",
+      "label": "tense",
+      "count": 80,
+      "plane_share": 0.1655422614106309
+    },
+    {
+      "lemma": "surprised",
+      "label": "astonished",
+      "count": 80,
+      "plane_share": 0.09792859719040886
+    },
+    {
+      "lemma": "tense",
+      "label": "tense",
+      "count": 80,
+      "plane_share": 0.13377150698008572
+    },
+    {
+      "lemma": "terrified",
+      "label": "afraid",
+      "count": 80,
+      "plane_share": 0.13429315304203737
+    },
+    {
+      "lemma": "thrilled",
+      "label": "delighted",
+      "count": 80,
+      "plane_share": 0.4708451796821159
+    },
+    {
+      "lemma": "tired",
+      "label": "tired",
+      "count": 80,
+      "plane_share": 0.19512270385645766
+    }
+  ],
+  "broader": [
+    {
+      "lemma": "abandoned",
+      "count": 80,
+      "plane_share": 0.024367941986441193
+    },
+    {
+      "lemma": "accepted",
+      "count": 80,
+      "plane_share": 0.06091824110172394
+    },
+    {
+      "lemma": "accomplished",
+      "count": 80,
+      "plane_share": 0.07153310199292198
+    },
+    {
+      "lemma": "adrift",
+      "count": 80,
+      "plane_share": 0.02275796566094315
+    },
+    {
+      "lemma": "aggressive",
+      "count": 80,
+      "plane_share": 0.049333362377131
+    },
+    {
+      "lemma": "agitated",
+      "count": 80,
+      "plane_share": 0.1058882508983972
+    },
+    {
+      "lemma": "alienated",
+      "count": 43,
+      "plane_share": 0.018964187605654978
+    },
+    {
+      "lemma": "alive",
+      "count": 80,
+      "plane_share": 0.11636291363922131
+    },
+    {
+      "lemma": "alone",
+      "count": 80,
+      "plane_share": 0.04597176192612015
+    },
+    {
+      "lemma": "amazing",
+      "count": 80,
+      "plane_share": 0.12453857607928709
+    },
+    {
+      "lemma": "ambitious",
+      "count": 62,
+      "plane_share": 0.0007426800550181692
+    },
+    {
+      "lemma": "ambivalent",
+      "count": 40,
+      "plane_share": 0.010608880520754746
+    },
+    {
+      "lemma": "antsy",
+      "count": 80,
+      "plane_share": 0.0359897310346533
+    },
+    {
+      "lemma": "appalled",
+      "count": 80,
+      "plane_share": 0.1630429103871839
+    },
+    {
+      "lemma": "appreciated",
+      "count": 80,
+      "plane_share": 0.05211036935890421
+    },
+    {
+      "lemma": "appreciative",
+      "count": 42,
+      "plane_share": 0.06884177961049848
+    },
+    {
+      "lemma": "apprehensive",
+      "count": 80,
+      "plane_share": 0.06707856818590399
+    },
+    {
+      "lemma": "asexual",
+      "count": 78,
+      "plane_share": 0.022068487274956926
+    },
+    {
+      "lemma": "ashame",
+      "count": 74,
+      "plane_share": 0.02817616516171087
+    },
+    {
+      "lemma": "ashamed",
+      "count": 80,
+      "plane_share": 0.04025854589097441
+    },
+    {
+      "lemma": "assured",
+      "count": 61,
+      "plane_share": 0.07532368827612014
+    },
+    {
+      "lemma": "attached",
+      "count": 34,
+      "plane_share": 0.002678451477687476
+    },
+    {
+      "lemma": "attacked",
+      "count": 46,
+      "plane_share": 0.019537188039228538
+    },
+    {
+      "lemma": "attracted",
+      "count": 49,
+      "plane_share": 0.0026267976856626843
+    },
+    {
+      "lemma": "awesome",
+      "count": 80,
+      "plane_share": 0.14186567754077412
+    },
+    {
+      "lemma": "awful",
+      "count": 80,
+      "plane_share": 0.027657550505767747
+    },
+    {
+      "lemma": "awkward",
+      "count": 80,
+      "plane_share": 0.015737578042778755
+    },
+    {
+      "lemma": "bad",
+      "count": 80,
+      "plane_share": 0.030423760063453997
+    },
+    {
+      "lemma": "baffled",
+      "count": 76,
+      "plane_share": 0.06410776893647922
+    },
+    {
+      "lemma": "balanced",
+      "count": 50,
+      "plane_share": 0.1947725313565205
+    },
+    {
+      "lemma": "beaten",
+      "count": 80,
+      "plane_share": 0.03060962289259632
+    },
+    {
+      "lemma": "beautiful",
+      "count": 80,
+      "plane_share": 0.07539599547439288
+    },
+    {
+      "lemma": "belittled",
+      "count": 80,
+      "plane_share": 0.01831703703501243
+    },
+    {
+      "lemma": "bereft",
+      "count": 30,
+      "plane_share": 0.0011029400630909211
+    },
+    {
+      "lemma": "best",
+      "count": 51,
+      "plane_share": 0.033986863452301876
+    },
+    {
+      "lemma": "betrayed",
+      "count": 80,
+      "plane_share": 0.020387817771550385
+    },
+    {
+      "lemma": "better",
+      "count": 80,
+      "plane_share": 0.07328784212482839
+    },
+    {
+      "lemma": "bitter",
+      "count": 80,
+      "plane_share": 0.09550680156691546
+    },
+    {
+      "lemma": "blessed",
+      "count": 80,
+      "plane_share": 0.12761363535969508
+    },
+    {
+      "lemma": "blissful",
+      "count": 35,
+      "plane_share": 0.12848718878629992
+    },
+    {
+      "lemma": "bothered",
+      "count": 80,
+      "plane_share": 0.05984755081657224
+    },
+    {
+      "lemma": "brave",
+      "count": 78,
+      "plane_share": 0.00909231286558916
+    },
+    {
+      "lemma": "broken",
+      "count": 80,
+      "plane_share": 0.03135607930530579
+    },
+    {
+      "lemma": "burdened",
+      "count": 80,
+      "plane_share": 0.036316045505462094
+    },
+    {
+      "lemma": "burned",
+      "count": 41,
+      "plane_share": 0.05267147098340651
+    },
+    {
+      "lemma": "burnt",
+      "count": 31,
+      "plane_share": 0.0648364547244006
+    },
+    {
+      "lemma": "called",
+      "count": 80,
+      "plane_share": 0.003910828217370673
+    },
+    {
+      "lemma": "calmer",
+      "count": 80,
+      "plane_share": 0.16239968723504689
+    },
+    {
+      "lemma": "cared",
+      "count": 59,
+      "plane_share": 0.018591608965051337
+    },
+    {
+      "lemma": "centered",
+      "count": 49,
+      "plane_share": 0.21082845176936826
+    },
+    {
+      "lemma": "certain",
+      "count": 80,
+      "plane_share": 0.010851512547694663
+    },
+    {
+      "lemma": "charged",
+      "count": 33,
+      "plane_share": 0.032564976642728206
+    },
+    {
+      "lemma": "cheated",
+      "count": 80,
+      "plane_share": 0.023684701221770053
+    },
+    {
+      "lemma": "cherished",
+      "count": 30,
+      "plane_share": 0.08681492601396286
+    },
+    {
+      "lemma": "childish",
+      "count": 36,
+      "plane_share": 0.00367237268031153
+    },
+    {
+      "lemma": "choked",
+      "count": 80,
+      "plane_share": 0.030786680037873104
+    },
+    {
+      "lemma": "claustrophobic",
+      "count": 40,
+      "plane_share": 0.0438394288677596
+    },
+    {
+      "lemma": "clingy",
+      "count": 57,
+      "plane_share": 0.04226984234507416
+    },
+    {
+      "lemma": "close",
+      "count": 31,
+      "plane_share": 0.026897443874081047
+    },
+    {
+      "lemma": "closer",
+      "count": 39,
+      "plane_share": 0.025964091476150097
+    },
+    {
+      "lemma": "clueless",
+      "count": 71,
+      "plane_share": 0.017687856724012747
+    },
+    {
+      "lemma": "comforted",
+      "count": 80,
+      "plane_share": 0.06343404690313223
+    },
+    {
+      "lemma": "compelled",
+      "count": 80,
+      "plane_share": 0.004043394663806176
+    },
+    {
+      "lemma": "complete",
+      "count": 80,
+      "plane_share": 0.1336370855687162
+    },
+    {
+      "lemma": "concerned",
+      "count": 80,
+      "plane_share": 0.08952801166274843
+    },
+    {
+      "lemma": "confident",
+      "count": 80,
+      "plane_share": 0.06766250032973786
+    },
+    {
+      "lemma": "conflicted",
+      "count": 80,
+      "plane_share": 0.022456710391749787
+    },
+    {
+      "lemma": "confused",
+      "count": 80,
+      "plane_share": 0.03469739214268352
+    },
+    {
+      "lemma": "connected",
+      "count": 80,
+      "plane_share": 0.045382097713406774
+    },
+    {
+      "lemma": "conscious",
+      "count": 34,
+      "plane_share": 0.030115171736317968
+    },
+    {
+      "lemma": "controlled",
+      "count": 42,
+      "plane_share": 0.0346551947895863
+    },
+    {
+      "lemma": "courageous",
+      "count": 33,
+      "plane_share": 0.026505161692826237
+    },
+    {
+      "lemma": "cozy",
+      "count": 34,
+      "plane_share": 0.1740631523317475
+    },
+    {
+      "lemma": "cranky",
+      "count": 35,
+      "plane_share": 0.06076883540248117
+    },
+    {
+      "lemma": "crazy",
+      "count": 80,
+      "plane_share": 0.01784991775266548
+    },
+    {
+      "lemma": "crippled",
+      "count": 80,
+      "plane_share": 0.024273471518840895
+    },
+    {
+      "lemma": "cruel",
+      "count": 80,
+      "plane_share": 0.014554131278636251
+    },
+    {
+      "lemma": "crushed",
+      "count": 80,
+      "plane_share": 0.029806103890359863
+    },
+    {
+      "lemma": "curious",
+      "count": 36,
+      "plane_share": 0.017854757104675826
+    },
+    {
+      "lemma": "cynical",
+      "count": 80,
+      "plane_share": 0.03105025848637919
+    },
+    {
+      "lemma": "damaged",
+      "count": 80,
+      "plane_share": 0.02827384507079145
+    },
+    {
+      "lemma": "dangerous",
+      "count": 52,
+      "plane_share": 0.029687261775223222
+    },
+    {
+      "lemma": "dead",
+      "count": 80,
+      "plane_share": 0.03719670119733829
+    },
+    {
+      "lemma": "deceived",
+      "count": 80,
+      "plane_share": 0.009797565944308093
+    },
+    {
+      "lemma": "deep",
+      "count": 42,
+      "plane_share": 4.107271726788442e-06
+    },
+    {
+      "lemma": "defeated",
+      "count": 80,
+      "plane_share": 0.03734948695070496
+    },
+    {
+      "lemma": "defective",
+      "count": 80,
+      "plane_share": 0.015490415816742572
+    },
+    {
+      "lemma": "defensive",
+      "count": 35,
+      "plane_share": 0.03253391133195587
+    },
+    {
+      "lemma": "deflated",
+      "count": 33,
+      "plane_share": 0.012093755046645659
+    },
+    {
+      "lemma": "degraded",
+      "count": 80,
+      "plane_share": 0.013897991399242294
+    },
+    {
+      "lemma": "dejected",
+      "count": 80,
+      "plane_share": 0.03886649542869594
+    },
+    {
+      "lemma": "demotivated",
+      "count": 51,
+      "plane_share": 0.061405405543011916
+    },
+    {
+      "lemma": "deprived",
+      "count": 73,
+      "plane_share": 0.008657486561947597
+    },
+    {
+      "lemma": "desired",
+      "count": 80,
+      "plane_share": 0.021770195212988414
+    },
+    {
+      "lemma": "despair",
+      "count": 35,
+      "plane_share": 0.058651645948518426
+    },
+    {
+      "lemma": "desperate",
+      "count": 80,
+      "plane_share": 0.05459492155941107
+    },
+    {
+      "lemma": "despondent",
+      "count": 33,
+      "plane_share": 0.0509498811447345
+    },
+    {
+      "lemma": "determined",
+      "count": 80,
+      "plane_share": 0.007177005824670536
+    },
+    {
+      "lemma": "devastated",
+      "count": 80,
+      "plane_share": 0.07770886422102125
+    },
+    {
+      "lemma": "devestated",
+      "count": 80,
+      "plane_share": 0.025398232487350233
+    },
+    {
+      "lemma": "directionless",
+      "count": 80,
+      "plane_share": 0.04038447778992641
+    },
+    {
+      "lemma": "dirty",
+      "count": 80,
+      "plane_share": 0.006361668026205021
+    },
+    {
+      "lemma": "disapointed",
+      "count": 80,
+      "plane_share": 0.043847403630642316
+    },
+    {
+      "lemma": "disappointed",
+      "count": 80,
+      "plane_share": 0.0941061895372178
+    },
+    {
+      "lemma": "discarded",
+      "count": 80,
+      "plane_share": 0.014038615341916605
+    },
+    {
+      "lemma": "disconnected",
+      "count": 80,
+      "plane_share": 0.05050947806740924
+    },
+    {
+      "lemma": "discouraged",
+      "count": 80,
+      "plane_share": 0.053533104896140465
+    },
+    {
+      "lemma": "disgusted",
+      "count": 80,
+      "plane_share": 0.11731027541451523
+    },
+    {
+      "lemma": "disgusting",
+      "count": 80,
+      "plane_share": 0.01756932193801135
+    },
+    {
+      "lemma": "disheartened",
+      "count": 38,
+      "plane_share": 0.02514712167123356
+    },
+    {
+      "lemma": "disillusioned",
+      "count": 80,
+      "plane_share": 0.023890762007335045
+    },
+    {
+      "lemma": "disloyal",
+      "count": 46,
+      "plane_share": 0.009586631946715761
+    },
+    {
+      "lemma": "dismissed",
+      "count": 62,
+      "plane_share": 0.01625269611041313
+    },
+    {
+      "lemma": "disoriented",
+      "count": 31,
+      "plane_share": 0.03228239934618946
+    },
+    {
+      "lemma": "disrespected",
+      "count": 80,
+      "plane_share": 0.012359372469639796
+    },
+    {
+      "lemma": "dissapointed",
+      "count": 80,
+      "plane_share": 0.026363567186842848
+    },
+    {
+      "lemma": "dissatisfied",
+      "count": 39,
+      "plane_share": 0.015719016870734806
+    },
+    {
+      "lemma": "distant",
+      "count": 63,
+      "plane_share": 0.047867710711630145
+    },
+    {
+      "lemma": "dizzy",
+      "count": 73,
+      "plane_share": 0.08994944659279275
+    },
+    {
+      "lemma": "done",
+      "count": 80,
+      "plane_share": 0.019775825256762206
+    },
+    {
+      "lemma": "doomed",
+      "count": 80,
+      "plane_share": 0.021318896937181742
+    },
+    {
+      "lemma": "doubtful",
+      "count": 67,
+      "plane_share": 0.07227201142697799
+    },
+    {
+      "lemma": "downtrodden",
+      "count": 69,
+      "plane_share": 0.059532547012867046
+    },
+    {
+      "lemma": "drained",
+      "count": 80,
+      "plane_share": 0.1292251617003673
+    },
+    {
+      "lemma": "driven",
+      "count": 53,
+      "plane_share": 0.006831981414830633
+    },
+    {
+      "lemma": "dumb",
+      "count": 80,
+      "plane_share": 0.008729951732300996
+    },
+    {
+      "lemma": "duped",
+      "count": 44,
+      "plane_share": 0.003862584270434471
+    },
+    {
+      "lemma": "dysphoric",
+      "count": 80,
+      "plane_share": 0.03053241162778616
+    },
+    {
+      "lemma": "eager",
+      "count": 80,
+      "plane_share": 0.0734266789883453
+    },
+    {
+      "lemma": "edgy",
+      "count": 80,
+      "plane_share": 0.06357845409301027
+    },
+    {
+      "lemma": "embarassed",
+      "count": 80,
+      "plane_share": 0.030919385218148496
+    },
+    {
+      "lemma": "embarrassed",
+      "count": 80,
+      "plane_share": 0.03697325997335069
+    },
+    {
+      "lemma": "emotional",
+      "count": 80,
+      "plane_share": 0.006557095302806226
+    },
+    {
+      "lemma": "empowered",
+      "count": 80,
+      "plane_share": 0.047293336323486215
+    },
+    {
+      "lemma": "empty",
+      "count": 80,
+      "plane_share": 0.042200700968300475
+    },
+    {
+      "lemma": "encouraged",
+      "count": 80,
+      "plane_share": 0.05857251113042006
+    },
+    {
+      "lemma": "energetic",
+      "count": 80,
+      "plane_share": 0.19669491628127564
+    },
+    {
+      "lemma": "energised",
+      "count": 80,
+      "plane_share": 0.14101308982355354
+    },
+    {
+      "lemma": "energized",
+      "count": 80,
+      "plane_share": 0.16838974637226226
+    },
+    {
+      "lemma": "enlightened",
+      "count": 35,
+      "plane_share": 0.06709916428975152
+    },
+    {
+      "lemma": "enormous",
+      "count": 55,
+      "plane_share": 0.011661602170212117
+    },
+    {
+      "lemma": "enriched",
+      "count": 51,
+      "plane_share": 0.11442149479976921
+    },
+    {
+      "lemma": "enthusiastic",
+      "count": 80,
+      "plane_share": 0.12008787157078803
+    },
+    {
+      "lemma": "envious",
+      "count": 46,
+      "plane_share": 0.02158946070193406
+    },
+    {
+      "lemma": "euphoric",
+      "count": 80,
+      "plane_share": 0.04846666237617931
+    },
+    {
+      "lemma": "excellent",
+      "count": 31,
+      "plane_share": 0.09970576720475717
+    },
+    {
+      "lemma": "exposed",
+      "count": 80,
+      "plane_share": 0.01678823730461226
+    },
+    {
+      "lemma": "exuberant",
+      "count": 34,
+      "plane_share": 0.07555025111154659
+    },
+    {
+      "lemma": "fabulous",
+      "count": 80,
+      "plane_share": 0.12881065173185383
+    },
+    {
+      "lemma": "failed",
+      "count": 80,
+      "plane_share": 0.013273230860208278
+    },
+    {
+      "lemma": "faint",
+      "count": 30,
+      "plane_share": 0.08171926542314141
+    },
+    {
+      "lemma": "fake",
+      "count": 65,
+      "plane_share": 0.013474132193445985
+    },
+    {
+      "lemma": "fantastic",
+      "count": 80,
+      "plane_share": 0.11415306456634444
+    },
+    {
+      "lemma": "fascinated",
+      "count": 47,
+      "plane_share": 0.10360682807079558
+    },
+    {
+      "lemma": "fatigued",
+      "count": 40,
+      "plane_share": 0.19262576979033544
+    },
+    {
+      "lemma": "fed",
+      "count": 80,
+      "plane_share": 0.01564246746034831
+    },
+    {
+      "lemma": "fine",
+      "count": 80,
+      "plane_share": 0.07165031643815993
+    },
+    {
+      "lemma": "flat",
+      "count": 48,
+      "plane_share": 0.06706943354173465
+    },
+    {
+      "lemma": "flattered",
+      "count": 47,
+      "plane_share": 0.06432302536154828
+    },
+    {
+      "lemma": "flustered",
+      "count": 80,
+      "plane_share": 0.02626115551267124
+    },
+    {
+      "lemma": "focused",
+      "count": 53,
+      "plane_share": 0.14492033534310012
+    },
+    {
+      "lemma": "foolish",
+      "count": 80,
+      "plane_share": 0.016798284883743523
+    },
+    {
+      "lemma": "fortunate",
+      "count": 80,
+      "plane_share": 0.1369568981302997
+    },
+    {
+      "lemma": "fragile",
+      "count": 80,
+      "plane_share": 0.0680316114967493
+    },
+    {
+      "lemma": "frantic",
+      "count": 80,
+      "plane_share": 0.09356575283412312
+    },
+    {
+      "lemma": "frazzled",
+      "count": 80,
+      "plane_share": 0.0897797700952883
+    },
+    {
+      "lemma": "free",
+      "count": 80,
+      "plane_share": 0.10633376938701722
+    },
+    {
+      "lemma": "freer",
+      "count": 80,
+      "plane_share": 0.07125706376787395
+    },
+    {
+      "lemma": "frozen",
+      "count": 80,
+      "plane_share": 0.029034966941085556
+    },
+    {
+      "lemma": "fulfilled",
+      "count": 80,
+      "plane_share": 0.14841706208305408
+    },
+    {
+      "lemma": "fuzzy",
+      "count": 80,
+      "plane_share": 0.0648711633749318
+    },
+    {
+      "lemma": "generous",
+      "count": 50,
+      "plane_share": 0.015524914688669903
+    },
+    {
+      "lemma": "giddy",
+      "count": 80,
+      "plane_share": 0.046039764516800245
+    },
+    {
+      "lemma": "good",
+      "count": 80,
+      "plane_share": 0.14757136395630271
+    },
+    {
+      "lemma": "grateful",
+      "count": 80,
+      "plane_share": 0.15791990604531272
+    },
+    {
+      "lemma": "gratified",
+      "count": 42,
+      "plane_share": 0.17876758894609254
+    },
+    {
+      "lemma": "great",
+      "count": 80,
+      "plane_share": 0.11931680903885428
+    },
+    {
+      "lemma": "greedy",
+      "count": 80,
+      "plane_share": 0.009076192448660498
+    },
+    {
+      "lemma": "gross",
+      "count": 80,
+      "plane_share": 0.014138346802934876
+    },
+    {
+      "lemma": "grouchy",
+      "count": 42,
+      "plane_share": 0.07655325087957805
+    },
+    {
+      "lemma": "grounded",
+      "count": 80,
+      "plane_share": 0.14763643831813592
+    },
+    {
+      "lemma": "grumpy",
+      "count": 80,
+      "plane_share": 0.07051907748780825
+    },
+    {
+      "lemma": "guilty",
+      "count": 80,
+      "plane_share": 0.023354453411734952
+    },
+    {
+      "lemma": "gutted",
+      "count": 80,
+      "plane_share": 0.016884624344549834
+    },
+    {
+      "lemma": "handsome",
+      "count": 49,
+      "plane_share": 0.02017249903134317
+    },
+    {
+      "lemma": "happier",
+      "count": 80,
+      "plane_share": 0.16333773027399903
+    },
+    {
+      "lemma": "happiest",
+      "count": 46,
+      "plane_share": 0.04427464285035124
+    },
+    {
+      "lemma": "hated",
+      "count": 80,
+      "plane_share": 0.028718013452383454
+    },
+    {
+      "lemma": "healed",
+      "count": 34,
+      "plane_share": 0.07935425174737959
+    },
+    {
+      "lemma": "healthier",
+      "count": 80,
+      "plane_share": 0.12760182859102073
+    },
+    {
+      "lemma": "healthy",
+      "count": 80,
+      "plane_share": 0.17570796110909573
+    },
+    {
+      "lemma": "heard",
+      "count": 80,
+      "plane_share": 0.027558975574252003
+    },
+    {
+      "lemma": "heartbroken",
+      "count": 80,
+      "plane_share": 0.039086750518146446
+    },
+    {
+      "lemma": "heavy",
+      "count": 54,
+      "plane_share": 0.06377264208826111
+    },
+    {
+      "lemma": "helpless",
+      "count": 80,
+      "plane_share": 0.027214733354013986
+    },
+    {
+      "lemma": "high",
+      "count": 80,
+      "plane_share": 0.02585781233608368
+    },
+    {
+      "lemma": "hollow",
+      "count": 80,
+      "plane_share": 0.03356325792744153
+    },
+    {
+      "lemma": "homesick",
+      "count": 70,
+      "plane_share": 0.022016402570022197
+    },
+    {
+      "lemma": "honored",
+      "count": 80,
+      "plane_share": 0.11324271927417262
+    },
+    {
+      "lemma": "honoured",
+      "count": 80,
+      "plane_share": 0.11021187006292461
+    },
+    {
+      "lemma": "hopeful",
+      "count": 80,
+      "plane_share": 0.043098703848502264
+    },
+    {
+      "lemma": "hopeless",
+      "count": 80,
+      "plane_share": 0.05613200538511241
+    },
+    {
+      "lemma": "hopless",
+      "count": 80,
+      "plane_share": 0.018571617933535522
+    },
+    {
+      "lemma": "horny",
+      "count": 80,
+      "plane_share": 0.010437453952021022
+    },
+    {
+      "lemma": "horrible",
+      "count": 80,
+      "plane_share": 0.03217391106066171
+    },
+    {
+      "lemma": "horrified",
+      "count": 80,
+      "plane_share": 0.20354081438838598
+    },
+    {
+      "lemma": "huge",
+      "count": 60,
+      "plane_share": 0.0013794173387043662
+    },
+    {
+      "lemma": "humble",
+      "count": 66,
+      "plane_share": 0.030782339035233513
+    },
+    {
+      "lemma": "humbled",
+      "count": 80,
+      "plane_share": 0.03586828976244399
+    },
+    {
+      "lemma": "humiliated",
+      "count": 80,
+      "plane_share": 0.02413276902905305
+    },
+    {
+      "lemma": "hungry",
+      "count": 79,
+      "plane_share": 0.047077924393695535
+    },
+    {
+      "lemma": "hurt",
+      "count": 80,
+      "plane_share": 0.053198685449497664
+    },
+    {
+      "lemma": "hyper",
+      "count": 33,
+      "plane_share": 0.022986727612858693
+    },
+    {
+      "lemma": "hysterical",
+      "count": 51,
+      "plane_share": 0.029074246100983813
+    },
+    {
+      "lemma": "ignored",
+      "count": 48,
+      "plane_share": 0.028050847110416513
+    },
+    {
+      "lemma": "ill",
+      "count": 74,
+      "plane_share": 0.06673431082476164
+    },
+    {
+      "lemma": "impatient",
+      "count": 54,
+      "plane_share": 0.036476198115052684
+    },
+    {
+      "lemma": "important",
+      "count": 80,
+      "plane_share": 0.02445076255162269
+    },
+    {
+      "lemma": "impotent",
+      "count": 80,
+      "plane_share": 0.02254288353970442
+    },
+    {
+      "lemma": "impulsive",
+      "count": 30,
+      "plane_share": 0.02462483341865936
+    },
+    {
+      "lemma": "inadequate",
+      "count": 80,
+      "plane_share": 0.03198769318511409
+    },
+    {
+      "lemma": "incapable",
+      "count": 61,
+      "plane_share": 0.0396582419981127
+    },
+    {
+      "lemma": "incompetent",
+      "count": 80,
+      "plane_share": 0.03756769222335907
+    },
+    {
+      "lemma": "incomplete",
+      "count": 58,
+      "plane_share": 0.041228989477718
+    },
+    {
+      "lemma": "inconsolable",
+      "count": 75,
+      "plane_share": 0.020217920073645344
+    },
+    {
+      "lemma": "incredible",
+      "count": 80,
+      "plane_share": 0.06751177354780986
+    },
+    {
+      "lemma": "indebted",
+      "count": 64,
+      "plane_share": 0.03754895029006377
+    },
+    {
+      "lemma": "indestructible",
+      "count": 44,
+      "plane_share": 0.017394646725739142
+    },
+    {
+      "lemma": "inferior",
+      "count": 47,
+      "plane_share": 0.02132706640206411
+    },
+    {
+      "lemma": "innocent",
+      "count": 60,
+      "plane_share": 0.008317108793220306
+    },
+    {
+      "lemma": "insecure",
+      "count": 80,
+      "plane_share": 0.10894831213417724
+    },
+    {
+      "lemma": "insignificant",
+      "count": 73,
+      "plane_share": 0.024546413594250357
+    },
+    {
+      "lemma": "inspired",
+      "count": 80,
+      "plane_share": 0.048798616397244324
+    },
+    {
+      "lemma": "insulted",
+      "count": 80,
+      "plane_share": 0.052146563940334636
+    },
+    {
+      "lemma": "intimidated",
+      "count": 80,
+      "plane_share": 0.018312940459373643
+    },
+    {
+      "lemma": "intrigued",
+      "count": 55,
+      "plane_share": 0.06495027093602414
+    },
+    {
+      "lemma": "invalidated",
+      "count": 64,
+      "plane_share": 0.012585993191223279
+    },
+    {
+      "lemma": "invigorated",
+      "count": 80,
+      "plane_share": 0.13673602292800294
+    },
+    {
+      "lemma": "invincible",
+      "count": 80,
+      "plane_share": 0.03759031463355466
+    },
+    {
+      "lemma": "invisible",
+      "count": 80,
+      "plane_share": 0.03528418653424047
+    },
+    {
+      "lemma": "irritable",
+      "count": 80,
+      "plane_share": 0.11323407288934398
+    },
+    {
+      "lemma": "isolated",
+      "count": 80,
+      "plane_share": 0.05524666037924298
+    },
+    {
+      "lemma": "jealous",
+      "count": 80,
+      "plane_share": 0.08321931539646091
+    },
+    {
+      "lemma": "jittery",
+      "count": 80,
+      "plane_share": 0.07837781403364212
+    },
+    {
+      "lemma": "joyless",
+      "count": 38,
+      "plane_share": 0.02634524388183212
+    },
+    {
+      "lemma": "judged",
+      "count": 80,
+      "plane_share": 0.02125205960524016
+    },
+    {
+      "lemma": "jumpy",
+      "count": 68,
+      "plane_share": 0.0757333088817561
+    },
+    {
+      "lemma": "justified",
+      "count": 32,
+      "plane_share": 0.019817979648002682
+    },
+    {
+      "lemma": "lame",
+      "count": 80,
+      "plane_share": 0.00928762954083454
+    },
+    {
+      "lemma": "lazy",
+      "count": 80,
+      "plane_share": 0.07690608701277854
+    },
+    {
+      "lemma": "less",
+      "count": 32,
+      "plane_share": 0.013484387680959217
+    },
+    {
+      "lemma": "liberated",
+      "count": 80,
+      "plane_share": 0.0661971491277529
+    },
+    {
+      "lemma": "lied",
+      "count": 80,
+      "plane_share": 0.0036621191240694922
+    },
+    {
+      "lemma": "light",
+      "count": 64,
+      "plane_share": 0.12766048071021513
+    },
+    {
+      "lemma": "lighter",
+      "count": 80,
+      "plane_share": 0.11774732645803294
+    },
+    {
+      "lemma": "lightheaded",
+      "count": 30,
+      "plane_share": 0.0713623610672265
+    },
+    {
+      "lemma": "like",
+      "count": 80,
+      "plane_share": 0.00037784801095513715
+    },
+    {
+      "lemma": "locked",
+      "count": 31,
+      "plane_share": 0.011924261268158032
+    },
+    {
+      "lemma": "lonely",
+      "count": 80,
+      "plane_share": 0.09312918943725433
+    },
+    {
+      "lemma": "lost",
+      "count": 80,
+      "plane_share": 0.044900021414748005
+    },
+    {
+      "lemma": "loved",
+      "count": 80,
+      "plane_share": 0.06782413466338212
+    },
+    {
+      "lemma": "low",
+      "count": 80,
+      "plane_share": 0.15220471674855657
+    },
+    {
+      "lemma": "lucky",
+      "count": 80,
+      "plane_share": 0.12084599933945057
+    },
+    {
+      "lemma": "lustful",
+      "count": 80,
+      "plane_share": 0.011827607821248103
+    },
+    {
+      "lemma": "manic",
+      "count": 80,
+      "plane_share": 0.01861928191324358
+    },
+    {
+      "lemma": "manipulated",
+      "count": 80,
+      "plane_share": 0.018425061689973023
+    },
+    {
+      "lemma": "marginalized",
+      "count": 80,
+      "plane_share": 0.03335632550798988
+    },
+    {
+      "lemma": "meaningless",
+      "count": 80,
+      "plane_share": 0.04305352870597352
+    },
+    {
+      "lemma": "misled",
+      "count": 80,
+      "plane_share": 0.004135219399693997
+    },
+    {
+      "lemma": "mistreated",
+      "count": 80,
+      "plane_share": 0.02332651624357043
+    },
+    {
+      "lemma": "moody",
+      "count": 80,
+      "plane_share": 0.10179472789611592
+    },
+    {
+      "lemma": "motivated",
+      "count": 80,
+      "plane_share": 0.060748211331547015
+    },
+    {
+      "lemma": "moved",
+      "count": 80,
+      "plane_share": 0.021748295941742143
+    },
+    {
+      "lemma": "naked",
+      "count": 35,
+      "plane_share": 0.006926062600417092
+    },
+    {
+      "lemma": "nauseous",
+      "count": 80,
+      "plane_share": 0.07545629343349367
+    },
+    {
+      "lemma": "needed",
+      "count": 31,
+      "plane_share": 0.022698529822095075
+    },
+    {
+      "lemma": "needy",
+      "count": 80,
+      "plane_share": 0.04773932781932764
+    },
+    {
+      "lemma": "neglected",
+      "count": 80,
+      "plane_share": 0.03264529706772643
+    },
+    {
+      "lemma": "normal",
+      "count": 45,
+      "plane_share": 0.05620964258211877
+    },
+    {
+      "lemma": "nostalgic",
+      "count": 80,
+      "plane_share": 0.0031600873690630217
+    },
+    {
+      "lemma": "numb",
+      "count": 80,
+      "plane_share": 0.020196122685211933
+    },
+    {
+      "lemma": "obese",
+      "count": 31,
+      "plane_share": 0.030070315040624213
+    },
+    {
+      "lemma": "offended",
+      "count": 80,
+      "plane_share": 0.0798210078525214
+    },
+    {
+      "lemma": "old",
+      "count": 58,
+      "plane_share": 0.005590526137590374
+    },
+    {
+      "lemma": "oppressed",
+      "count": 37,
+      "plane_share": 0.04395726218268954
+    },
+    {
+      "lemma": "optimistic",
+      "count": 80,
+      "plane_share": 0.08298553946673892
+    },
+    {
+      "lemma": "overlooked",
+      "count": 51,
+      "plane_share": 0.02335446465935982
+    },
+    {
+      "lemma": "overstimulated",
+      "count": 80,
+      "plane_share": 0.06277857567331262
+    },
+    {
+      "lemma": "overwhelmed",
+      "count": 80,
+      "plane_share": 0.06628240151109827
+    },
+    {
+      "lemma": "paralysed",
+      "count": 80,
+      "plane_share": 0.038232235476729555
+    },
+    {
+      "lemma": "paralyzed",
+      "count": 80,
+      "plane_share": 0.044821625680752396
+    },
+    {
+      "lemma": "paranoid",
+      "count": 80,
+      "plane_share": 0.07431941668448099
+    },
+    {
+      "lemma": "passionate",
+      "count": 80,
+      "plane_share": 0.016677651774229276
+    },
+    {
+      "lemma": "pathetic",
+      "count": 80,
+      "plane_share": 0.018213708690561537
+    },
+    {
+      "lemma": "pessimistic",
+      "count": 80,
+      "plane_share": 0.036490605877391086
+    },
+    {
+      "lemma": "pointless",
+      "count": 80,
+      "plane_share": 0.029368134185172454
+    },
+    {
+      "lemma": "positive",
+      "count": 80,
+      "plane_share": 0.1570698943988608
+    },
+    {
+      "lemma": "possessive",
+      "count": 69,
+      "plane_share": 0.020346697647579556
+    },
+    {
+      "lemma": "powerful",
+      "count": 80,
+      "plane_share": 0.037844930931495914
+    },
+    {
+      "lemma": "powerless",
+      "count": 80,
+      "plane_share": 0.030995431969675923
+    },
+    {
+      "lemma": "pressured",
+      "count": 80,
+      "plane_share": 0.023531793499723792
+    },
+    {
+      "lemma": "pretty",
+      "count": 80,
+      "plane_share": 0.008335538131681355
+    },
+    {
+      "lemma": "privileged",
+      "count": 80,
+      "plane_share": 0.12164918687631482
+    },
+    {
+      "lemma": "protected",
+      "count": 80,
+      "plane_share": 0.060662800969893516
+    },
+    {
+      "lemma": "protective",
+      "count": 44,
+      "plane_share": 0.01320548619058442
+    },
+    {
+      "lemma": "proud",
+      "count": 80,
+      "plane_share": 0.18102934130188794
+    },
+    {
+      "lemma": "pumped",
+      "count": 30,
+      "plane_share": 0.08465487797066935
+    },
+    {
+      "lemma": "punished",
+      "count": 80,
+      "plane_share": 0.00957148027082783
+    },
+    {
+      "lemma": "ready",
+      "count": 80,
+      "plane_share": 0.04031118729326229
+    },
+    {
+      "lemma": "real",
+      "count": 50,
+      "plane_share": 0.0031020424282523114
+    },
+    {
+      "lemma": "reassured",
+      "count": 80,
+      "plane_share": 0.0266306424717367
+    },
+    {
+      "lemma": "reborn",
+      "count": 55,
+      "plane_share": 0.045396207747068075
+    },
+    {
+      "lemma": "refreshed",
+      "count": 80,
+      "plane_share": 0.2415580501449818
+    },
+    {
+      "lemma": "regretful",
+      "count": 50,
+      "plane_share": 0.015097429681011128
+    },
+    {
+      "lemma": "rejected",
+      "count": 80,
+      "plane_share": 0.02422539487813799
+    },
+    {
+      "lemma": "rejuvenated",
+      "count": 80,
+      "plane_share": 0.21321582032434297
+    },
+    {
+      "lemma": "relieved",
+      "count": 80,
+      "plane_share": 0.09821981471992146
+    },
+    {
+      "lemma": "reluctant",
+      "count": 50,
+      "plane_share": 0.04214830977975208
+    },
+    {
+      "lemma": "renewed",
+      "count": 80,
+      "plane_share": 0.17477935576280765
+    },
+    {
+      "lemma": "replaced",
+      "count": 70,
+      "plane_share": 0.0070842402297427555
+    },
+    {
+      "lemma": "resentful",
+      "count": 80,
+      "plane_share": 0.1461296500609991
+    },
+    {
+      "lemma": "resilient",
+      "count": 36,
+      "plane_share": 0.07658919715359837
+    },
+    {
+      "lemma": "respected",
+      "count": 80,
+      "plane_share": 0.05313036931766638
+    },
+    {
+      "lemma": "responsible",
+      "count": 80,
+      "plane_share": 0.003514767900931436
+    },
+    {
+      "lemma": "restless",
+      "count": 80,
+      "plane_share": 0.08547387050781986
+    },
+    {
+      "lemma": "revitalized",
+      "count": 49,
+      "plane_share": 0.16590439771096366
+    },
+    {
+      "lemma": "rewarded",
+      "count": 80,
+      "plane_share": 0.08508319714668112
+    },
+    {
+      "lemma": "ridiculous",
+      "count": 80,
+      "plane_share": 0.010124359103525849
+    },
+    {
+      "lemma": "right",
+      "count": 80,
+      "plane_share": 0.011533230130718641
+    },
+    {
+      "lemma": "ripped",
+      "count": 59,
+      "plane_share": 0.0013900483820835862
+    },
+    {
+      "lemma": "robbed",
+      "count": 52,
+      "plane_share": 0.008462448827731091
+    },
+    {
+      "lemma": "romantic",
+      "count": 77,
+      "plane_share": 0.01880976088091845
+    },
+    {
+      "lemma": "ruined",
+      "count": 80,
+      "plane_share": 0.01459014922519029
+    },
+    {
+      "lemma": "saddened",
+      "count": 57,
+      "plane_share": 0.08653272729990698
+    },
+    {
+      "lemma": "safe",
+      "count": 80,
+      "plane_share": 0.05432330655477278
+    },
+    {
+      "lemma": "safer",
+      "count": 80,
+      "plane_share": 0.026375651937992836
+    },
+    {
+      "lemma": "salty",
+      "count": 80,
+      "plane_share": 0.08466637216317263
+    },
+    {
+      "lemma": "scammed",
+      "count": 42,
+      "plane_share": 0.005222545950007886
+    },
+    {
+      "lemma": "second",
+      "count": 32,
+      "plane_share": 0.007249475802727242
+    },
+    {
+      "lemma": "secure",
+      "count": 80,
+      "plane_share": 0.13624175340263517
+    },
+    {
+      "lemma": "seen",
+      "count": 80,
+      "plane_share": 0.026162591067501736
+    },
+    {
+      "lemma": "selfish",
+      "count": 80,
+      "plane_share": 0.005435525527347802
+    },
+    {
+      "lemma": "sexy",
+      "count": 80,
+      "plane_share": 0.05925665136757323
+    },
+    {
+      "lemma": "shaken",
+      "count": 80,
+      "plane_share": 0.013811106991386709
+    },
+    {
+      "lemma": "shakey",
+      "count": 32,
+      "plane_share": 0.07361715355825142
+    },
+    {
+      "lemma": "shaky",
+      "count": 80,
+      "plane_share": 0.09748727641244452
+    },
+    {
+      "lemma": "shameful",
+      "count": 80,
+      "plane_share": 0.04406774840658911
+    },
+    {
+      "lemma": "shattered",
+      "count": 80,
+      "plane_share": 0.012095428280394543
+    },
+    {
+      "lemma": "shitty",
+      "count": 80,
+      "plane_share": 0.030982195114934784
+    },
+    {
+      "lemma": "shocked",
+      "count": 80,
+      "plane_share": 0.1687164740634988
+    },
+    {
+      "lemma": "shy",
+      "count": 59,
+      "plane_share": 0.030242737776019914
+    },
+    {
+      "lemma": "sick",
+      "count": 80,
+      "plane_share": 0.04339791818813004
+    },
+    {
+      "lemma": "silenced",
+      "count": 80,
+      "plane_share": 0.023375448468462484
+    },
+    {
+      "lemma": "silly",
+      "count": 80,
+      "plane_share": 0.01275686141669496
+    },
+    {
+      "lemma": "smart",
+      "count": 35,
+      "plane_share": 0.018379256833684732
+    },
+    {
+      "lemma": "sorry",
+      "count": 80,
+      "plane_share": 0.04003543665011542
+    },
+    {
+      "lemma": "sour",
+      "count": 62,
+      "plane_share": 0.04487339972917509
+    },
+    {
+      "lemma": "special",
+      "count": 80,
+      "plane_share": 0.055739198866065924
+    },
+    {
+      "lemma": "speechless",
+      "count": 63,
+      "plane_share": 0.005064740547177654
+    },
+    {
+      "lemma": "spiteful",
+      "count": 80,
+      "plane_share": 0.06554105855721673
+    },
+    {
+      "lemma": "stable",
+      "count": 54,
+      "plane_share": 0.14388901124984665
+    },
+    {
+      "lemma": "stressful",
+      "count": 67,
+      "plane_share": 0.12381972183368448
+    },
+    {
+      "lemma": "strong",
+      "count": 80,
+      "plane_share": 0.08751338945800127
+    },
+    {
+      "lemma": "stronger",
+      "count": 80,
+      "plane_share": 0.058368707646906874
+    },
+    {
+      "lemma": "stuck",
+      "count": 80,
+      "plane_share": 0.045398724698964596
+    },
+    {
+      "lemma": "stunted",
+      "count": 37,
+      "plane_share": 0.01937683971920436
+    },
+    {
+      "lemma": "stupid",
+      "count": 80,
+      "plane_share": 0.008797812712395117
+    },
+    {
+      "lemma": "successful",
+      "count": 77,
+      "plane_share": 0.07068478872490447
+    },
+    {
+      "lemma": "suffocated",
+      "count": 80,
+      "plane_share": 0.041632551975680006
+    },
+    {
+      "lemma": "suicidal",
+      "count": 61,
+      "plane_share": 0.06173441859713536
+    },
+    {
+      "lemma": "super",
+      "count": 80,
+      "plane_share": 0.03425076820304898
+    },
+    {
+      "lemma": "supercharged",
+      "count": 80,
+      "plane_share": 0.05488948463851681
+    },
+    {
+      "lemma": "supported",
+      "count": 80,
+      "plane_share": 0.06912714659426958
+    },
+    {
+      "lemma": "sure",
+      "count": 80,
+      "plane_share": 0.010751422651756222
+    },
+    {
+      "lemma": "surreal",
+      "count": 80,
+      "plane_share": 0.019509933458661047
+    },
+    {
+      "lemma": "sweet",
+      "count": 71,
+      "plane_share": 0.028613866162706864
+    },
+    {
+      "lemma": "sympathy",
+      "count": 76,
+      "plane_share": 0.016436269218638822
+    },
+    {
+      "lemma": "taken",
+      "count": 80,
+      "plane_share": 0.003826998546591346
+    },
+    {
+      "lemma": "terrible",
+      "count": 80,
+      "plane_share": 0.03007855919671604
+    },
+    {
+      "lemma": "thankful",
+      "count": 80,
+      "plane_share": 0.14558490258721912
+    },
+    {
+      "lemma": "threatened",
+      "count": 80,
+      "plane_share": 0.043696533360930725
+    },
+    {
+      "lemma": "thrown",
+      "count": 72,
+      "plane_share": 0.0016131675087638522
+    },
+    {
+      "lemma": "torn",
+      "count": 80,
+      "plane_share": 0.016120961730426688
+    },
+    {
+      "lemma": "touched",
+      "count": 42,
+      "plane_share": 0.07610753541648704
+    },
+    {
+      "lemma": "transformed",
+      "count": 31,
+      "plane_share": 0.04861783230287175
+    },
+    {
+      "lemma": "trapped",
+      "count": 80,
+      "plane_share": 0.04442417775245705
+    },
+    {
+      "lemma": "traumatic",
+      "count": 55,
+      "plane_share": 0.05898046515737463
+    },
+    {
+      "lemma": "traumatized",
+      "count": 80,
+      "plane_share": 0.05593034215529255
+    },
+    {
+      "lemma": "tremendous",
+      "count": 44,
+      "plane_share": 0.022810740479667645
+    },
+    {
+      "lemma": "tricked",
+      "count": 80,
+      "plane_share": 0.006308309976715191
+    },
+    {
+      "lemma": "trusted",
+      "count": 46,
+      "plane_share": 0.023159256188384766
+    },
+    {
+      "lemma": "twisted",
+      "count": 47,
+      "plane_share": 0.0046431872566028995
+    },
+    {
+      "lemma": "ugly",
+      "count": 80,
+      "plane_share": 0.034279151075441175
+    },
+    {
+      "lemma": "unappreciated",
+      "count": 80,
+      "plane_share": 0.025381324846835474
+    },
+    {
+      "lemma": "unattractive",
+      "count": 80,
+      "plane_share": 0.03102435679736313
+    },
+    {
+      "lemma": "uncertain",
+      "count": 41,
+      "plane_share": 0.05852137913809648
+    },
+    {
+      "lemma": "uncomfortable",
+      "count": 80,
+      "plane_share": 0.019811124106142348
+    },
+    {
+      "lemma": "undermined",
+      "count": 80,
+      "plane_share": 0.02823202869934737
+    },
+    {
+      "lemma": "understood",
+      "count": 80,
+      "plane_share": 0.053302462527067884
+    },
+    {
+      "lemma": "undervalued",
+      "count": 80,
+      "plane_share": 0.020896339457731845
+    },
+    {
+      "lemma": "underwhelmed",
+      "count": 36,
+      "plane_share": 0.003214612449709788
+    },
+    {
+      "lemma": "undesirable",
+      "count": 80,
+      "plane_share": 0.023186212350708797
+    },
+    {
+      "lemma": "uneasy",
+      "count": 80,
+      "plane_share": 0.023191348203252554
+    },
+    {
+      "lemma": "unfair",
+      "count": 80,
+      "plane_share": 0.03215638333866871
+    },
+    {
+      "lemma": "unfit",
+      "count": 49,
+      "plane_share": 0.016911173049557165
+    },
+    {
+      "lemma": "unfulfilled",
+      "count": 80,
+      "plane_share": 0.03912496807923172
+    },
+    {
+      "lemma": "ungrateful",
+      "count": 80,
+      "plane_share": 0.001536474839244332
+    },
+    {
+      "lemma": "unhappy",
+      "count": 80,
+      "plane_share": 0.03200312984511498
+    },
+    {
+      "lemma": "unimportant",
+      "count": 80,
+      "plane_share": 0.023786372359338975
+    },
+    {
+      "lemma": "uninspired",
+      "count": 47,
+      "plane_share": 0.0675603878781455
+    },
+    {
+      "lemma": "unloved",
+      "count": 57,
+      "plane_share": 0.03872154243662797
+    },
+    {
+      "lemma": "unmotivated",
+      "count": 80,
+      "plane_share": 0.09812957584929737
+    },
+    {
+      "lemma": "unsafe",
+      "count": 80,
+      "plane_share": 0.055957627253572076
+    },
+    {
+      "lemma": "unsettled",
+      "count": 80,
+      "plane_share": 0.03594008617722969
+    },
+    {
+      "lemma": "unstoppable",
+      "count": 68,
+      "plane_share": 0.033950836140589274
+    },
+    {
+      "lemma": "unwanted",
+      "count": 44,
+      "plane_share": 0.039681921936485176
+    },
+    {
+      "lemma": "unworthy",
+      "count": 80,
+      "plane_share": 0.020294167609005997
+    },
+    {
+      "lemma": "uplifted",
+      "count": 80,
+      "plane_share": 0.15349222578149563
+    },
+    {
+      "lemma": "upset",
+      "count": 80,
+      "plane_share": 0.12361378971090246
+    },
+    {
+      "lemma": "used",
+      "count": 80,
+      "plane_share": 0.012037788641872724
+    },
+    {
+      "lemma": "useful",
+      "count": 43,
+      "plane_share": 0.017207349643849675
+    },
+    {
+      "lemma": "useless",
+      "count": 80,
+      "plane_share": 0.028886492132726156
+    },
+    {
+      "lemma": "validated",
+      "count": 80,
+      "plane_share": 0.01432885446618315
+    },
+    {
+      "lemma": "valuable",
+      "count": 78,
+      "plane_share": 0.0190746894074595
+    },
+    {
+      "lemma": "valued",
+      "count": 80,
+      "plane_share": 0.06187163185352509
+    },
+    {
+      "lemma": "vibrant",
+      "count": 46,
+      "plane_share": 0.17533010553168785
+    },
+    {
+      "lemma": "vile",
+      "count": 80,
+      "plane_share": 0.012038124622211922
+    },
+    {
+      "lemma": "vindicated",
+      "count": 80,
+      "plane_share": 0.0363790138605174
+    },
+    {
+      "lemma": "violated",
+      "count": 80,
+      "plane_share": 0.012710067024134844
+    },
+    {
+      "lemma": "violent",
+      "count": 80,
+      "plane_share": 0.05221974373363061
+    },
+    {
+      "lemma": "void",
+      "count": 80,
+      "plane_share": 0.029854323695214856
+    },
+    {
+      "lemma": "vulnerable",
+      "count": 80,
+      "plane_share": 0.05715692257932939
+    },
+    {
+      "lemma": "wanted",
+      "count": 77,
+      "plane_share": 0.02836699481837669
+    },
+    {
+      "lemma": "warm",
+      "count": 78,
+      "plane_share": 0.13198251056850205
+    },
+    {
+      "lemma": "weak",
+      "count": 80,
+      "plane_share": 0.10509107414166773
+    },
+    {
+      "lemma": "weary",
+      "count": 62,
+      "plane_share": 0.13771402490136672
+    },
+    {
+      "lemma": "weird",
+      "count": 49,
+      "plane_share": 0.01654136140569799
+    },
+    {
+      "lemma": "welcome",
+      "count": 80,
+      "plane_share": 0.054009175910759086
+    },
+    {
+      "lemma": "welcomed",
+      "count": 45,
+      "plane_share": 0.046832157450505216
+    },
+    {
+      "lemma": "wistful",
+      "count": 80,
+      "plane_share": 0.00011200253860046362
+    },
+    {
+      "lemma": "withdrawn",
+      "count": 80,
+      "plane_share": 0.08781551840468059
+    },
+    {
+      "lemma": "wonderful",
+      "count": 80,
+      "plane_share": 0.14701063085020497
+    },
+    {
+      "lemma": "worn",
+      "count": 80,
+      "plane_share": 0.08260217227838247
+    },
+    {
+      "lemma": "worried",
+      "count": 80,
+      "plane_share": 0.13081859321072706
+    },
+    {
+      "lemma": "worse",
+      "count": 80,
+      "plane_share": 0.014033913463944449
+    },
+    {
+      "lemma": "worst",
+      "count": 80,
+      "plane_share": 0.014814472391035198
+    },
+    {
+      "lemma": "worthless",
+      "count": 80,
+      "plane_share": 0.04395595384739315
+    },
+    {
+      "lemma": "worthwhile",
+      "count": 61,
+      "plane_share": 0.0262661509565207
+    },
+    {
+      "lemma": "worthy",
+      "count": 78,
+      "plane_share": 0.01182564322570135
+    },
+    {
+      "lemma": "wrecked",
+      "count": 80,
+      "plane_share": 0.026738803642932848
+    },
+    {
+      "lemma": "wrong",
+      "count": 54,
+      "plane_share": 0.014825832552451594
+    },
+    {
+      "lemma": "wronged",
+      "count": 41,
+      "plane_share": 0.020531221659249806
+    }
+  ]
+}
