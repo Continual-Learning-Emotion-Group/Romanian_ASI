@@ -81,11 +81,6 @@ def main() -> None:
         ax.annotate("", xy=(1.02 * x, 1.02 * y), xytext=(-1.02 * x, -1.02 * y),
                     arrowprops=dict(arrowstyle="<->", color=FAINT, lw=0.7,
                                     shrinkA=0.0, shrinkB=0.0), zorder=1)
-    for x, y, text in ((0.52, 0.062, "pleasant"), (-0.52, 0.062, "unpleasant"),
-                       (0.0, 0.30, "high arousal"), (0.0, -0.30, "low arousal")):
-        ax.text(x, y, text, ha="center", va="center", fontsize=6.0, color=MUTED,
-                style="italic", zorder=2,
-                bbox=dict(facecolor="white", edgecolor="none", pad=0.6))
 
     # Alternate label radii within each pole band so horizontal text can't collide.
     pole_parity: dict[bool, int] = {}
@@ -114,7 +109,15 @@ def main() -> None:
     ax.set_xlim(-1.66, 1.66)
     ax.set_ylim(-1.46, 1.46)
     ax.set_aspect("equal")
-    ax.axis("off")
+    # Same axis labeling as the other circumplex figures in the paper.
+    ax.set_xlabel(r"Valence  (unpleasant $\rightarrow$ pleasant)", fontsize=9)
+    ax.set_ylabel(r"Arousal  (deactivated $\rightarrow$ activated)", fontsize=9)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.tick_params(axis="both", which="both", top=False, right=False,
+                   left=False, bottom=False)
+    for spine in ax.spines.values():
+        spine.set_visible(False)
     fig.tight_layout(pad=0.1)
     figures = PACKAGE / "figures"
     figures.mkdir(exist_ok=True)
