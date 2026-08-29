@@ -11,7 +11,7 @@ focuses on the latter — it summarizes the accompanying blog post,
 Space*](https://alexjerpelea.com/circumplex.html): how a multilingual LLM
 represents fine-grained affective states in its activation space.
 
-## The benchmark in one minute
+## The benchmark
 
 Two definitions first. An **emotion**, in the sense used by emotion detection
 datasets, is one of a small, predetermined label set — the Ekman or Plutchik
