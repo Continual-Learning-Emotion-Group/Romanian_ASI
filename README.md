@@ -1,1211 +1,143 @@
-# Romanian ASI Benchmark
-
-Unified pipeline for constructing the Romanian ASI (Affective State Identification) benchmark.
-
-All pipeline code lives in `pipeline/`. Paths in this document are relative to the repo root.
-Old experiments and scripts are archived in `deprecated/`.
-
-## Table of Contents
-
-1. [Seed Construction (`seed/`)](#seed-construction-seed)
-2. [Data Collection (`collect/`)](#data-collection-collect)
-3. [Shared Utilities (`utils/`)](#shared-utilities-utils)
-4. [Seed Enrichment (`seed_enrichment/`)](#seed-enrichment-seed_enrichment)
-5. [Pattern Extraction (`extract_match/`)](#pattern-extraction-extract_match)
-6. [Embedding Extraction (`extract_embed/`)](#embedding-extraction-extract_embed--experimental) — EXPERIMENTAL
-7. [LLM Validation (`llm_validation/`)](#llm-validation-llm_validation)
-8. [Human Evaluation (`human_eval/`)](#human-evaluation-human_eval)
-   - [Benchmark Construction](#benchmark-construction-build_benchmarkpy)
-9. [Zero-Shot Evaluation (`eval/`)](#zero-shot-evaluation-eval)
-10. [Fine-Tuning](#fine-tuning)
-    - [mT5-Large SFT (`ft_mt5/`)](#mt5-large-sft-ft_mt5)
-    - [Qwen3.5-4B Multilingual SFT (`ft_qwen_mixed/`)](#qwen35-4b-multilingual-sft-ft_qwen_mixed)
-    - [Qwen3.5-4B Day-by-Day Sequential SFT (`ft_qwen_day_by_day/`)](#qwen35-4b-day-by-day-sequential-sft-ft_qwen_day_by_day)
-11. [External Data (`seed/`)](#external-data-seed)
-
-```
-pipeline/
-├── data/                              # Pipeline outputs
-│   ├── merged_corpus.jsonl            # Unified corpus (106K records)
-│   ├── enriched_seed.json             # Small-dataset enriched seed (377 words)
-│   ├── enriched_seed_merged.json      # Final merged enriched seed (524 words)
-│   ├── fulg_enrichment_filtered.json  # FULG enrichment: 135 new nouns (manually filtered)
-│   ├── filmot_enrichment_filtered.json # Filmot enrichment: 4 new nouns (manually filtered)
-│   ├── filmot_raw.jsonl               # Raw filmot subtitle hits (88K records)
-│   ├── pattern_candidates_small.jsonl  # Extraction from small datasets (5.2K candidates)
-│   ├── pattern_candidates_filmot.jsonl # Extraction from Filmot API (29K candidates)
-│   ├── pattern_candidates_filmot_pp.jsonl    # Post-processed: Stanza 1st-person trimming
-│   ├── pattern_candidates_filmot_light.jsonl # Post-processed: light (>>, periods, fragments)
-│   ├── embedding_asi_candidates.jsonl # Embedding extraction raw output (all hits >= 0.75)
-│   ├── embedding_asi_candidates_filtered.jsonl # Filtered (bad noun anchors removed)
-│   ├── candidates_unified.jsonl       # All candidates merged (pre-validation)
-│   ├── candidates_validated.jsonl     # LLM-validated candidates (with llm_affect_score 0-3)
-│   ├── candidates_validated_partial.jsonl # First 20K validated chunk
-│   ├── human_eval_sample.jsonl        # 200 stratified samples for human eval
-│   ├── human_eval_mturk.csv           # MTurk-ready CSV (HTML-encoded diacritics)
-│   ├── human_eval_results.json        # Agreement metrics + per-item scores
-│   ├── benchmark_ro_asi.jsonl         # Final benchmark (73K, LLM >= 3)
-│   ├── benchmark_ro_asi.stats.json    # Benchmark distribution stats
-│   ├── splits/                        # Train/test splits for evaluation
-│   │   ├── train.jsonl                # Training split (50,496 samples)
-│   │   ├── test.jsonl                 # Test split (2,658 samples)
-│   │   └── test_translated_en.jsonl   # Test translated to English (NLLB-200)
-│   ├── eval_results/                  # Zero-shot evaluation outputs
-│   │   ├── *_results.jsonl            # Per-sample predictions (9 model×lang combos)
-│   │   └── *_metrics.json             # Aggregate metrics per model
-│   └── ...                            # Provenance files, checkpoints, stats
-├── utils/                             # Shared utilities
-│   ├── text_utils.py                  # Diacritics normalization, sentence splitting
-│   ├── inflect.py                     # Lemma → inflected forms (MULTEXT-East)
-│   ├── pattern_matcher.py             # 20 "I feel" patterns (1st person sg), PatternMatcher
-│   ├── corpus_reader.py               # Unified JSONL reader + FULG streamer
-│   └── stoplists.py                   # Minimal stoplist, gender inference
-├── seed/                              # Seed construction
-│   ├── bridge.py                      # Bridge-only seed (229 words)
-│   ├── merged.py                      # Bridge + old seed merged (375 words)
-│   ├── enriched.py                    # Loader for enriched seed
-│   ├── test_wn_affect_bridge.py       # Bridge script (RoEmoLex × WN-Affect)
-│   ├── wn_affect_bridge_results.json  # Raw bridge output (398 words)
-│   ├── wn-affect-1.1/                 # WordNet-Affect data
-│   ├── wn-mappings/                   # WN 1.6→3.0 offset mappings
-│   └── multext-east/                  # Romanian morphological lexicon
-├── collect/                           # Data collection
-│   ├── merge_small.py                 # Merge 6 small datasets
-│   ├── stream_fulg.py                 # Stream from FULG (trigger-filtered)
-│   ├── stream_filmot.py               # Stream from Filmot API (parallel workers)
-│   └── small_datasets/                # Raw source data
-├── extract_match/                     # Pattern-based ASI candidate extraction
-│   ├── run.py                         # Small datasets → pattern_candidates_small.jsonl
-│   ├── filmot.py                      # Filmot API collect+filter → pattern_candidates_filmot.jsonl
-│   ├── postprocess_filmot.py          # Stanza-based: trim to 1st-person context (_pp.jsonl)
-│   ├── postprocess_filmot_light.py    # Light: split >>, add periods, trim fragments (_light.jsonl)
-│   ├── fulg.py                        # FULG streaming extract → pattern_candidates_fulg.jsonl
-│   └── unify.py                       # Merge all sources → candidates_unified.jsonl
-├── extract_embed/                     # Embedding similarity ASI extraction
-│   ├── run.py                         # Main pipeline (Modal GPU + E5-base)
-│   ├── modal_embeddings.py            # Modal GPU embedder class
-│   ├── filter_results.py              # Post-processing: remove bad-anchor hits
-│   └── ANALYSIS.md                    # Experiment results & conclusions
-├── llm_validation/                    # LLM-based verification (Qwen 3.5-9B)
-│   ├── config.py                      # Model name, prompt template, scale definitions
-│   ├── parse.py                       # Prompt building + response parsing
-│   └── modal_validate.py              # Modal A100-80GB validation runner
-├── human_eval/                        # Human annotation & agreement analysis
-│   ├── sample.py                      # Stratified sampling (50 per LLM score bin)
-│   ├── prepare_csv.py                 # Convert JSONL → MTurk CSV (HTML-encoded)
-│   ├── mturk_interface.html           # Romanian MTurk annotation interface
-│   ├── agreement.py                   # Inter-annotator agreement + LLM correlation
-│   └── build_benchmark.py             # Final benchmark construction (LLM >= 3)
-├── eval/                              # Zero-shot evaluation pipeline
-│   ├── split.py                       # Train/test split (dedup + stratified)
-│   ├── metrics.py                     # Acc@k, MRR, contextual similarity
-│   ├── eval_mlm.py                    # MLM evaluation (encoder models)
-│   ├── eval_generative.py             # Generative evaluation (mT5, vLLM)
-│   ├── translate.py                   # NLLB-200 RO→EN translation
-│   └── report.py                      # Comparison tables (markdown/LaTeX)
-├── ft_mt5/                            # mT5-large SFT (MASIVE-style)
-│   ├── README.md                      # Full setup + run instructions (seahorse)
-│   ├── RESULTS.md                     # Training results
-│   ├── resplit.py                     # 85/5/10 train/val/test resplit
-│   ├── truncate.py                    # Sentence-level truncation to 512 mT5 tokens
-│   ├── build_training_data.py         # [MASK] → <extra_id_0> format
-│   ├── config.py                      # TrainConfig (hyperparameters)
-│   └── train.py                       # HF Seq2SeqTrainer loop
-├── ft_qwen_mixed/                     # Qwen3.5-4B multilingual SFT (scrambled)
-│   ├── prepare_data.py                # Build 5-language DatasetDict from CSVs
-│   ├── prompts.py                     # Chat template + loss masking
-│   ├── train.py                       # HF Trainer + DeepSpeed ZeRO-3
-│   ├── eval_sft.py                    # Per-language test evaluation
-│   └── configs/
-│       ├── qwen3_5_4b_full_ft.yaml    # Training config (multi-GPU)
-│       └── deepspeed_zero3.json       # DeepSpeed ZeRO-3 config
-├── ft_qwen_day_by_day/                # Qwen3.5-4B sequential per-language SFT
-│   ├── RUN_LOG.md                     # 5×5 results matrix + lessons learned
-│   ├── prepare_data.py                # Per-language DatasetDict splits
-│   ├── prompts.py                     # Chat template + loss masking
-│   ├── train.py                       # Outer per-day training loop
-│   ├── eval_sft.py                    # Per-day eval on all 5 languages
-│   ├── requirements-tigerfish.txt     # Authoritative pin list (not root reqs)
-│   └── configs/
-│       └── qwen3_5_4b_day_by_day.yaml # Single-GPU config (no DeepSpeed)
-└── seed_enrichment/                   # Seed enrichment
-    ├── run.py                         # CLI: runs both methods on any source
-    ├── bootstrapping.py               # MASIVE-style "I feel X and Y"
-    ├── distributional.py              # "un sentiment de X" discovery
-    ├── merge_results.py               # Combine bootstrap + distributional per source
-    └── merge_all_sources.py           # Merge original seed + all filtered results
-```
-
-## Seed Construction (`seed/`)
-
-The seed is a curated list of Romanian lemmas (masculine singular adjectives,
-base-form nouns, adverbs) that describe **affective states** — how someone
-feels internally. These words are used downstream by the pattern matcher to
-find "I feel [X]" expressions in Romanian text.
-
-### Method
-
-The seed was built in two stages, then merged.
-
-**Stage 1: RoEmoLex × WordNet-Affect bridge** (`seed/bridge.py`, 229 words)
-
-RoEmoLex V3 is a Romanian emotion lexicon with ~9K words, but most entries are
-emotion-*associated* (e.g., "accident" tagged fear/sadness) rather than
-emotion-*describing*. To filter it down to genuine affective states, we bridged
-it with WordNet-Affect 1.1:
-
-1. WordNet-Affect labels ~798 WordNet synsets as affective (emotions, moods,
-   traits, etc.), but uses WN 1.6 offsets
-2. RoEmoLex links each word to a WN 3.0 synset ID
-3. UPC/TALP mapping files (`seed/wn-mappings/`) convert WN 1.6 → 3.0 offsets
-4. Join: if a RoEmoLex word's WN 3.0 synset appears in WordNet-Affect → keep
-
-This produced 398 candidate words, which were then manually reviewed:
-- 199 passed (genuine affective states)
-- 156 failed (causative adjectives like "enervant", external qualities like
-  "admirabil", event nouns like "tortură", social concepts like "fraternitate")
-- 43 questionable
-- 33 salvaged from fails by converting causative forms to felt-state
-  participles (e.g., "enervant" → "enervat", "cutremurător" → "cutremurat")
-
-Bridge script: `seed/test_wn_affect_bridge.py`
-Bridge results: `seed/wn_affect_bridge_results.json`
-
-**Stage 2: Merge with old curated seed** (`seed/merged.py`, 375 words)
-
-The previous hand-curated seed (`scripts/ro_asi/curated_affective_states.py`,
-511 entries including gender/diacritics variants) covered many common words
-that the bridge missed — either because they aren't in RoEmoLex at all
-(e.g., "stresat", "obosit") or have no valid WN synset ID (e.g., "dezamăgit",
-"plictisit" marked as DEX).
-
-To merge:
-1. Deduplicated old seed to base lemmas (removed feminine forms, diacritics
-   variants)
-2. Removed words that failed quality review (sigur, voie, chef, violent,
-   agresiv, beligerant, confident, etc.)
-3. Added remaining 148 words that weren't already in the bridge seed
-
-### Output files
-
-| File | Words | Description |
-|------|-------|-------------|
-| `seed/bridge.py` | 229 | Bridge-only seed (WN-Affect validated) |
-| `seed/merged.py` | 375 | Bridge + old curated seed (recommended) |
-
-Run with `python -m pipeline.seed.bridge` or `python -m pipeline.seed.merged`
-to export to JSON.
-
-### Quality criteria
-
-Every word in both seeds was checked against:
-
-1. **Pattern fit** — must work grammatically in Romanian "I feel" patterns:
-   - Adjectives: "mă simt [X]", "sunt [X]"
-   - Nouns: "mi-e [X]", "am [X]", "simt [X]"
-   - Adverbs: "mă simt [X]"
-
-2. **Affective state** — must describe internal felt experience:
-   - Yes: emotions, moods, bodily-felt states, psychological states
-   - No: epistemic states, personality traits, external qualities,
-     causative/stimulus adjectives, social roles, events/situations
-
-## Data Collection (`collect/`)
-
-### Small Datasets (`collect/merge_small.py`)
-
-Merges 6 Romanian NLP datasets into `data/merged_corpus.jsonl` (106K records)
-with a unified schema. Deduplicates by MD5 text hash.
-
-| Dataset | Records | Type |
-|---------|---------|------|
-| LaRoSeDa | 14,982 | Product reviews (sentiment) |
-| PoPreRo | 28,103 | News articles (popularity) |
-| RED v1 | 4,036 | Tweets, single-label emotion (5 classes) |
-| RED v2 | 5,199 | Tweets, multi-label emotion (7 classes) |
-| RoSent | 27,338 | Reviews (sentiment, binary) |
-| RedditRoAP | 26,269 | Reddit posts (authorship profiling) |
-
-Run with `python -m pipeline.collect.merge_small`.
-
-Output schema:
-```json
-{"id": "source_123", "text": "...", "source": "laroseda", "split": "train", "original_labels": {...}}
-```
-
-Raw datasets live in `collect/small_datasets/` (not checked into git).
-
-### FULG (`collect/stream_fulg.py`)
-
-Streams records from the FULG dataset (150B tokens, 289GB Romanian web text)
-via HuggingFace Datasets in streaming mode. By default, filters by trigger words
-from the pattern matcher to keep only records likely to contain "I feel" patterns.
-
-Run with `python -m pipeline.collect.stream_fulg --max-records 50000`.
-
-Options: `--min-language-score 0.8`, `--min-text-length 100`, `--no-trigger-filter`.
-
-### Filmot API (`collect/stream_filmot.py`)
-
-Streams raw subtitle hits from the Filmot API (RapidAPI) by searching for
-Romanian "I feel" trigger phrases in YouTube subtitles. Queries are sourced
-from `utils/pattern_matcher.get_filmot_queries()` (single source of truth).
-No pattern matching — saves raw subtitle context for downstream filtering.
-
-Supports checkpoint/resume for long collection runs.
-
-Requires: `pip install filmot python-dotenv` and `RAPIDAPI_KEY` in `.env`.
-
-```bash
-# Collect filmot data (run before enrichment)
-python -m pipeline.collect.stream_filmot --max-hits 100000
-python -m pipeline.collect.stream_filmot --max-hits 100000 --resume          # resume interrupted run
-python -m pipeline.collect.stream_filmot --max-pages-per-query 200           # deeper pagination
-python -m pipeline.collect.stream_filmot --workers 8                         # parallel query workers
-python -m pipeline.collect.stream_filmot --no-secondary                      # skip no-diacritic variants
-```
-
-## Shared Utilities (`utils/`)
-
-### Pattern Matcher (`utils/pattern_matcher.py`)
-
-20 Romanian "I feel" regex patterns (first person singular only). Auto-expands
-lemma seeds to masc/fem singular + diacritic variants via MULTEXT-East.
-
-New patterns added: `o să mă simt` (colloquial future), `o să fiu` (colloquial
-future of "to be"), `m-aș simți` (conditional), `să mă simt` (subjunctive),
-`mă fac` (reflexive "I become").
-
-Also exports `get_trigger_words()` and `get_filmot_queries()` for seed
-enrichment collection, and `get_filmot_queries_all()` for extraction (adds
-"sunt", "eram", "am fost", "mă fac", "aveam" triggers).
-
-### Inflection (`utils/inflect.py`)
-
-Expands lemmas to masculine + feminine singular forms for "I feel" patterns
-using MULTEXT-East (428K entries). E.g., `fericit` → `{fericit, fericită, fericita}`.
-No plurals, articles, oblique/vocative — only forms that appear after "mă simt".
-
-### Corpus Reader (`utils/corpus_reader.py`)
-
-Unified JSONL reader: `iter_corpus(data_dir)` yields `(id, text, source)` from
-all `*.jsonl` files in `pipeline/data/`. Handles different text field names
-(`text`, `full_context`). Optional trigger word pre-filter.
-
-## Seed Enrichment (`seed_enrichment/`)
-
-Discovers new seed words from text data via two methods, then manually filters
-results. Supports three data sources: small datasets (JSONL), FULG (streaming),
-and Filmot (JSONL from API).
-
-```bash
-# Run enrichment on a specific source
-python -m pipeline.seed_enrichment.run                          # small datasets only
-python -m pipeline.seed_enrichment.run --source filmot          # filmot JSONL only
-python -m pipeline.seed_enrichment.run --source fulg            # FULG streaming only
-python -m pipeline.seed_enrichment.run --source all             # small + FULG + filmot
-python -m pipeline.seed_enrichment.run --source fulg --fulg-max-records 500000
-python -m pipeline.seed_enrichment.run --source filmot --filmot-path /path/to/file.jsonl
-
-# After manually filtering results into *_enrichment_filtered.json files,
-# merge everything into the final enriched seed:
-python -m pipeline.seed_enrichment.merge_all_sources
-```
-
-### Method 1: Bootstrapping (`bootstrapping.py`)
-
-MASIVE-style conjunction mining: finds "mă simt X și Y" patterns where X is a
-known seed word and Y is a candidate. Uses only unambiguous "simt" verb forms
-(no "sunt"/"eram" — too ambiguous with 3rd person). Iterative (4 rounds) for
-small datasets, single-pass for streaming/JSONL sources. Starts from the
-375-word merged seed. Validates by co-occurrence threshold, gender agreement,
-and stopword filtering.
-
-**Results:** Bootstrapping produced no usable words across all three sources.
-On small datasets (106K records): only 1 word accepted. On FULG (500K records):
-10 accepted, all garbage (conjunctions, verbs: "încerc", "iar", "deși").
-On filmot (88K records): 28 accepted, all garbage ("simt", "știi", "mulțumesc").
-The method finds many conjunction matches but the Y words are rarely affective
-states — co-occurring words tend to be filler (adverbs, verbs, conjunctions).
-
-### Method 2: Distributional Mining (`distributional.py`)
-
-Discovers emotion words via explicit labeling patterns (no seed needed):
-"un sentiment de X", "sentimentul de X", "emoție de X", "o senzație de X",
-"copleșit de X". Primarily finds nouns. Excluded patterns that produced too
-much noise: "stare de" (matches "starea de urgență"), "plin de" (matches
-"plin de gauri"), "cuprins de" (matches "cuprinsă de flăcări").
-
-**Results:** Distributional mining was the productive method. FULG (500K records)
-found 570 raw candidates, manually filtered to 135 genuine affective nouns.
-Filmot found 13 candidates, filtered to 4 new nouns. Small datasets found 20
-candidates, filtered to 2.
-
-### Filtering
-
-Raw enrichment results contain significant noise: articulated forms (moartea,
-dragostea), plural forms (emoțiile, frici), garbled diacritics (fricã, aparteneþã),
-foreign words (doom, bukkake), wrong parts of speech, and non-affective concepts.
-Each source's results are manually reviewed and saved to `*_enrichment_filtered.json`
-files with full documentation of what was removed and why.
-
-### Merging (`merge_all_sources.py`)
-
-After filtering, `merge_all_sources.py` unions the original seed with all
-filtered results. First source to introduce a word wins. No cross-source
-validation.
-
-```bash
-python -m pipeline.seed_enrichment.merge_all_sources
-```
-
-### Output files
-
-| File | Description |
-|------|-------------|
-| `data/enriched_seed.json` | Small-dataset enrichment only (377 words) |
-| `data/fulg_enrichment_filtered.json` | FULG: 135 new nouns (manually filtered, with metadata) |
-| `data/filmot_enrichment_filtered.json` | Filmot: 4 new nouns (manually filtered, with metadata) |
-| `data/enriched_seed_merged.json` | **Final merged seed: 524 words** (193 adj + 304 nouns + 27 adv) |
-| `data/bootstrap_*_provenance.json` | Raw bootstrapping results per source |
-| `data/distributional_*_discovered.json` | Raw distributional results per source |
-
-The final enriched seed is loadable via `pipeline.seed.enriched.build_enriched_seed()`.
-
-### Results summary
-
-| Source | Records | Bootstrapping | Distributional | After filtering |
-|--------|---------|---------------|----------------|-----------------|
-| Small datasets | 106K | 1 word | 20 candidates → 2 new | +2 nouns |
-| FULG | 500K | 0 usable | 570 candidates → 135 new | +134 nouns |
-| Filmot | 88K | 0 usable | 13 candidates → 4 new | +3 nouns |
-| **Total** | | | | **375 → 524 words** |
-
-Note: new words are stored without diacritics (normalized form) because the
-distributional mining operates on normalized text. This is intentional — the
-pattern matcher normalizes during matching anyway, so diacritic-free storage
-avoids errors from incorrect diacritic restoration.
-
-## Pattern Extraction (`extract_match/`)
-
-Extracts ASI candidates from text corpora using the enriched seed (524 words)
-and 20 "I feel" regex patterns. Each hit = one pattern match (trigger + seed
-word) in one text. Texts can produce multiple candidates if different patterns
-fire. Deduplication by MD5 text hash.
-
-### Small Datasets (`extract_match/run.py`)
-
-Reads `data/merged_corpus.jsonl` (106K records). Full text preserved (reviews,
-tweets, and Reddit posts are short enough).
-
-```bash
-python -m pipeline.extract_match.run                          # full extraction
-python -m pipeline.extract_match.run --max-records 1000       # quick test
-python -m pipeline.extract_match.run --sample 10              # show samples
-```
-
-Output: `data/pattern_candidates_small.jsonl`
-
-**Results** (106K records):
-- 5,227 candidates from 4,788 texts (4.5% hit rate)
-- 237 unique seed words matched
-- Top patterns: `sunt_adj_present` (3,090), `am_fost_adj_perfect` (1,001)
-- Top emotions: contentment (1,105), anticipation (928), sadness (791), joy (624)
-- Dominated by product review "sunt mulțumit/dezamăgit" from LaRoSeDa/RoSent
-
-### Filmot API (`extract_match/filmot.py`)
-
-Queries **all** trigger phrases (27 queries: existing "simt"-family + new
-"sunt", "eram", "am fost", "mă fac", "aveam") via the Filmot subtitle search
-API. Each hit is immediately filtered through PatternMatcher — only candidates
-where a seed word follows the trigger are saved. Combined collect+extract in
-one step.
-
-Query list defined in `utils/pattern_matcher.get_filmot_queries_all()`. Parallel
-workers, checkpoint/resume. The API hits a server-side pagination limit at ~102
-pages per query (500 error), which the script handles gracefully.
-
-Requires: `pip install filmot python-dotenv` and `RAPIDAPI_KEY` in `.env`.
-
-```bash
-python -m pipeline.extract_match.filmot                                     # default
-python -m pipeline.extract_match.filmot --workers 8 --max-hits 1000000      # full run
-python -m pipeline.extract_match.filmot --resume                            # resume
-python -m pipeline.extract_match.filmot --max-pages-per-query 2             # quick test
-```
-
-Output: `data/pattern_candidates_filmot.jsonl`
-
-**Results** (200 pages/query, 8 workers):
-- 331K hits scanned, 29,452 candidates saved (8.9% hit rate)
-- 364 unique seed words matched
-- Top patterns: `ma_simt_present` (10,071), `sunt_adj_present` (5,656),
-  `eram_adj_imperfect` (2,845)
-- Top emotions: joy (9,791), sadness (7,282), negative-fear (1,847)
-- Text is ~250 chars of YouTube auto-caption context (no periods, speaker
-  changes marked with `>>`, ~96% auto-generated subtitles)
-
-### Filmot Post-Processing
-
-YouTube auto-captions lack punctuation and may contain multiple speakers. Two
-post-processing scripts clean up the filmot candidates. Both preserve the
-original text and write to separate output files.
-
-**Heavy: Stanza-based 1st-person trimming** (`postprocess_filmot.py`)
-
-Uses Stanza NLP (tokenizer + POS + dependency parser) to detect the grammatical
-person of each sentence's root verb. Finds the anchor sentence (containing the
-match), expands outward keeping 1st-person and unknown sentences, stops at 2nd
-or 3rd person boundaries.
-
-```bash
-python -m pipeline.extract_match.postprocess_filmot                    # full run (~16 min)
-python -m pipeline.extract_match.postprocess_filmot --max-records 200  # quick test
-```
-
-Output: `data/pattern_candidates_filmot_pp.jsonl`
-- Each record has `text_pp` (post-processed) and `text_original`
-- 71% of records get trimmed (avg 5.0 → 2.7 sentences, 220 → 148 chars)
-- Requires: `pip install stanza` (downloads ~200MB Romanian model on first run)
-
-**Light: rule-based cleanup** (`postprocess_filmot_light.py`)
-
-No ML — instant processing:
-1. Remove `#tags#` (music/sound markers like `#Muzică#`)
-2. Split on `>>` (speaker change markers) — keep segment with match
-3. Add periods at sentence boundaries (capitalization-based, skips proper noun
-   sequences and words after prepositions)
-4. Remove leading fragment if first word is not capitalized (incomplete sentence
-   from API context window)
-
-```bash
-python -m pipeline.extract_match.postprocess_filmot_light                    # full run (<1 sec)
-python -m pipeline.extract_match.postprocess_filmot_light --max-records 200  # quick test
-```
-
-Output: `data/pattern_candidates_filmot_light.jsonl`
-- Each record has `text_light` (post-processed) and `text_original`
-
-### FULG (`extract_match/fulg.py`)
-
-Streams records from the FULG dataset (150B tokens) via HuggingFace Datasets,
-applies PatternMatcher with the enriched seed. Extracts sentence-level context
-(configurable window around the match). Supports parallel shard workers and
-checkpoint/resume.
-
-```bash
-python -m pipeline.extract_match.fulg                                          # default (100K samples)
-python -m pipeline.extract_match.fulg --max-samples 200000 --workers 4         # more, parallel
-python -m pipeline.extract_match.fulg --resume                                 # resume
-python -m pipeline.extract_match.fulg --max-records 10000 --max-samples 100    # quick test
-```
-
-Output: `data/pattern_candidates_fulg.jsonl`
-
-**Results** (2.8M records scanned):
-- 100,000 candidates (3.6% hit rate)
-- Top patterns: `sunt_adj_present` (48,646), `mie_short` (16,071),
-  `am_fost_adj_perfect` (8,779)
-- Top source categories: other (67.7%), blog (19.6%), news (9.3%)
-- FULG-specific fields: `source_domain`, `source_category`, `url`, `title`,
-  `context_before`, `context_after`, `full_text_length`
-
-### Unification (`extract_match/unify.py`)
-
-Merges all extracted candidates into a single dataset with a common schema.
-Uses filmot light post-processing by default. Deduplicates by `matched_sentence`
-hash with priority: small > filmot > fulg.
-
-```bash
-python -m pipeline.extract_match.unify                          # default (all 3 sources, filmot light)
-python -m pipeline.extract_match.unify --filmot-variant pp      # use Stanza post-processed filmot
-python -m pipeline.extract_match.unify --no-fulg                # exclude FULG
-python -m pipeline.extract_match.unify --max-per-source 10000   # cap per source
-```
-
-Output: `data/candidates_unified.jsonl`
-
-**Results**:
-- 134,657 input → 129,700 output (4,957 cross-source duplicates removed)
-- By source: small 4,905 / filmot 28,314 / FULG 96,481
-
-### Output schema
-
-All extractors share a common base schema:
-
-```json
-{
-  "id": "source_123",
-  "text": "...",
-  "matched_sentence": "Mă simt fericit",
-  "pattern_used": "ma_simt_present",
-  "pattern_category": "primary",
-  "seed_word": "fericit",
-  "seed_word_normalized": "fericit",
-  "emotion_category": ["happiness"],
-  "source": "filmot|laroseda|..."
-}
-```
-
-Filmot adds: `video_id`, `video_title`, `channel_name`, `youtube_url`,
-`view_count`.
-
-## Embedding Extraction (`extract_embed/`) — EXPERIMENTAL
-
-Attempted to find ASI expressions via semantic similarity to synthetic anchor
-sentences (all combinations of 20 "I feel" verb templates × 524 seed words).
-Used `intfloat/multilingual-e5-base` (278M params, 768-dim) on Modal T4.
-
-```bash
-python -m pipeline.extract_embed.run --dry-run                    # test without GPU
-python -m pipeline.extract_embed.run --threshold 0.75 --sample 10 # full run
-python -m pipeline.extract_embed.filter_results                   # remove bad noun anchors
-python -m pipeline.extract_embed.filter_results --min-confidence 0.90  # + threshold filter
-```
-
-### Pipeline
-
-1. Load all 106K posts from `merged_corpus.jsonl`
-2. Split into sentences (409K total) — no pre-filter, embed everything
-3. Generate 3,912 synthetic anchors ("mă simt fericit", "sunt trist", etc.)
-4. Embed anchors (`query:` prefix) + all sentences (`passage:` prefix) on Modal GPU
-5. Cosine similarity: each sentence vs all anchors, keep max
-6. Group hits by post, output one row per post with `hits` list
-
-### Results & Conclusions
-
-**The synthetic anchor approach did not work well.** Short anchors produce a very
-narrow similarity band (median ~0.836) — 99.9% of sentences pass the 0.75
-threshold. Only above 0.90 (342 hits) is there meaningful signal, and those
-are mostly near-exact matches to what regex already catches.
-
-See `extract_embed/ANALYSIS.md` for full analysis. Key findings:
-
-**New patterns discovered** (to consider adding to `pattern_matcher.py`):
-- `am rămas [adj]` / `rămân [adj]` — "Am rămas perplex"
-- `aș fi [adj]` — "Aș fi foarte recunoscător" (conditional of "a fi")
-- `să fiu [adj]` — "Să fiu mulțumită" (subjunctive of "a fi")
-- `îmi pare rău` — common regret/sympathy expression
-- `mă ia cu [noun]` — "Mă ia cu rău" (felt-state idiom)
-
-**New seed words discovered**: `special`, `rupt` (colloquial "shattered")
-
-**Recommendation**: For regex-matched corpora, pattern matching with the enriched
-seed is sufficient. If embeddings are revisited, corpus-mined anchors (real
-matched sentences) provide much better discrimination than synthetic ones.
-
-### Output schema
-
-One row per post, all qualifying sentences grouped in `hits`:
-
-```json
-{
-  "id": "reddit_roap_12345",
-  "text": "full post text",
-  "source": "merged_corpus",
-  "extraction_method": "embedding_similarity",
-  "hits": [
-    {
-      "sentence": "Mă simt foarte trist.",
-      "confidence": 0.8723,
-      "emotion_category": ["sadness"],
-      "nearest_anchor": "mă simt trist",
-      "nearest_anchor_pattern": "ma_simt_present",
-      "is_novel": true
-    }
-  ]
-}
-```
-
-### Post-processing filter (`filter_results.py`)
-
-Removes hits where a noun-only pattern (e.g., `imi_este`, `am_noun`) was paired
-with a noun not in the curated `EMOTION_NOUNS_ONLY` set. Also supports
-`--min-confidence` for threshold filtering without re-running the GPU pipeline.
-
-## LLM Validation (`llm_validation/`)
-
-Verifies whether each ASI candidate is a genuine affective state using
-Qwen/Qwen3.5-9B on Modal (A100-80GB, vLLM). MASIVE-style verification prompt
-in Romanian with 7 in-context examples.
-
-### Scoring Scale (0–3)
-
-| Score | Label | Description |
-|-------|-------|-------------|
-| 0 | Nu este o stare afectivă | Term doesn't refer to emotion/feeling/internal state |
-| 1 | Improbabil o stare afectivă | Term likely refers to something else |
-| 2 | Probabil o stare afectivă | Term likely refers to emotion/feeling/internal state |
-| 3 | Categoric o stare afectivă | Term is definitely an emotion/feeling/internal state |
-
-### Pipeline
-
-1. Loads candidates from `candidates_unified.jsonl`
-2. Truncates context to ~5000 chars centered on the matched sentence
-3. Inserts `<span>seed_word</span>` markers
-4. Formats with Qwen chat template (system + user message with 7 examples)
-5. Runs vLLM inference (temperature=0, max_tokens=8)
-6. Parses response to extract 0–3 digit
-7. Writes results with `llm_affect_score` to `candidates_validated.jsonl`
-
-Supports checkpoint/resume (20K chunks committed to Modal volume), `--shuffle`
-for randomized source mixing. Processing runs entirely on the GPU container
-(data uploaded via Modal volume) to eliminate network round-trips.
-
-```bash
-# Run on Modal
-modal run pipeline/llm_validation/modal_validate.py
-
-# Quick test (shuffled for source diversity)
-modal run pipeline/llm_validation/modal_validate.py --max-candidates 200 --shuffle
-
-# Resume from checkpoint
-modal run pipeline/llm_validation/modal_validate.py --resume --shuffle
-```
-
-### Results (129,700 candidates)
-
-| Score | Count | % | Description |
-|-------|-------|---|-------------|
-| 3 | 73,427 | 56.6% | Clearly affective |
-| 2 | 30,373 | 23.4% | Likely affective |
-| 1 | 16,348 | 12.6% | Unlikely affective |
-| 0 | 9,552 | 7.4% | Not affective |
-
-Parse failures: 0
-
-**By source (score ≥ 2 acceptance rate):**
-
-| Source | Total | Score ≥ 2 | Rate |
-|--------|-------|-----------|------|
-| FULG | 96,481 | 75,952 | 78.7% |
-| Filmot | 28,314 | 24,148 | 85.3% |
-| Small datasets | 4,905 | 3,700 | 75.4% |
-
-**By pattern (notable):**
-- `ma_simt_present`: 91% score ≥ 2 (high precision pattern)
-- `sunt_adj_present`: 77.5% score ≥ 2 (noisiest, as expected)
-- `am_noun_present`: 34.7% score ≥ 2 (most false positives)
-- `mie_short`: 91.0% score ≥ 2
-
-### Key files
-
-| File | Purpose |
-|------|---------|
-| `config.py` | Model name, prompt template, scale definitions, context window params |
-| `parse.py` | `build_prompt()` — context truncation + span insertion; `parse_response()` — digit extraction |
-| `modal_validate.py` | Modal runner: A100-80GB, vLLM, 92% GPU memory utilization, 4h timeout |
-
-## Human Evaluation (`human_eval/`)
-
-Pilot human evaluation measuring LLM validation quality, following the MASIVE
-paper methodology. 2 Romanian native-speaker annotators, hosted on MTurk
-Developer Sandbox (free).
-
-### Pipeline
-
-```bash
-# Step 1: Stratified sample 200 candidates (50 per LLM score bin)
-python -m pipeline.human_eval.sample
-
-# Step 2: Convert to MTurk CSV (HTML-encodes diacritics for MTurk compatibility)
-python -m pipeline.human_eval.prepare_csv
-
-# Step 3: Upload to MTurk Developer Sandbox
-# - Create project with human_eval/mturk_interface.html as the HIT template
-# - Upload data/human_eval_mturk.csv as the batch CSV
-# - Set "Number of assignments per HIT" = number of annotators
-
-# Step 4: After annotation, download results CSVs and compute agreement
-python -m pipeline.human_eval.agreement data/annotator1_results.csv data/annotator2_results.csv
-```
-
-### MTurk Interface (`mturk_interface.html`)
-
-Romanian adaptation of the MASIVE paper's MTurk annotation interface:
-- Single question: 4-point affective state Likert scale (0–3), matching the
-  LLM validation scale exactly
-- Toggle between short context (matched sentence) and full context (surrounding
-  text + title)
-- 7 worked examples adapted from the LLM prompt (încredere=0, fericit=3, dor=3,
-  sigur=0, confuz=2, tulburată=3, încredere=1)
-- TimeMe.js time tracking
-- All instructions, labels, and definitions in Romanian
-
-### CSV Format (`prepare_csv.py`)
-
-MTurk rejects raw UTF-8 Romanian diacritics in CSV uploads. `prepare_csv.py`
-HTML-encodes all non-ASCII characters (e.g., `ă` → `&#259;`) while preserving
-HTML tags for the green highlight spans.
-
-Columns: `id`, `short_context`, `full_context`, `emo_term`, `show_inst`
-
-### Agreement Analysis (`agreement.py`)
-
-Computes inter-annotator and LLM–human agreement metrics. Saves all results
-(metrics + per-item scores) to `data/human_eval_results.json`.
-
-Handles MTurk's boolean column export format (separate `Answer.affect.is_affect`,
-`Answer.affect.like_affect`, etc. columns).
-
-### Results (n=105)
-
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Cohen's Kappa (quadratic weighted) | 0.649 | Substantial agreement |
-| Cohen's Kappa (unweighted) | 0.295 | Fair (expected — 4-point ordinal scale) |
-| Percent agreement (exact) | 47.6% | |
-| Binary Kappa (0–1 vs 2–3) | 0.564 | Moderate agreement |
-| Binary percent agreement | 78.1% | |
-| Spearman's ρ (mean human vs LLM) | 0.701 | Strong correlation (p<0.0001) |
-| Human validation rate (LLM≥2) | 71.7% | Comparable to MASIVE Spanish (72%) |
-
-Human positive defined as mean annotator score ≥ 2.0 (MASIVE binary: 0–1 = not
-affect, 2–3 = affect).
-
-**Human validation rate by LLM score:**
-
-| LLM Score | n | Human confirmed (mean≥2.0) |
-|-----------|---|---------------------------|
-| 0 | 25 | 4.0% |
-| 1 | 27 | 29.6% |
-| 2 | 30 | 46.7% |
-| 3 | 23 | 91.3% |
-
-**Threshold analysis for benchmark construction:**
-
-| Threshold | Precision | Recall | F1 | Est. benchmark size (130K) |
-|-----------|-----------|--------|----|---------------------------|
-| LLM ≥ 2 | 71.7% | 77.6% | 74.5% | ~104K |
-| LLM ≥ 3 | 91.3% | 42.9% | 58.3% | ~73K |
-
-### Benchmark Construction (`build_benchmark.py`)
-
-Filters `candidates_validated.jsonl` to produce the final benchmark. Based on
-human evaluation results, we use **LLM ≥ 3** as the inclusion threshold:
-- 91.3% precision against human annotations (mean ≥ 2.0)
-- Prioritizes precision over recall — a clean benchmark is more valuable than
-  a large noisy one
-
-```bash
-# Build the benchmark (refuses to overwrite if output exists)
-python -m pipeline.human_eval.build_benchmark
-
-# Custom threshold or paths
-python -m pipeline.human_eval.build_benchmark --threshold 2 --output data/benchmark_lenient.jsonl
-```
-
-**Final benchmark: `data/benchmark_ro_asi.jsonl`** — 73,427 candidates
-
-| Source | Candidates | % |
-|--------|-----------|---|
-| FULG | 57,794 | 78.7% |
-| Filmot | 12,819 | 17.5% |
-| Merged corpus | 2,814 | 3.8% |
-
-- 910 unique seed words matched
-- 87.4% secondary patterns, 12.6% primary patterns
-
-### Output files
-
-| File | Description |
-|------|-------------|
-| `data/human_eval_sample.jsonl` | 200 stratified samples with LLM scores |
-| `data/human_eval_mturk.csv` | MTurk-ready CSV (all 200) |
-| `data/human_eval_mturk_annotator2.csv` | Filtered to 105 IDs completed by annotator 1 |
-| `data/annotator1_results.csv` | MTurk export — annotator 1 responses |
-| `data/annotator2_results.csv` | MTurk export — annotator 2 responses |
-| `data/human_eval_results.json` | All metrics + per-item scores (both annotators + LLM) |
-| `data/benchmark_ro_asi.jsonl` | **Final benchmark** (73,427 candidates, LLM ≥ 3) |
-| `data/benchmark_ro_asi.stats.json` | Benchmark distribution stats |
-
-## Zero-Shot Evaluation (`eval/`)
-
-Evaluates how well existing models predict masked emotion words in the benchmark
-**without any task-specific training**. Following the MASIVE paper methodology
-(Sections 4–5), this establishes baselines before fine-tuning.
-
-### Setup
-
-The benchmark is deduplicated by `(id, seed_word_normalized)` and split into
-95/5 stratified train/test (by source). Test set: 2,658 samples, 212 unique
-seed words.
-
-```bash
-# Create train/test splits (local, no GPU)
-python -m pipeline.eval.split
-```
-
-### Evaluation approaches
-
-**1. MLM (Masked Language Modeling)** — Encoder models predict the `[MASK]` token
-directly using their pre-trained masked LM head.
-
-**2. Generative** — Decoder-only LLMs and encoder-decoder models (mT5) are
-prompted to fill in the blank. Uses proper chat templates for instruction-tuned
-models. Multiple completions (`n=5`, temperature=0.5) ranked by cumulative
-log-probability for top-k predictions.
-
-**3. Translate-test** — Benchmark samples are translated RO→EN using
-NLLB-200-distilled-1.3B, then evaluated with the same multilingual models to
-compare native vs. translated performance.
-
-```bash
-# MLM evaluation (GPU)
-python -m pipeline.eval.eval_mlm --model dumitrescustefan/bert-base-romanian-cased-v1 --split test --no-similarity
-python -m pipeline.eval.eval_mlm --model readerbench/RoBERT-base --split test --no-similarity
-python -m pipeline.eval.eval_mlm --model FacebookAI/xlm-roberta-large --split test --no-similarity
-
-# Generative evaluation (GPU, vLLM)
-python -m pipeline.eval.eval_generative --model google/mt5-large --split test --backend transformers --no-similarity
-python -m pipeline.eval.eval_generative --model Qwen/Qwen3.5-9B --split test --backend vllm --no-similarity
-python -m pipeline.eval.eval_generative --model OpenLLM-Ro/RoGemma2-9b-Instruct --split test --backend vllm --no-similarity
-python -m pipeline.eval.eval_generative --model OpenLLM-Ro/RoLlama3.1-8b-Instruct --split test --backend vllm --no-similarity
-
-# Translation (GPU)
-python -m pipeline.eval.translate --split test --batch-size 64
-
-# Translated evaluation (GPU)
-python -m pipeline.eval.eval_mlm --model FacebookAI/xlm-roberta-large --split test --translated --no-similarity
-python -m pipeline.eval.eval_generative --model Qwen/Qwen3.5-9B --split test --translated --backend vllm --no-similarity
-```
-
-### Results
-
-All results on the test split (2,658 samples). Acc@k = fraction of samples
-where the gold word appears in the top-k predictions. MRR = mean reciprocal rank.
-
-#### Romanian (native)
-
-| Model | Type | Params | Acc@1 | Acc@3 | Acc@5 | MRR |
-|-------|------|-------:|------:|------:|------:|----:|
-| ro-bert | MLM | 124M | **35.6%** | **54.0%** | **61.1%** | **0.469** |
-| mT5-large | Gen (enc-dec) | 1.2B | 27.9% | 34.6% | 34.6% | 0.311 |
-| RoBERT-base | MLM | 125M | 23.4% | 32.7% | 36.0% | 0.287 |
-| Qwen3.5-9B | Gen (LLM) | 9B | 22.0% | 33.4% | 34.5% | 0.275 |
-| RoGemma2-9b | Gen (LLM) | 9B | 19.4% | 28.9% | 29.8% | 0.239 |
-| XLM-R-large | MLM | 550M | 17.2% | 20.5% | 21.9% | 0.193 |
-| RoLlama3.1-8b | Gen (LLM) | 8B | 7.7% | 14.3% | 15.6% | 0.110 |
-
-#### Translate-test (RO→EN via NLLB-200)
-
-| Model | Type | Acc@1 (RO) | Acc@1 (EN) | Delta |
-|-------|------|------:|------:|------:|
-| XLM-R-large | MLM | 17.2% | 14.5% | -16% |
-| Qwen3.5-9B | Gen (LLM) | 22.0% | 12.9% | -41% |
-
-Translation verification rate: 45.1% (seed word found in translated text),
-54.9% fallback (placeholder-based translation).
-
-#### By data source (Acc@1)
-
-| Model | Filmot (n=579) | FULG (n=1986) | Merged corpus (n=93) |
-|-------|------:|------:|------:|
-| ro-bert | 31.4% | 37.6% | 19.4% |
-| mT5-large | 26.8% | 28.5% | 21.5% |
-| RoBERT-base | 25.7% | 23.6% | 6.5% |
-| Qwen3.5-9B | 16.4% | 23.7% | 21.5% |
-| RoGemma2-9b | 11.9% | 21.3% | 24.7% |
-| XLM-R-large | 20.4% | 17.0% | 2.2% |
-| RoLlama3.1-8b | 5.5% | 7.9% | 16.1% |
-
-FULG (web text) is generally the easiest source. MLMs struggle on merged corpus
-(product reviews — shorter, more formulaic text). Filmot (YouTube auto-captions)
-is hardest for most generative models.
-
-#### By pattern type (Acc@1)
-
-| Model | Primary (n=361) | Secondary (n=2297) |
-|-------|------:|------:|
-| ro-bert | 32.7% | 36.1% |
-| mT5-large | 28.3% | 27.8% |
-| RoBERT-base | 31.0% | 22.2% |
-| Qwen3.5-9B | 17.5% | 22.7% |
-| RoGemma2-9b | 7.5% | 21.3% |
-| XLM-R-large | 30.2% | 15.2% |
-| RoLlama3.1-8b | 2.5% | 8.5% |
-
-MLMs (RoBERT, XLM-R) do relatively better on primary patterns ("mă simt [X]")
-which are close to standard `[MASK]` prediction. Generative models (Qwen,
-RoGemma) do better on secondary patterns ("sunt [X]", "am [X]") which benefit
-from broader contextual reasoning.
-
-#### By seed word gender (Acc@1)
-
-| Model | Masculine (n=1272) | Feminine (n=1013) | Nouns (n=373) |
-|-------|------:|------:|------:|
-| ro-bert | 35.4% | 30.3% | 50.9% |
-| mT5-large | 30.0% | 22.1% | 36.5% |
-| RoBERT-base | 19.7% | 19.2% | 48.0% |
-| Qwen3.5-9B | 18.7% | 22.5% | 31.9% |
-| RoGemma2-9b | 25.6% | 7.5% | 30.6% |
-| XLM-R-large | 25.8% | 0.1% | 34.3% |
-| RoLlama3.1-8b | 10.8% | 4.0% | 6.7% |
-
-XLM-R almost completely fails on feminine adjective forms (0.1%) — it predicts
-masculine forms exclusively. RoGemma shows a similar but less extreme bias
-(7.5% feminine vs 25.6% masculine). Emotion nouns are easiest for MLMs (no
-gender agreement needed). Qwen is the only generative model with no gender bias
-(18.7% masc vs 22.5% fem).
-
-#### Key findings
-
-1. **Romanian monolingual MLM dominates** — ro-bert (124M params) beats all
-   models including 9B-parameter LLMs, especially at Acc@5 (61.1%).
-2. **Native data > translated data** — both XLM-R and Qwen perform worse on
-   translated English, confirming MASIVE's Takeaway #6 that machine translation
-   is insufficient for cross-lingual ASI transfer.
-3. **mT5-large is the best generative model** — consistent with MASIVE's finding
-   that smaller fine-tuned encoder-decoder models outperform larger LLMs.
-4. **Romanian instruction-tuned LLMs underperform** — RoLlama (7.7%) and
-   RoGemma (19.4%) score below the multilingual Qwen (22.0%), despite being
-   specifically trained on Romanian data.
-5. **Severe gender bias in multilingual MLMs** — XLM-R predicts almost
-   exclusively masculine forms (0.1% feminine accuracy). This reflects training
-   data bias where masculine is the default/unmarked form.
-6. **MLMs prefer primary patterns, LLMs prefer secondary** — MLMs excel at
-   direct "mă simt [MASK]" prediction; LLMs handle the more ambiguous "sunt
-   [X]" patterns better through contextual reasoning.
-
-### Metrics
-
-- **Acc@k**: top-k exact match accuracy (after diacritic-free normalization)
-- **MRR**: mean reciprocal rank of the gold word among predictions
-- Contextual similarity metrics (MASIVE Section 4.2) available via `--similarity`
-  flag but omitted from main runs for speed.
-
-### Output files
-
-| Directory | Contents |
-|-----------|----------|
-| `data/splits/` | `train.jsonl`, `test.jsonl`, `test_translated_en.jsonl`, stats |
-| `data/eval_results/` | Per-model `*_results.jsonl` (per-sample predictions) + `*_metrics.json` (aggregate) |
-
-### Code
-
-| File | Purpose |
-|------|---------|
-| `eval/split.py` | Deduplication + stratified train/test split |
-| `eval/metrics.py` | Acc@k, MRR, contextual similarity scorer |
-| `eval/eval_mlm.py` | Zero-shot MLM evaluation (encoder models) |
-| `eval/eval_generative.py` | Zero-shot generative evaluation (mT5, vLLM decoder-only) |
-| `eval/translate.py` | NLLB-200 RO→EN translation with two-pass mask handling |
-| `eval/report.py` | Aggregate comparison tables (markdown/LaTeX) |
-
-## Fine-Tuning
-
-Three fine-tuning pipelines live alongside the zero-shot baselines. All three
-train on the benchmark (or a multilingual extension of it) and are evaluated
-with the same metrics used in zero-shot evaluation (`eval_sft.py` scripts for
-Qwen runs; `pipeline.eval.eval_generative` for mT5).
-
-| Directory | Model | Recipe | Hardware |
-|-----------|-------|--------|----------|
-| `ft_mt5/` | `google/mt5-large` (1.2B) | MASIVE-style generative SFT on RO only | 1× A6000 48GB (seahorse) |
-| `ft_qwen_mixed/` | `Qwen/Qwen3.5-4B` | Multilingual SFT, 5 languages scrambled | 4× A100 (piranha) + DeepSpeed ZeRO-3 |
-| `ft_qwen_day_by_day/` | `Qwen/Qwen3.5-4B` | Sequential per-language SFT (continual learning) | 1× A100-40GB (tigerfish) |
-
-> **Warning — requirements.txt at the repo root is wrong for fine-tuning.**
-> Root `requirements.txt` pins `transformers==5.0.0` and `torch==2.2.2`, both
-> incompatible with the training scripts. Each `ft_*/` module has its own
-> source-of-truth pin file (`ft_mt5/requirements.txt`,
-> `ft_qwen_day_by_day/requirements-tigerfish.txt`). Use those.
-
-### mT5-Large SFT (`ft_mt5/`)
-
-Replicates the MASIVE paper's generative SFT recipe on the Romanian ASI
-benchmark. Reuses the benchmark with an 85/5/10 resplit (seed-word-disjoint
-test set — unseen vocabulary evaluation).
-
-**Pipeline:**
-
-```
-benchmark_ro_asi.jsonl
-    ↓  ft_mt5/resplit.py       # 85/5/10 splits, seed-word-disjoint test
-splits/{train,val,test}.jsonl  # 45,181 / 2,658 / 5,315
-    ↓  ft_mt5/truncate.py      # sentence-level truncation to 512 mT5 tokens
-    ↓  ft_mt5/build_training_data.py  # [MASK] → <extra_id_0>; target = <extra_id_0> word <extra_id_1>
-    ↓  ft_mt5/train.py         # HF Seq2SeqTrainer, Adafactor, bf16
-runs/mt5-large-ro-asi/best/
-    ↓  pipeline.eval.eval_generative
-eval_results/gen_mt5-large-ro-asi_*
-```
-
-**Hyperparameters** (`ft_mt5/config.py`, from MASIVE Appendix D):
-
-| | Value |
+# Romanian ASI · Mosaic-Emo
+
+This repository was built as part of **Mosaic-Emo**, a native-speaker-informed
+multilingual benchmark of affective states spanning eight languages (English,
+Spanish, French, Romanian, Persian, Hindi, Mandarin, Indonesian), currently
+under anonymous review. It contains two things:
+
+1. **Data collection** — the full pipeline that built the Romanian side of the
+   benchmark: seed lexicon construction, corpus collection, "I feel X" pattern
+   extraction, LLM validation, human evaluation, and the zero-shot /
+   fine-tuning evaluations. Documented in
+   [`pipeline/README.md`](pipeline/README.md).
+2. **Interpretability experiments** — the paper's intrinsic analysis of how a
+   multilingual LLM represents affective states in its activation space,
+   written up in the blog post [*The Emotion Circumplex in a Multilingual
+   LLM's Activation Space*](https://alexjerpelea.com/circumplex.html).
+
+This README focuses on the interpretability experiments, which live in
+[`pipeline/affect_geometry/`](pipeline/affect_geometry/).
+
+## The questions
+
+An *affective state* is any term people use to describe their felt experience —
+the open-vocabulary superset of the closed basic-emotion label sets used by
+emotion detection datasets. We ground the analysis in Russell's (1980)
+**circumplex theory of affect**, which arranges emotions on a circle in the
+two-dimensional plane spanned by valence (pleasant ↔ unpleasant) and arousal
+(activated ↔ deactivated). Circumplex-like geometry is known to emerge in LLM
+activations, but for closed sets of standard emotions. We ask two questions:
+
+1. Are the much broader, open-ended affective states of Mosaic-Emo explained
+   by the same valence–arousal geometry?
+2. Is that geometry shared between languages?
+
+## Method
+
+**Representations.** Qwen3-8B (bf16) is run over each occurrence of an
+affective state in its original document context; hidden states are recorded
+after the embedding layer and after each of the 36 transformer blocks (37
+layers × 4096 dims). The hidden vectors at the state's token span are
+mean-pooled per occurrence and averaged over all occurrences, giving one
+centroid per state per layer. Only states with ≥ 30 occurrences are kept.
+
+**Sets.** 𝒮 is a language's full set of affective-state centroids. 𝒜 ⊂ 𝒮 are
+the *original emotions*: the language's strict, audited synonyms of Russell's
+28 circumplex words (mapping in `anchors_russell.json`, full audit trail in
+`results/russell_mapping_report.tsv`). Everything else, 𝒮 ∖ 𝒜, are the
+*broader affective states*.
+
+**Candidate planes.** Centroids of a fit set ℱ ∈ {𝒜, 𝒮 ∖ 𝒜, 𝒮} are
+standardized and PCA-fit. We examine (1) the *leading plane* PC1+PC2, where
+the circumplex appears only if it is the dominant structure of the fit set,
+and (2) a *search* over pairs of the top-10 PCs and over layers for the
+best-fitting plane, which can reveal a circumplex that is present but
+entangled with stronger variation factors.
+
+**Scoring.** The original emotions' centroids are projected onto the candidate
+plane and compared against Russell's published coordinates via the Procrustes
+disparity *D* (alignment is measured on the original emotions only — the
+broader states have no prescribed position). Reported as PRE = 1 − *D*/*D*ₙᵤₗₗ,
+the fraction of chance-level disparity eliminated. Significance uses the
+PROTEST permutation test (5,000 shuffles); when an alignment benefits from a
+plane/layer search, the null replays the identical search, so cherry-picking
+the best plane cannot manufacture significance.
+
+## Findings
+
+- **The circumplex is the leading geometry of the broader affective states.**
+  Removing every standard emotion from the fit set (ℱ = 𝒮 ∖ 𝒜) barely changes
+  the leading-plane alignment in most languages — the model organizes even its
+  broader affective vocabulary primarily along valence and arousal, on the
+  first two principal components of the broader states' own variance.
+- **Where the leading plane is weak, the circumplex is present but
+  entangled.** For Romanian, Persian, and Hindi the searched planes recover it
+  on non-leading components. Alignment is strongest in the middle of the
+  network in every language.
+- **The circumplex transfers across languages.** A plane fit and frozen on one
+  language recovers every other language's circumplex (all 56 ordered pairs
+  significant). Language-matched planes are rarely the best source — Mandarin,
+  the largest vocabulary, is almost always the strongest.
+- **The broader states obey the angular structure but leave the circle.**
+  Their angles track meaning while their radii exceed the emotion circle —
+  consistent with an extra degree of freedom in magnitude (offered as a
+  hypothesis, not a conclusion).
+
+A fine-tuning follow-up (multilingual ASI LoRA merged into the base model)
+leaves the geometry intact and slightly strengthens the low-resource corner of
+the transfer matrix — see `RESULTS_FINAL_DATA.md`.
+
+## Code map (`pipeline/affect_geometry/`)
+
+| Files | Purpose |
 |---|---|
-| Optimizer | Adafactor (`scale_parameter=False`, `relative_step=False`) |
-| Learning rate | 1e-4, linear decay |
-| Weight decay | 0.01 |
-| Per-device batch size | 4 |
-| Epochs | 3 |
-| Max input / target tokens | 512 / 32 |
-| Precision | bf16 + TF32 matmul |
+| `prepare.py`, `prepare_russell.py`, `prepare_new_languages.py`, `prepare_final_data.py` | Build per-language occurrence manifests from the benchmark data (frozen sampling config in `config.json`) |
+| `extract.py` | Run the model over the manifests and save per-layer hidden states at the state's token span (`--adapter` for the LoRA variant) |
+| `anchors_russell.json`, `results/russell_mapping_report.tsv` | Russell-word ↔ lemma anchor mapping and its 100%-coverage audit trail |
+| `analyze_russell.py` | Anchor-basis fits (ℱ = 𝒜): confirmatory PC1+PC2 + corrected plane/layer search |
+| `analyze_all_states.py`, `analyze_broader_only.py` | ℱ = 𝒮 and ℱ = 𝒮 ∖ 𝒜 fits (broader states carry the structure on their own) |
+| `analyze_plane_share_russell.py`, `analyze_convexity_russell.py` | Controls: plane variance share, convex reconstruction of broader states from anchors |
+| `basis_search_cross_language.py`, `transfer_*.py` | Cross-language transfer: frozen source planes, shared-label tiers, pairwise label intersections, fixed-layer and target-label variants |
+| `plot_*.py`, `paper_style.py` | Figures; the `*_paper.py` / `*_main.py` scripts produce the paper/post figures |
+| `run_final_suite.sh` | Runs the full analysis + figure suite for one extraction variant |
 
-**Quick commands** (see `ft_mt5/README.md` for full seahorse setup):
+Results docs, in chronological order:
 
-```bash
-# Smoke test (<5 min on any GPU)
-python -m pipeline.ft_mt5.train \
-    --model google/mt5-small --max-train-samples 200 --max-val-samples 40 \
-    --num-train-epochs 1 --per-device-train-batch-size 2 \
-    --output-dir /tmp/mt5-smoke
-
-# Full run (~8–15 h on one A6000)
-python -m pipeline.ft_mt5.train \
-    --output-dir /local/nlp/$USER/ro_asi_ft/runs/mt5-large-ro-asi
-
-# Evaluate
-python -m pipeline.eval.eval_generative \
-    --model /local/nlp/$USER/ro_asi_ft/runs/mt5-large-ro-asi/best \
-    --split test --backend transformers --no-similarity
-```
-
-### Qwen3.5-4B Multilingual SFT (`ft_qwen_mixed/`)
-
-Full-parameter SFT on Qwen3.5-4B using a multilingual dataset that extends the
-Romanian benchmark to five languages (`ro`, `en`, `es`, `fa`, `hi`). Trains on
-all five simultaneously (scrambled batches) and evaluates per-language on
-held-out test sets.
-
-**Data format.** Each row holds a sentence with one or more `[MASK]` tokens and
-a `labels` list — the set of distinct affective expressions filling those
-masks, in order of first appearance. Supervision target is the space-joined
-label list (e.g. `labels=["trist"]` → target `"trist"`; FA multi-word idioms
-like `"دلم تنگ شده"` fill one mask span). The system prompt instructs the model
-to emit exactly this set, space-separated, no punctuation.
-
-**Pipeline:**
-
-```
-presentation_data/{ro,en,es,fa,hi}/{train,val,test}.csv
-    ↓  ft_qwen_mixed/prepare_data.py
-DatasetDict {train (~5K, shuffled), val (~1.2K), test_<lang> × 5}
-    ↓  ft_qwen_mixed/train.py  (chat template + loss masking on assistant turn)
-final/ checkpoint
-    ↓  ft_qwen_mixed/eval_sft.py
-per-language test metrics
-```
-
-**Hyperparameters** (`configs/qwen3_5_4b_full_ft.yaml`):
-
-| | Value |
+| Doc | Contents |
 |---|---|
-| Precision | bf16 + TF32, gradient checkpointing |
-| Attention | `sdpa` (dispatches to FA2 on A100 + bf16) |
-| Per-device batch / grad accum | 2 / 2 |
-| Epochs | 3 |
-| Learning rate | 1e-5, cosine, warmup 0.03 |
-| Max sequence length | 1024 tokens (user content capped to ~2200 chars around the mask) |
-| Distributed | DeepSpeed ZeRO-3 across 4 GPUs |
-| Eval / save | Every 25 steps, best-checkpoint on `eval_loss` |
+| `RESULTS.md` | v1: Plutchik-8 anchors, ro/en/es, Qwen3.5-4B |
+| `RESULTS_RUSSELL.md` | Russell-28 redesign; six languages; anchor audit |
+| `RESULTS_MODEL_COMPARISON.md` | Qwen3.5-4B vs Qwen3-8B end-to-end rerun |
+| `RESULTS_FINAL_DATA.md` | Final 8-language data; base vs multilingual-SFT Qwen3-8B — the runs behind the paper and the post |
 
-**Commands:**
+Numerical results and figures are committed under `results/{variant}/` and
+`figures/{variant}/` (`qwen3-8b-final` and `qwen3-8b-joint-final` are the
+final ones). Large manifests and centroid archives live under `artifacts/`
+and are not committed.
 
-```bash
-# Build DatasetDict (once)
-python -m pipeline.ft_qwen_mixed.prepare_data \
-    --output /local/nlp/$USER/data/asi_multilingual
+## Reproducing
 
-# Local 1-step dry run
-python -m pipeline.ft_qwen_mixed.train \
-    --config pipeline/ft_qwen_mixed/configs/qwen3_5_4b_full_ft.yaml \
-    --max_steps 2 --per_device_train_batch_size 2
-
-# Full multi-GPU run (see run/piranha_launch.sh)
-torchrun --nproc_per_node=4 -m pipeline.ft_qwen_mixed.train \
-    --config pipeline/ft_qwen_mixed/configs/qwen3_5_4b_full_ft.yaml
-
-# Per-language eval
-python -m pipeline.ft_qwen_mixed.eval_sft --checkpoint <final/> --language ro
-```
-
-### Qwen3.5-4B Day-by-Day Sequential SFT (`ft_qwen_day_by_day/`)
-
-Continual-learning variant of the mixed SFT run. Instead of scrambling all five
-languages into one training set, train one language per "day" with each day
-starting from the previous day's checkpoint. After each day, evaluate on **all
-5** language test sets to measure forgetting and cross-lingual transfer.
-Full details — 5×5 results matrix, environment pin list, lessons learned
-(OOM, vllm eval crash, disk hygiene) — are in `ft_qwen_day_by_day/RUN_LOG.md`.
-
-**Setup** (differs from `ft_qwen_mixed/`):
-
-- 1000 train + 250 val + 1000 test rows per language (200 val for `hi`),
-  produced by `prepare_data.py --per-language-splits`
-- 3 epochs per day, effective batch size 4 (`per_device_train_batch_size=1`,
-  `gradient_accumulation_steps=4`)
-- Single A100-40GB, no DeepSpeed, `load_best_model_at_end: false` (end-of-day
-  weights are the day-N+1 init)
-- Eval backend: `transformers` (vLLM not installed on tigerfish for this run)
-
-**Headline result — `set_acc@1` 5×5 matrix** (en→es→fa→hi→ro order, from `RUN_LOG.md`):
-
-```
-                test_en   test_es   test_fa   test_hi   test_ro
-day1 (en)       0.187*    0.149     0.114     0.117     0.121
-day2 (→es)      0.192     0.267*    0.112     0.088     0.090
-day3 (→fa)      0.166     0.231     0.445*    0.068     0.111
-day4 (→hi)      0.157     0.234     0.315     0.571*    0.174
-day5 (→ro)      0.144     0.167     0.358     0.533     0.443*
-```
-
-`*` = language trained that day. Diagonal jumps measure just-trained boost;
-column drift measures forgetting + cross-lingual transfer.
-
-**Commands:**
+From the repo root, with the per-language judged data available:
 
 ```bash
-# Build per-language DatasetDict (once)
-python -m pipeline.ft_qwen_day_by_day.prepare_data \
-    --output /local/nlp/$USER/data/asi_day_by_day --per-language-splits
+# 1. Build manifests (frozen sampling config)
+python -m pipeline.affect_geometry.prepare_final_data --help
 
-# Full 5-day run (~2.5–3 h on one A100-40GB)
-bash run/tigerfish_day_by_day_launch.sh
+# 2. Extract hidden states (GPU)
+python -m pipeline.affect_geometry.extract \
+  --manifest pipeline/affect_geometry/artifacts/manifests_final/en.jsonl \
+  --output pipeline/affect_geometry/artifacts/hidden/qwen3-8b-final/en.npz \
+  --model Qwen/Qwen3-8B --batch-size 32 --maximum-tokens 512
 
-# Override permutation
-LANGUAGE_ORDER=ro,hi,fa,es,en bash run/tigerfish_day_by_day_launch.sh
-
-# Auto-resume from highest day with saved final/ (retries + backoff)
-bash run/tigerfish_day_by_day_resume.sh
+# 3. Full analysis + figure suite for one variant
+./pipeline/affect_geometry/run_final_suite.sh qwen3-8b-final
 ```
 
-Outputs committed under `runs/day_by_day/` (logs, offline wandb) and
-`pipeline/data/eval_results/sft_day{1..5}_{lang}_test_{lang}_metrics.json`.
-Model checkpoints (~8 GB each) are not committed; only the last day's `final/`
-typically survives the disk-hygiene cleanup chain.
+## Status
 
-## External Data (`seed/`)
-
-### `seed/wn-affect-1.1/`
-
-WordNet-Affect 1.1 — labels ~798 WordNet 1.6 synsets as affective.
-
-- `a-synsets.xml` — synset-to-category mappings (280 nouns with category
-  labels; adjectives/verbs/adverbs reference a noun-id)
-- `a-hierarchy.xml` — category taxonomy (root → mental-state → affective-state
-  → emotion → positive-emotion → joy → happiness, etc.)
-
-Source: https://github.com/larsmans/wordnet-domains-sentiwords
-
-### `seed/wn-mappings/`
-
-UPC/TALP WordNet 1.6 → 3.0 offset mapping files. Each line maps one WN 1.6
-offset to one or more WN 3.0 offsets with confidence scores.
-
-Files: `wn16-30.noun`, `wn16-30.adj`, `wn16-30.verb`, `wn16-30.adv`
-
-Source: https://github.com/getalp/UFSAC
-
-### `seed/multext-east/`
-
-MULTEXT-East Romanian morphological lexicon — 428K entries mapping inflected
-forms to lemmas with morphosyntactic descriptors.
-
-File: `wfl-ro.txt` (tab-separated: form, lemma, MSD tag)
-
-Used by `utils/inflect.py` to expand lemma seeds to all gender/number/diacritics
-forms for the pattern matcher.
-
-Source: https://www.clarin.si/repository/xmlui/handle/11356/1041
+Mosaic-Emo is joint work, currently under anonymous review; the paper is not
+linked here yet. The blog post covers the intrinsic analysis only — the
+benchmark construction, the data collection across the eight languages, the
+native-speaker validation, and the extrinsic experiments are the bulk of the
+paper. The Romanian data contribution is this repo's
+[`pipeline/`](pipeline/README.md).
