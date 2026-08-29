@@ -13,30 +13,37 @@ represents fine-grained affective states in its activation space.
 
 ## The benchmark
 
-Two definitions first. An **emotion**, in the sense used by emotion detection
-datasets, is one of a small, predetermined label set — the Ekman or Plutchik
-basic emotions (*happy*, *sad*, *angry*, ...). An **affective state** is any
-term people use to describe their felt experiences, including figurative
-expressions of feeling. It is the open-vocabulary superset of emotion: it
-covers nuanced experiences that aren't well approximated by compositions of
-basic emotions (*grief*), states that are felt but aren't quite emotions
-(*tired*, *conflicted*), and language-specific terms with no clean translation
-(Romanian *dor*). And where emotion datasets are labeled by third-party
-annotators, an affective state benchmark can use the author's own words for
-their own state.
+Research on emotion detection has historically relied on small, predetermined
+label sets — e.g., the Ekman or Plutchik basic emotions — applied universally
+across linguistic and cultural backgrounds. These taxonomies have several
+limitations: they struggle to capture nuanced experiences that are not well
+approximated by compositions of basic emotions (*grief*), felt states that
+are not emotions proper (*tired*, *conflicted*), or language-specific terms
+with no direct translation (Romanian *dor*); emotion concepts themselves vary
+across cultural and linguistic boundaries in ways a fixed taxonomy cannot
+express (English *frustration* denotes a high-power experience close to
+anger, while cognates in other languages, such as Spanish *frustración*, can
+denote low-power experiences closer to disappointment); and labels are
+typically assigned by third-party annotators who bring their own cultural and
+linguistic perspectives to the task. **Affective states** — the
+open-vocabulary superset of emotion, comprising any term authors use to
+describe their own felt experience, including figurative expressions of
+feeling — address these limitations by deriving labels from natural language
+itself.
 
-That is what Mosaic-Emo is: a native-speaker-informed benchmark of personal
-narratives in which authors explicitly label their own affective state ("I
-feel X"), spanning eight typologically, syntactically, and geographically
+Mosaic-Emo is a large-scale, native-speaker-validated benchmark for affective
+state identification: a corpus of personal narratives in which authors
+explicitly self-report their affective state ("I feel X"), drawn from diverse
+written sources across eight typologically, syntactically, and geographically
 diverse languages — English, Spanish, French, Romanian, Persian, Hindi,
-Mandarin, and Indonesian — and an unbounded set of emotion labels drawn from
-diverse written sources. This repo built the Romanian side. The task: the
-affective state terms are masked, and a model must predict the original terms
-used by the author. The extrinsic analysis benchmarks models on this task; its
-two headline results are that multilingual Qwen outperforms language-specific
-models tailored to each language, and that finetuning on any single language
-improves affective-state identification in all the others. The rest of this
-README is the intrinsic analysis.
+Mandarin, and Indonesian — with an unbounded label set. This repository
+contributed the Romanian portion. In the benchmark task, the affective state
+terms are masked and a model must recover the terms originally used by the
+author. The paper's extrinsic evaluation benchmarks multilingual LLMs on this
+task, finding that multilingual Qwen outperforms models tailored to each
+language and that finetuning on any single language improves affective state
+identification in all the others. The remainder of this README summarizes the
+intrinsic analysis.
 
 ## Setup: looking for the circumplex
 
